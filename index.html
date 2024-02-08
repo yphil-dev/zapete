@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Zapete</title>
+
+        <link rel="manifest" href="manifest.json">
+
+        <link rel="apple-touch-icon" sizes="180x180" href="img/icons/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="img/icons/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="img/icons/favicon-16x16.png">
+        <link rel="mask-icon" href="img/icons/safari-pinned-tab.svg" color="#5bbad5">
+        <link rel="shortcut icon" href="img/icons/favicon.ico">
+        <meta name="msapplication-TileColor" content="#375a7f">
+        <meta name="msapplication-config" content="img/icons/browserconfig.xml">
+        <meta name="theme-color" content="#375a7f">
+
+        <script src="node_modules/remotestoragejs/release/remotestorage.js"></script>
+        <script src="node_modules/remotestorage-widget/build/widget.js"></script>
+        <script src="node_modules/dompurify/dist/purify.min.js"></script>
+        <script src="node_modules/marked/marked.min.js"></script>
+        <script src="node_modules/mousetrap/mousetrap.min.js"></script>
+        <script src="node_modules/bulma-toast/dist/bulma-toast.min.js"></script>
+        <script src="node_modules/sortablejs/Sortable.min.js"></script>
+
+        <link id="theme-link" rel="stylesheet" type="text/css" href="css/zapete-bulma-light.css">
+        <link rel="stylesheet" type="text/css" href="css/zapete-font.css">
+        <link rel="stylesheet" type="text/css" href="css/zapete.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <meta name="description" content="A simple but powerful note-taking app that syncs with your own cloud">
+
+        <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; object-src 'none';">
+        -->
+    </head>
+    <body>
+
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+
+                <a id="logo" href="#home" data-role="link" class="navbar-item">
+                    <img src="img/zapete-logo.svg" alt="Zapete logo" height="38" width="38">
+                </a>
+
+                <a id="burger" href="#home" data-role="link" role="button" class="navbar-burger is-hoverable" aria-label="menu" aria-expanded="false" data-target="zapeteNavbar">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
+
+            <div id="zapeteNavbar" class="navbar-menu">
+                <div class="navbar-start">
+                    <a href="#home" id="home" data-role="link" class="navbar-item active-link">Zapete</a>
+                    <a href="#settings" id="settings" data-role="link" class="navbar-item">Settings</a>
+                    <a href="#about" id="about" data-role="link" class="navbar-item">About</a>
+                </div>
+            </div>
+
+        </nav>
+
+        <section data-page="home" id="home" class="section active">
+
+            <nav class="level">
+                <!-- Left side -->
+                <div class="level-left is-flex-mobile ">
+                    <div class="level-item">
+                        <p class="subtitle is-5">
+                            <button class="button new-note icon-add" onclick="newNote()" title="New note"></button>
+                        </p>
+                    </div>
+                    <div class="level-item">
+                        <div class="field has-addons">
+                            <p class="control">
+                                <input id="search-notes" class="input" type="text" placeholder="Find a note">
+                            </p>
+                            <p class="control">
+                                <button id="search-button" class="button icon-search" title="Search notes"></button>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="level-item is-hidden-mobile">
+                        <p class="subtitle is-5">
+                            <strong id="number-of-notes"></strong> <span id="number-of-notes-label">notes</span>
+                        </p>
+                    </div>
+
+                </div>
+
+                <!-- Right side -->
+                <div class="level-right">
+                    <div class="select">
+                        <select id="tags-menu">
+                            <option value="all">all</option>
+                            <option value="zob">zob</option>
+                        </select>
+                    </div>
+                    <div class="select is-hidden-mobile" onchange="PPS.prefs.saveNumOfCols(event)">
+                        <select>
+                            <option value="is-one-fifth">5</option>
+                            <option value="is-one-quarter">4</option>
+                            <option value="is-one-third">3</option>
+                            <option value="is-half">2</option>
+                            <option value="is-full">1</option>
+                        </select>
+                    </div>
+                    <div class="level-item is-hidden-mobile">
+                        <div class="field has-addons">
+                            <p class="control">
+                                <button id="grid-button" class="layout-button button icon-grid" data-layout="is-one-fifth" onclick="PPS.prefs.saveLayout(event, 'grid')" title="View: Grid"></button>
+                            </p>
+                            <p class="control">
+                                <button id="list-button" class="layout-button button icon-list" data-layout="is-full" onclick="PPS.prefs.saveLayout(event, 'list')" title="View: List"></button>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </nav>
+
+            <div class="container">
+
+                <form id="new-note-form" class="form" style="display: none;">
+                    <div class="field">
+                        <div class="control">
+                            <textarea id="note-text" class="textarea" placeholder="Note title
+Note text"></textarea>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <button class="button save-button" onclick="saveNote()" title="Save note">Save</button>
+
+                            <button class="button" onclick="cancelNote()" title="Cancel">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+
+                <div id="note-list" class="block columns is-multiline">
+                    <!-- Saved notes will be displayed here -->
+                </div>
+
+            </div>
+
+            <div id="delete-modal" class="modal">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                    <header class="modal-card-head">
+                        <p class="modal-card-title"></p>
+                        <button id="delete-note-close-button" class="delete" aria-label="close"></button>
+                    </header>
+                    <section class="modal-card-body">
+                        <p id="modal-text" class="editable"></p>
+                        <!-- Content ... -->
+                    </section>
+                    <footer class="modal-card-foot">
+                        <button id="delete-note-button" class="button is-danger" title="Delete">Delete</button>
+                        <button id="delete-note-cancel-button" class="button" title="Cancel">Cancel</button>
+                    </footer>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="section" data-page="settings" id="settings">
+            <div class="container settings">
+                <article class="message">
+                    <div class="message-header">
+                        <p>Zapete <span class="version-number"></span></p>
+                    </div>
+                    <div class="message-body">
+                        <div class="columns is-multiline">
+                            <div class="column is-variable">
+                                <button class="button is-info is-fullwidth" id="update-button" type="button" title="Check for updates"><i class="icon-update"></i> Check for updates</button>
+                            </div>
+                            <div class="column is-variable">
+                                <button class="button is-info is-fullwidth" id="install-button" type="button" title="Install Zapete"><i class="icon-install"></i> Install</button>
+                            </div>
+                        </div>
+                        <div id="update-messages"></div>
+                        <div class="buttons columns is-multiline">
+                            <p class="image column is-one-third">
+                                <img class="qr-code" alt="Zapete QR-Code" src="img/zapete-qrcode.png" height="246" width="246"/>
+                            </p>
+                            <p class="content column is-two-thirds">
+                                <span class="icon-left-hand is-medium"></span>
+                                Scan this code to install <a href="https://zapete.gitlab.io">Zapete</a> on your mobile device(s)
+                            </p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="message">
+                    <div class="message-header">
+                        <p>Preferences</p>
+                    </div>
+                    <div class="message-body prefs-radio-buttons">
+
+                        <div class="columns block">
+
+                            <div class="column block">
+                                <div class="field">
+                                    <label class="radio">
+                                        <input type="radio" name="theme" value="css/zapete-bulma-light.css" onclick="PPS.prefs.saveTheme(event)" checked> Light theme </label>
+                                </div>
+                                <div class="field">
+                                    <label class="radio">
+                                        <input type="radio" name="theme" value="css/zapete-bulma-dark.css" onclick="PPS.prefs.saveTheme(event)"> Dark theme </label>
+                                </div>
+                            </div>
+
+                            <div class="column block">
+                                <div class="field">
+                                    <label class="radio">
+                                        <input type="radio" name="state" value="keep-open" onclick="PPS.prefs.saveStatePolicy(event)"> Keep notes open </label>
+                                </div>
+                                <div class="field">
+                                    <label class="radio">
+                                        <input type="radio" name="state" value="auto-close" onclick="PPS.prefs.saveStatePolicy(event)" checked> Auto close notes </label>
+                                </div>
+                            </div>
+
+                            <div class="column block">
+                                <div class="field">
+                                    <label class="radio">
+                                        <input type="radio" name="display" value="markdown" onclick="PPS.prefs.saveDisplayPolicy(event)" checked> Use markdown </label>
+                                </div>
+                                <div class="field">
+                                    <label class="radio">
+                                        <input type="radio" name="display" value="plain" onclick="PPS.prefs.saveDisplayPolicy(event)"> Use plain text </label>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </article>
+
+                <article class="message">
+                    <div class="message-header">
+                        <p>Remote storage</p>
+                    </div>
+                    <div class="message-body">
+
+                        <div id="rs-form" class="block">
+                            <div id="remotestorage-widget-anchor"></div>
+                            <div class="columns is-multiline">
+                                <div class="column is-variable">
+                                    <a class="rs-convenience-button button is-fullwidth is-info" href="https://inspektor.5apps.com" target="_blank" rel="noopener noreferrer" title="Connect your storage to view your online data" disabled>View data</a></div>
+                                <div class="column is-variable">
+                                    <a class="rs-convenience-button button is-fullwidth is-info" href="https://rs.5apps.com/apps" target="_blank" rel="noopener noreferrer" title="Connect your storage to view your connected apps authorizations" disabled>Auths</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="section" data-page="about" id="about">
+            <div class="container about">
+                <article class="message">
+                    <div class="message-header">
+                        <p>Zapete <span class="version-number"></span></p>
+                    </div>
+                    <div class="message-body regular-text">
+                        <h2 class="is-size-4">What it is</h2>
+                        <p>
+                            A simple but powerful note-taking app that syncs with your own cloud.
+                        </p>
+                        <h2 class="is-size-4">Why use it</h2>
+                        <p>
+                            Notes are important. Zapete is fully open-source and doesn't mess with your data.
+                        </p>
+                            <h2 class="is-size-4">How to help</h2>
+                            <p>
+                                If you find one of the <a href="https://mobilohm.gitlab.io/">MobilOhm apps</a> helpful and would like to support its development, consider making a contribution through Ko-fi or Liberapay.
+                        </p>
+                        <p>
+                            Your support helps keep this app free, open source, and ad-free.
+                        </p>
+                        <div class="block big-logo">
+                            <img class="big-logo" title="Papier logo by yPhil" alt="Papier logo by yPhil" src="img/zapete-logo.svg" width="447" height="447" />
+                        </div>
+                        <div class="columns is-multiline">
+                            <div class="column is-variable">
+                                <a class="button is-fullwidth is-info" href="https://gitlab.com/zapete/zapete.gitlab.io" target="_blank" rel="noopener noreferrer">Source code</a>
+                            </div>
+                            <div class="column is-variable">
+                                <a class="button is-fullwidth is-info" href="https://gitlab.com/zapete/zapete.gitlab.io/-/issues/new" target="_blank" rel="noopener noreferrer">Report an issue</a>
+                            </div>
+                        </div>
+                        <div class="columns is-multiline">
+                            <div class="column is-variable">
+                                <a class="button is-fullwidth is-success" href="https://ko-fi.com/yphil" target="_blank" rel="noopener noreferrer">Support us on Ko-fi</a>
+                            </div>
+                            <div class="column is-variable">
+                                <a class="button is-fullwidth is-success" href="https://liberapay.com/yPhil/" target="_blank" rel="noopener noreferrer">Support us on Liberapay</a>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <template id="note-article">
+            <article class="block note-div message column">
+                <div class="message-header">
+                    <p class="note-title"></p>
+                    <span class="open-edit-button icon-pencil"></span>
+                </div>
+                <div class="message-body" style="display: none;">
+                    <div class="tags">
+                        <span class="tag new-tag-button is-link is-small" title="Add a new tag"><span class="icon-add"></span></span>
+                    </div>
+
+                    <div class="field new-tag has-addons" style="display: none;">
+                        <p class="control">
+                            <input class="input new-tag is-small" type="text" placeholder="New tag">
+                        </p>
+                        <p class="control">
+                            <button class="button add-tag-button icon-add is-small" title="Add tag"></button>
+                        </p>
+                    </div>
+
+                    <div class="note-text content"></div>
+                    <form class="form buttons edit-form" style="display: none;">
+                        <textarea class="textarea note-text-area"></textarea>
+                        <button class="save-button button is-success is-small icon-check"></button>
+                        <button class="delete-button button is-danger is-small icon-trash"></button>
+                    </form>
+                </div>
+            </article>
+        </template>
+
+        <script src="js/serviceworker.js"></script>
+        <script src="js/zapete.js"></script>
+        <script src="js/prefs.js"></script>
+        <script src="js/sync.js"></script>
+
+    </body>
+</html>
+
+
+<!-- <!DOCTYPE html>
+     <html>
+     <head>
+     <title>WebSocket Client</title>
+     </head>
+     <body>
+     <button onclick="sendMessage('play')">Play</button>
+     <button onclick="sendMessage('pause')">Pause</button>
+
+     <script>
+     const ws = new WebSocket('ws://desktop-pc-ip-address:8080');
+
+     ws.onopen = function() {
+     console.log('Connected to WebSocket server');
+     };
+
+     function sendMessage(message) {
+     console.log('Sending message:', message);
+     ws.send(message);
+     }
+
+     ws.onmessage = function(event) {
+     console.log('Received message:', event.data);
+     // Handle any response from the server if needed
+     };
+
+     ws.onerror = function(error) {
+     console.error('WebSocket error:', error);
+     };
+
+     ws.onclose = function() {
+     console.log('WebSocket connection closed');
+     };
+     </script>
+     </body>
+     </html> -->
