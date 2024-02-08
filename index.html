@@ -3,25 +3,20 @@
     <head>
         <title>Zapete</title>
 
-        <link rel="manifest" href="manifest.json">
-
-        <link rel="apple-touch-icon" sizes="180x180" href="img/icons/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="img/icons/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="img/icons/favicon-16x16.png">
-        <link rel="mask-icon" href="img/icons/safari-pinned-tab.svg" color="#5bbad5">
-        <link rel="shortcut icon" href="img/icons/favicon.ico">
-        <meta name="msapplication-TileColor" content="#375a7f">
-        <meta name="msapplication-config" content="img/icons/browserconfig.xml">
-        <meta name="theme-color" content="#375a7f">
-
-        <script src="node_modules/remotestoragejs/release/remotestorage.js"></script>
-        <script src="node_modules/remotestorage-widget/build/widget.js"></script>
-        <script src="node_modules/dompurify/dist/purify.min.js"></script>
-        <script src="node_modules/marked/marked.min.js"></script>
-        <script src="node_modules/mousetrap/mousetrap.min.js"></script>
-        <script src="node_modules/bulma-toast/dist/bulma-toast.min.js"></script>
-        <script src="node_modules/sortablejs/Sortable.min.js"></script>
-
+        <!-- <link rel="manifest" href="manifest.json">
+        -->
+        <!-- <link rel="apple-touch-icon" sizes="180x180" href="img/icons/apple-touch-icon.png">
+             <link rel="icon" type="image/png" sizes="32x32" href="img/icons/favicon-32x32.png">
+             <link rel="icon" type="image/png" sizes="16x16" href="img/icons/favicon-16x16.png">
+             <link rel="mask-icon" href="img/icons/safari-pinned-tab.svg" color="#5bbad5">
+             <link rel="shortcut icon" href="img/icons/favicon.ico">
+             <meta name="msapplication-TileColor" content="#375a7f">
+             <meta name="msapplication-config" content="img/icons/browserconfig.xml">
+             <meta name="theme-color" content="#375a7f">
+        -->
+        <!-- <script src="node_modules/remotestoragejs/release/remotestorage.js"></script> -->
+        <!-- <script src="node_modules/remotestorage-widget/build/widget.js"></script>
+        -->
         <link id="theme-link" rel="stylesheet" type="text/css" href="css/zapete-bulma-light.css">
         <link rel="stylesheet" type="text/css" href="css/zapete-font.css">
         <link rel="stylesheet" type="text/css" href="css/zapete.css">
@@ -60,104 +55,19 @@
 
         <section data-page="home" id="home" class="section active">
 
-            <nav class="level">
-                <!-- Left side -->
-                <div class="level-left is-flex-mobile ">
-                    <div class="level-item">
-                        <p class="subtitle is-5">
-                            <button class="button new-note icon-add" onclick="newNote()" title="New note"></button>
-                        </p>
-                    </div>
-                    <div class="level-item">
-                        <div class="field has-addons">
-                            <p class="control">
-                                <input id="search-notes" class="input" type="text" placeholder="Find a note">
-                            </p>
-                            <p class="control">
-                                <button id="search-button" class="button icon-search" title="Search notes"></button>
-                            </p>
-                        </div>
-                    </div>
-                    <div class="level-item is-hidden-mobile">
-                        <p class="subtitle is-5">
-                            <strong id="number-of-notes"></strong> <span id="number-of-notes-label">notes</span>
-                        </p>
-                    </div>
-
-                </div>
-
-                <!-- Right side -->
-                <div class="level-right">
-                    <div class="select">
-                        <select id="tags-menu">
-                            <option value="all">all</option>
-                            <option value="zob">zob</option>
-                        </select>
-                    </div>
-                    <div class="select is-hidden-mobile" onchange="PPS.prefs.saveNumOfCols(event)">
-                        <select>
-                            <option value="is-one-fifth">5</option>
-                            <option value="is-one-quarter">4</option>
-                            <option value="is-one-third">3</option>
-                            <option value="is-half">2</option>
-                            <option value="is-full">1</option>
-                        </select>
-                    </div>
-                    <div class="level-item is-hidden-mobile">
-                        <div class="field has-addons">
-                            <p class="control">
-                                <button id="grid-button" class="layout-button button icon-grid" data-layout="is-one-fifth" onclick="PPS.prefs.saveLayout(event, 'grid')" title="View: Grid"></button>
-                            </p>
-                            <p class="control">
-                                <button id="list-button" class="layout-button button icon-list" data-layout="is-full" onclick="PPS.prefs.saveLayout(event, 'list')" title="View: List"></button>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-            </nav>
 
             <div class="container">
 
-                <form id="new-note-form" class="form" style="display: none;">
-                    <div class="field">
-                        <div class="control">
-                            <textarea id="note-text" class="textarea" placeholder="Note title
-Note text"></textarea>
-                        </div>
-                    </div>
-                    <div class="field">
-                        <div class="control">
-                            <button class="button save-button" onclick="saveNote()" title="Save note">Save</button>
+                  <label for="serverAddress">Server IP:</label>
+  <input type="text" id="serverAddress" name="serverAddress" placeholder="Enter server IP address">
+  <button onclick="connect()">Connect</button>
 
-                            <button class="button" onclick="cancelNote()" title="Cancel">Cancel</button>
-                        </div>
-                    </div>
-                </form>
+     <button onclick="sendMessage('play')">Play</button>
+     <button onclick="sendMessage('pause')">Pause</button>
 
-                <div id="note-list" class="block columns is-multiline">
-                    <!-- Saved notes will be displayed here -->
-                </div>
 
             </div>
 
-            <div id="delete-modal" class="modal">
-                <div class="modal-background"></div>
-                <div class="modal-card">
-                    <header class="modal-card-head">
-                        <p class="modal-card-title"></p>
-                        <button id="delete-note-close-button" class="delete" aria-label="close"></button>
-                    </header>
-                    <section class="modal-card-body">
-                        <p id="modal-text" class="editable"></p>
-                        <!-- Content ... -->
-                    </section>
-                    <footer class="modal-card-foot">
-                        <button id="delete-note-button" class="button is-danger" title="Delete">Delete</button>
-                        <button id="delete-note-cancel-button" class="button" title="Cancel">Cancel</button>
-                    </footer>
-                </div>
-            </div>
 
         </section>
 
@@ -330,48 +240,9 @@ Note text"></textarea>
             </article>
         </template>
 
-        <script src="js/serviceworker.js"></script>
-        <script src="js/zapete.js"></script>
-        <script src="js/prefs.js"></script>
-        <script src="js/sync.js"></script>
+        <script src="js/nav.js"></script>
+        <script src="js/client.js"></script>
+
 
     </body>
 </html>
-
-
-<!-- <!DOCTYPE html>
-     <html>
-     <head>
-     <title>WebSocket Client</title>
-     </head>
-     <body>
-     <button onclick="sendMessage('play')">Play</button>
-     <button onclick="sendMessage('pause')">Pause</button>
-
-     <script>
-     const ws = new WebSocket('ws://desktop-pc-ip-address:8080');
-
-     ws.onopen = function() {
-     console.log('Connected to WebSocket server');
-     };
-
-     function sendMessage(message) {
-     console.log('Sending message:', message);
-     ws.send(message);
-     }
-
-     ws.onmessage = function(event) {
-     console.log('Received message:', event.data);
-     // Handle any response from the server if needed
-     };
-
-     ws.onerror = function(error) {
-     console.error('WebSocket error:', error);
-     };
-
-     ws.onclose = function() {
-     console.log('WebSocket connection closed');
-     };
-     </script>
-     </body>
-     </html> -->

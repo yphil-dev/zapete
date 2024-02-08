@@ -1,11 +1,11 @@
 @font-face {
-  font-family: 'papiers-font';
-  src: url('../font/papiers-font.eot?90930475');
-  src: url('../font/papiers-font.eot?90930475#iefix') format('embedded-opentype'),
-       url('../font/papiers-font.woff2?90930475') format('woff2'),
-       url('../font/papiers-font.woff?90930475') format('woff'),
-       url('../font/papiers-font.ttf?90930475') format('truetype'),
-       url('../font/papiers-font.svg?90930475#papiers-font') format('svg');
+  font-family: 'zapete';
+  src: url('../font/zapete.eot?75669480');
+  src: url('../font/zapete.eot?75669480#iefix') format('embedded-opentype'),
+       url('../font/zapete.woff2?75669480') format('woff2'),
+       url('../font/zapete.woff?75669480') format('woff'),
+       url('../font/zapete.ttf?75669480') format('truetype'),
+       url('../font/zapete.svg?75669480#zapete') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -14,13 +14,13 @@
 /*
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
-    font-family: 'papiers-font';
-    src: url('../font/papiers-font.svg?90930475#papiers-font') format('svg');
+    font-family: 'zapete';
+    src: url('../font/zapete.svg?75669480#zapete') format('svg');
   }
 }
 */
 [class^="icon-"]:before, [class*=" icon-"]:before {
-  font-family: "papiers-font";
+  font-family: "zapete";
   font-style: normal;
   font-weight: normal;
   speak: never;
@@ -54,17 +54,5 @@
   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
 
-.icon-trash:before { content: '\e800'; } /* '' */
-.icon-search:before { content: '\e801'; } /* '' */
-.icon-add:before { content: '\e802'; } /* '' */
-.icon-cancel:before { content: '\e803'; } /* '' */
-.icon-pin-on:before { content: '\e804'; } /* '' */
-.icon-pin-off:before { content: '\e805'; } /* '' */
-.icon-left-hand:before { content: '\e806'; } /* '' */
-.icon-remove:before { content: '\e807'; } /* '' */
-.icon-check:before { content: '\e80d'; } /* '' */
-.icon-pencil:before { content: '\e80e'; } /* '' */
-.icon-list:before { content: '\e810'; } /* '' */
-.icon-grid:before { content: '\e811'; } /* '' */
-.icon-light:before { content: '\f10c'; } /* '' */
-.icon-dark:before { content: '\f111'; } /* '' */
+.icon-play-circled:before { content: '\e800'; } /* '' */
+.icon-pause-circled:before { content: '\e801'; } /* '' */
