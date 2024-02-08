@@ -1,7 +1,22 @@
 const WebSocket = require('isomorphic-ws');
 const { exec } = require('child_process');
+const os = require('os');
 
-const wss = new WebSocket.Server({ port: 8008 });
+const port = "8008";
+const interfaces = os.networkInterfaces();
+let hostIP;
+
+// Iterate over network interfaces to find the local IP address
+Object.keys(interfaces).forEach((interfaceName) => {
+    interfaces[interfaceName].forEach((interface) => {
+        // Skip over loopback and non-IPv4 addresses
+        if (!interface.internal && interface.family === 'IPv4') {
+            hostIP = interface.address;
+        }
+    });
+});
+
+const wss = new WebSocket.Server({ port });
 
 wss.on('connection', function connection(ws) {
     console.log('Client connected');
@@ -11,6 +26,10 @@ wss.on('connection', function connection(ws) {
     });
 
     ws.send('Hello, client!');
+});
+
+wss.on('listening', function() {
+    console.log(`WebSocket server is listening on ${hostIP}:${port}`);
 });
 
 wss.on('error', function error(err) {

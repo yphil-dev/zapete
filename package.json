@@ -1,4 +1,10 @@
 {
+  "name": "Zapete",
+  "version": "1.0.0",
+  "description": "Phone remote control for your PC media player",
+  "scripts": {
+    "start": "node js/server.js"
+  },
   "dependencies": {
     "isomorphic-ws": "^5.0.0"
   }

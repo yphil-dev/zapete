@@ -5,15 +5,16 @@
 
         <!-- <link rel="manifest" href="manifest.json">
         -->
+        <link rel="shortcut icon" href="img/zapete-logo.png">
+
         <!-- <link rel="apple-touch-icon" sizes="180x180" href="img/icons/apple-touch-icon.png">
              <link rel="icon" type="image/png" sizes="32x32" href="img/icons/favicon-32x32.png">
              <link rel="icon" type="image/png" sizes="16x16" href="img/icons/favicon-16x16.png">
              <link rel="mask-icon" href="img/icons/safari-pinned-tab.svg" color="#5bbad5">
-             <link rel="shortcut icon" href="img/icons/favicon.ico">
              <meta name="msapplication-TileColor" content="#375a7f">
              <meta name="msapplication-config" content="img/icons/browserconfig.xml">
-             <meta name="theme-color" content="#375a7f">
-        -->
+             <meta name="theme-color" content="#375a7f"> -->
+        
         <!-- <script src="node_modules/remotestoragejs/release/remotestorage.js"></script> -->
         <!-- <script src="node_modules/remotestorage-widget/build/widget.js"></script>
         -->
@@ -33,7 +34,7 @@
             <div class="navbar-brand">
 
                 <a id="logo" href="#home" data-role="link" class="navbar-item">
-                    <img src="img/zapete-logo.svg" alt="Zapete logo" height="38" width="38">
+                    <img src="img/zapete-logo.png" alt="Zapete logo">
                 </a>
 
                 <a id="burger" href="#home" data-role="link" role="button" class="navbar-burger is-hoverable" aria-label="menu" aria-expanded="false" data-target="zapeteNavbar">
@@ -46,7 +47,6 @@
             <div id="zapeteNavbar" class="navbar-menu">
                 <div class="navbar-start">
                     <a href="#home" id="home" data-role="link" class="navbar-item active-link">Zapete</a>
-                    <a href="#settings" id="settings" data-role="link" class="navbar-item">Settings</a>
                     <a href="#about" id="about" data-role="link" class="navbar-item">About</a>
                 </div>
             </div>
@@ -55,20 +55,46 @@
 
         <section data-page="home" id="home" class="section active">
 
+                <form id="serverForm" onsubmit="connect(); return false;">
+                    <div class="columns is-mobile is-multiline">
+                        <!-- <input class="input column is-three-quarters" type="text" id="serverAddress" placeholder="Enter server IP"> -->
+                        <!-- <button class="button column is-one-quarter" type="submit"><i class="icon-connect"></i></button> -->
+                    </div>
 
-            <div class="container">
+                    <div id="serverControl" class="columns is-mobile is-multiline">
+                        <div class="field has-addons">
+                            <p class="control">
+                                <input class="input" type="text" id="serverAddress" placeholder="Enter server IP">
+                            </p>
+                            <p class="control">
+                                <button type="submit" class="button icon-connect" title="Search notes"></button>
+                            </p>
+                        </div>
+                        <div class="serverMessages field has-addons">
+                            <p class="control">
+                                <input disabled class="input" type="text" id="serverMessages" placeholder="server MSGs">
+                            </p>
 
-                <label for="serverAddress">Server IP:</label>
-                <input type="text" id="serverAddress" name="serverAddress" placeholder="Enter server IP">
-                <button onclick="connect()">Connect</button>
+                        </div>
+                    </div>
 
-                <button onclick="sendMessage('pause')">Play</button>
-                <button onclick="sendMessage('pause')">Pause</button>
-                <button onclick="sendMessage('pl_next')">Next</button>
+                </form>
+                <div class="columns is-mobile is-multiline controls">
+                    <button class="button is-info is-large column icon-pl_prev" onclick="sendMessage('pl_prev')"></button>
+                    <button class="button is-info is-large column icon-rewind3" onclick="sendMessage('rewind3')"></button>
+                    <button class="button is-info is-large column icon-rewind1" onclick="sendMessage('rewind1')"></button>
+                    <button class="button is-success is-large column is-third" onclick="sendMessage('pause')"><i class="icon-play"></i> / <i class="icon-pause"></i></button>
+                    <button class="button is-info is-large column icon-forward1" onclick="sendMessage('forward1')"></button>
+                    <button class="button is-info is-large column icon-forward3" onclick="sendMessage('forward3')"></button>
+                    <button class="button is-info is-large column icon-pl_next" onclick="sendMessage('pl_next')"></button>
+                </div>
 
-            </div>
-
-
+                <div class="columns is-mobile controls">
+                    <button class="button is-large column" onclick="sendMessage('dec_sub_step')" oncontextmenu="handleContextMenu(event, 'pl_prev')">Sub -</button>
+                    <button class="button is-large column icon-fullscreen" onclick="sendMessage('fullscreen')"></button>
+                    <button class="button is-large column" onclick="sendMessage('inc_sub_step')">Sub +</button>
+                </div>
+                
         </section>
 
         <section class="section" data-page="settings" id="settings">
@@ -87,15 +113,7 @@
                             </div>
                         </div>
                         <div id="update-messages"></div>
-                        <div class="buttons columns is-multiline">
-                            <p class="image column is-one-third">
-                                <img class="qr-code" alt="Zapete QR-Code" src="img/zapete-qrcode.png" height="246" width="246"/>
-                            </p>
-                            <p class="content column is-two-thirds">
-                                <span class="icon-left-hand is-medium"></span>
-                                Scan this code to install <a href="https://zapete.gitlab.io">Zapete</a> on your mobile device(s)
-                            </p>
-                        </div>
+
                     </div>
                 </article>
 
@@ -173,21 +191,17 @@
                     <div class="message-body regular-text">
                         <h2 class="is-size-4">What it is</h2>
                         <p>
-                            A simple but powerful note-taking app that syncs with your own cloud.
+                            A simple but powerful remote control for any computer in you local network.
                         </p>
-                        <h2 class="is-size-4">Why use it</h2>
+                        <h2 class="is-size-4">How to help</h2>
                         <p>
-                            Notes are important. Zapete is fully open-source and doesn't mess with your data.
-                        </p>
-                            <h2 class="is-size-4">How to help</h2>
-                            <p>
                                 If you find one of the <a href="https://mobilohm.gitlab.io/">MobilOhm apps</a> helpful and would like to support its development, consider making a contribution through Ko-fi or Liberapay.
                         </p>
                         <p>
                             Your support helps keep this app free, open source, and ad-free.
                         </p>
                         <div class="block big-logo">
-                            <img class="big-logo" title="Papier logo by yPhil" alt="Papier logo by yPhil" src="img/zapete-logo.svg" width="447" height="447" />
+                            <img class="big-logo" title="Papier logo by yPhil" alt="Papier logo by yPhil" src="img/zapete-logo.png" />
                         </div>
                         <div class="columns is-multiline">
                             <div class="column is-variable">

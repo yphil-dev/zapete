@@ -1,11 +1,11 @@
 @font-face {
-  font-family: 'zapete';
-  src: url('../font/zapete.eot?75669480');
-  src: url('../font/zapete.eot?75669480#iefix') format('embedded-opentype'),
-       url('../font/zapete.woff2?75669480') format('woff2'),
-       url('../font/zapete.woff?75669480') format('woff'),
-       url('../font/zapete.ttf?75669480') format('truetype'),
-       url('../font/zapete.svg?75669480#zapete') format('svg');
+  font-family: 'zapete-font';
+  src: url('../font/zapete-font.eot?21412055');
+  src: url('../font/zapete-font.eot?21412055#iefix') format('embedded-opentype'),
+       url('../font/zapete-font.woff2?21412055') format('woff2'),
+       url('../font/zapete-font.woff?21412055') format('woff'),
+       url('../font/zapete-font.ttf?21412055') format('truetype'),
+       url('../font/zapete-font.svg?21412055#zapete-font') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -14,13 +14,13 @@
 /*
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
-    font-family: 'zapete';
-    src: url('../font/zapete.svg?75669480#zapete') format('svg');
+    font-family: 'zapete-font';
+    src: url('../font/zapete-font.svg?21412055#zapete-font') format('svg');
   }
 }
 */
 [class^="icon-"]:before, [class*=" icon-"]:before {
-  font-family: "zapete";
+  font-family: "zapete-font";
   font-style: normal;
   font-weight: normal;
   speak: never;
@@ -54,5 +54,13 @@
   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
 
-.icon-play-circled:before { content: '\e800'; } /* '' */
-.icon-pause-circled:before { content: '\e801'; } /* '' */
+.icon-play:before { content: '\e800'; } /* '' */
+.icon-pause:before { content: '\e801'; } /* '' */
+.icon-rewind1:before { content: '\e802'; } /* '' */
+.icon-rewind3:before { content: '\e803'; } /* '' */
+.icon-forward3:before { content: '\e804'; } /* '' */
+.icon-forward1:before { content: '\e805'; } /* '' */
+.icon-pl_prev:before { content: '\e806'; } /* '' */
+.icon-pl_next:before { content: '\e807'; } /* '' */
+.icon-fullscreen:before { content: '\e808'; } /* '' */
+.icon-connect:before { content: '\f1e6'; } /* '' */
