@@ -80,23 +80,61 @@
 
                 </form>
                 <div class="columns is-mobile is-multiline controls">
-                    <button name="prev" class="button is-info is-large column icon-pl_prev" data-cmd="smplayer -send-action pl_prev"></button>
-                    <button name="rewind3" class="button is-info is-large column icon-rewind3" data-cmd="smplayer -send-action rewind3"></button>
-                    <button name="rewind1" class="button is-info is-large column icon-rewind1" data-cmd="smplayer -send-action rewind1"></button>
-                    <button class="button is-success is-large column is-third" data-cmd="smplayer -send-action pause"><i class="icon-play"></i> / <i class="icon-pause"></i></button>
-                    <button class="button is-info is-large column icon-forward1" data-cmd="smplayer -send-action forward1"></button>
-                    <button class="button is-info is-large column icon-forward3" data-cmd="smplayer -send-action forward3"></button>
-                    <button class="button is-info is-large column icon-pl_next" data-cmd="smplayer -send-action pl_next"></button>
-                    <button class="button is-large column" data-cmd="smplayer -send-action dec_sub_step" oncontextmenu="handleContextMenu(event, 'pl_prev')">Sub -</button>
-                    <button class="button is-large column icon-fullscreen" data-cmd="smplayer -send-action fullscreen"></button>
-                    <button class="button is-large column" data-cmd="smplayer -send-action inc_sub_step">Sub +</button>
+                    <button
+                        name="prev"
+                        class="button is-info is-large column icon-pl_prev"
+                        data-icon="pl_prev"
+                        oncontextmenu="handleContextMenu(event)"
+                        data-cmd="plop"></button>
+                    <button
+                        name="rewind3"
+                        class="button is-info is-large column icon-rewind3"
+                        oncontextmenu="handleContextMenu(event)"
+                        data-cmd="smplayer -send-action rewind3"></button>
+                    <button
+                        name="rewind1"
+                        class="button is-info is-large column icon-rewind1"
+                        oncontextmenu="handleContextMenu(event)"
+                        data-cmd="smplayer -send-action rewind1"></button>
+                    <button
+                        class="button is-success is-large column is-third"
+                        oncontextmenu="handleContextMenu(event)"
+                        data-cmd="smplayer -send-action pause"><i class="icon-play"></i> / <i class="icon-pause"></i></button>
+                    <button
+                        class="button is-info is-large column icon-forward1"
+                        oncontextmenu="handleContextMenu(event)"
+                        data-cmd="smplayer -send-action forward1"></button>
+                    <button
+                        class="button is-info is-large column icon-forward3"
+                        oncontextmenu="handleContextMenu(event)"
+                        data-cmd="smplayer -send-action forward3"></button>
+                    <button
+                        class="button is-info is-large column icon-pl_next"
+                        oncontextmenu="handleContextMenu(event)"
+                        data-cmd="smplayer -send-action pl_next"></button>
+                    <button
+                        class="button is-large column"
+                        data-icon="none"
+                        name="dec_sub_step"
+                        oncontextmenu="handleContextMenu(event)"
+                        data-cmd="smplayer -send-action dec_sub_step">Sub -</button>
+                    <button
+                        class="button is-large column icon-fullscreen"
+                        oncontextmenu="handleContextMenu(event)"
+                        data-cmd="smplayer -send-action fullscreen"></button>
+                    <button
+                        class="button is-large column"
+                        oncontextmenu="handleContextMenu(event)"
+                        data-cmd="smplayer -send-action inc_sub_step">Sub +</button>
                 </div>
 
                 <div class="buttons">
                     <button class="read-button">Read Buttons</button>
                     <button class="write-button">Write Buttons</button>
                 </div>
-                
+
+                <div id="button-info"></div>
+
         </section>
 
         <section class="section" data-page="settings" id="settings">

@@ -1,8 +1,9 @@
 let ws;
 
+let serverMessages = document.getElementById("serverMessages");
+
 function connect() {
     const serverAddress = document.getElementById("serverAddress").value;
-    const serverMessages = document.getElementById("serverMessages");
     console.log("Connecting to server...");
     ws = new WebSocket(`ws://${serverAddress}:8008`);
 
@@ -14,23 +15,42 @@ function connect() {
 
     ws.onmessage = function(event) {
         console.log("Received: " + event.data);
+        serverMessages.value = event.data;
     };
-}
-
-function handleContextMenu(event, command) {
-    event.preventDefault(); // Prevent the default context menu from appearing
-    // Handle the context menu action (e.g., sending a message)
-    alert(`Right-click or long-press detected for command: ${command}`);
-    // sendMessage(command);
 }
 
 function sendMessage(command) {
     if (ws && ws.readyState === WebSocket.OPEN) {
         // let cmd = "smplayer -send-action " + command;
+        serverMessages.value = "";
         ws.send(command);
     } else {
-        alert("WebSocket connection is not open");
+        serverMessages.value = "WebSocket connection is not open";
     }
+}
+
+function handleContextMenu(event) {
+    event.preventDefault(); // Prevent the default context menu from appearing
+    // Handle the context menu action (e.g., sending a message)
+    // alert(`Right-click or long-press detected for command: ${command}`);
+    // sendMessage(command);
+
+    console.log('event: ', event.target.getAttribute('data-cmd'));
+
+    const cmd = event.target.getAttribute('data-cmd');
+    const icon = event.target.getAttribute('data-icon');
+    const name = event.target.getAttribute('name');
+
+    // Update content in the info div
+    const infoDiv = document.getElementById('button-info');
+    infoDiv.innerHTML = `
+        <div class="box">
+            <h3 class="h3">Button Information</h3>
+            <p><strong>Name:</strong> ${name}</p>
+            <p><strong>Icon:</strong> ${icon}</p>
+            <p><strong>Command:</strong> ${cmd}</p>
+        </div>
+    `;
 }
 
 // Select the div containing the buttons
@@ -47,7 +67,6 @@ buttons.forEach(button => {
     });
 });
 
-
 // Function to get buttons array from the div.controls in the page
 function getButtonsFromPage() {
     const controlsDiv = document.querySelector('.controls');
@@ -55,8 +74,8 @@ function getButtonsFromPage() {
     controlsDiv.querySelectorAll('button').forEach(buttonElement => {
         const button = {
             name: buttonElement.getAttribute('name'),
-            icon: buttonElement.classList[3], // Assuming the icon class is the fourth class
-            command: buttonElement.getAttribute('data-command')
+            icon: buttonElement.getAttribute('data-icon'), // Assuming the icon class is the fourth class
+            command: buttonElement.getAttribute('data-cmd')
         };
         buttons.push(button);
     });

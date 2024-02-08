@@ -20,6 +20,10 @@
 }
 
 #serverAddress, #serverMessages {
+  min-width: 28vw;
+}
+
+#serverMessages {
   min-width: 43vw;
 }
 

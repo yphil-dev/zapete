@@ -22,7 +22,7 @@ wss.on('connection', function connection(ws) {
     console.log('Client connected');
 
     ws.on('message', function incoming(message) {
-        executeCommand(message.toString());
+        executeCommand(message.toString(), ws); // Pass the WebSocket instance
     });
 
     ws.send('Hello, client!');
@@ -36,17 +36,21 @@ wss.on('error', function error(err) {
     console.error('WebSocket server error:', err);
 });
 
-function executeCommand(command) {
+function executeCommand(command, ws) {
     console.log('Running command: ', command);
     exec(command, (error, stdout, stderr) => {
         if (error) {
-            console.error(`Error executing command: ${error.message}`);
-            return;
+            console.error(`Error executing command: ${error}`);
+            // Send the error message back to the WebSocket client
+            // ws.send(`${error.message}`);
+            // return;
         }
         if (stderr) {
+            ws.send(`${stderr}`);
             console.error(`Command stderr: ${stderr}`);
-            return;
         }
         console.log(`Command stdout: ${stdout}`);
+        return;
     });
 }
+
