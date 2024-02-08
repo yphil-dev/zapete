@@ -80,19 +80,21 @@
 
                 </form>
                 <div class="columns is-mobile is-multiline controls">
-                    <button class="button is-info is-large column icon-pl_prev" onclick="sendMessage('pl_prev')"></button>
-                    <button class="button is-info is-large column icon-rewind3" onclick="sendMessage('rewind3')"></button>
-                    <button class="button is-info is-large column icon-rewind1" onclick="sendMessage('rewind1')"></button>
-                    <button class="button is-success is-large column is-third" onclick="sendMessage('pause')"><i class="icon-play"></i> / <i class="icon-pause"></i></button>
-                    <button class="button is-info is-large column icon-forward1" onclick="sendMessage('forward1')"></button>
-                    <button class="button is-info is-large column icon-forward3" onclick="sendMessage('forward3')"></button>
-                    <button class="button is-info is-large column icon-pl_next" onclick="sendMessage('pl_next')"></button>
+                    <button name="prev" class="button is-info is-large column icon-pl_prev" data-cmd="smplayer -send-action pl_prev"></button>
+                    <button name="rewind3" class="button is-info is-large column icon-rewind3" data-cmd="smplayer -send-action rewind3"></button>
+                    <button name="rewind1" class="button is-info is-large column icon-rewind1" data-cmd="smplayer -send-action rewind1"></button>
+                    <button class="button is-success is-large column is-third" data-cmd="smplayer -send-action pause"><i class="icon-play"></i> / <i class="icon-pause"></i></button>
+                    <button class="button is-info is-large column icon-forward1" data-cmd="smplayer -send-action forward1"></button>
+                    <button class="button is-info is-large column icon-forward3" data-cmd="smplayer -send-action forward3"></button>
+                    <button class="button is-info is-large column icon-pl_next" data-cmd="smplayer -send-action pl_next"></button>
+                    <button class="button is-large column" data-cmd="smplayer -send-action dec_sub_step" oncontextmenu="handleContextMenu(event, 'pl_prev')">Sub -</button>
+                    <button class="button is-large column icon-fullscreen" data-cmd="smplayer -send-action fullscreen"></button>
+                    <button class="button is-large column" data-cmd="smplayer -send-action inc_sub_step">Sub +</button>
                 </div>
 
-                <div class="columns is-mobile controls">
-                    <button class="button is-large column" onclick="sendMessage('dec_sub_step')" oncontextmenu="handleContextMenu(event, 'pl_prev')">Sub -</button>
-                    <button class="button is-large column icon-fullscreen" onclick="sendMessage('fullscreen')"></button>
-                    <button class="button is-large column" onclick="sendMessage('inc_sub_step')">Sub +</button>
+                <div class="buttons">
+                    <button class="read-button">Read Buttons</button>
+                    <button class="write-button">Write Buttons</button>
                 </div>
                 
         </section>
