@@ -5,10 +5,12 @@ function connect() {
 
     ws.onopen = function() {
         console.log('Connected to server');
+        alert('Connected to server');
         ws.send('Hello, server!');
     };
 
     ws.onmessage = function(event) {
         console.log('Received: ' + event.data);
+        alert('Received: ' + event.data);
     };
 }
