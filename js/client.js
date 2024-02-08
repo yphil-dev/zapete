@@ -7,7 +7,6 @@ function connect() {
 
     ws.onopen = function() {
         console.log('Connected to server');
-        alert('Connected to server');
         ws.send('Hello, server!');
     };
 
@@ -19,8 +18,9 @@ function connect() {
 
 function sendMessage(command) {
     if (ws && ws.readyState === WebSocket.OPEN) {
-        console.log('Sending command: ' + command);
-        ws.send(command);
+        let cmd = "smplayer -send-action " + command;
+        console.log('Sending command: ' + cmd);
+        ws.send(cmd);
     } else {
         console.log('WebSocket connection is not open');
     }
