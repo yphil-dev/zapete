@@ -199,6 +199,16 @@ function handleContextMenu(event) {
     const container = document.getElementById('button-info');
     container.innerHTML = ''; // Clear existing content
     container.appendChild(infoDiv);
+
+    
+    const colorSelect = document.getElementById('colorSelect');
+
+    const optionToSelect = colorSelect.querySelector('.' + color);
+
+    optionToSelect.selected = true;
+
+    console.log('button.color: ', color);
+
 }
 
 const buttons = buttonContainer.querySelectorAll('button');
@@ -248,6 +258,9 @@ function editButton(event) {
 
 function setButtonsToPage(buttons) {
     buttonContainer.innerHTML = '';
+
+    populateIconSelect();
+
     buttons.forEach(button => {
 
         const buttonElement = document.createElement('button');
@@ -267,11 +280,10 @@ function setButtonsToPage(buttons) {
         });
 
         buttonElement.setAttribute('oncontextmenu', 'handleContextMenu(event); return false;');
-
+        
         buttonContainer.appendChild(buttonElement);
     });
 
-    populateIconSelect();
 
 }
 
