@@ -11,15 +11,25 @@ function connect() {
         serverMessages.value = "Connected to server";
     };
 
+    // ws.onmessage = function(event) {
+    //     const buttons = JSON.parse(event.data);
+    //     setButtonsToPage(buttons);
+    // };
+
     ws.onmessage = function(event) {
         serverMessages.value = event.data;
     };
+
 }
 
 function sendMessage(command) {
     if (ws && ws.readyState === WebSocket.OPEN) {
         serverMessages.value = "";
-        ws.send(command);
+        if (command) {
+            ws.send(JSON.stringify({ type: 'button_command', command: command }));
+        } else {
+            ws.send(JSON.stringify({ type: 'button_update', buttons: getButtonsFromPage() }));
+        }
     } else {
         serverMessages.value = "WebSocket connection is not open";
     }
@@ -28,24 +38,22 @@ function sendMessage(command) {
 const buttonContainer = document.getElementById('buttonContainer');
 
 function moveButtonLeft(selectedButton) {
-    console.log('selectedButton: ', selectedButton);
     if (selectedButton && selectedButton.previousElementSibling) {
         buttonContainer.insertBefore(selectedButton, selectedButton.previousElementSibling);
+        // sendMessage();
     }
 }
 
 function moveButtonRight(selectedButton) {
     if (selectedButton && selectedButton.nextElementSibling) {
         buttonContainer.insertBefore(selectedButton.nextElementSibling, selectedButton);
+        // sendMessage();
     }
 }
 
 function handleContextMenu(event) {
-    event.preventDefault(); 
+    event.preventDefault();
 
-    console.log('event: ', event.target.getAttribute('data-cmd'));
-
-    
     const cmd = event.target.getAttribute('data-cmd');
     const icon = event.target.getAttribute('data-icon');
     const name = event.target.getAttribute('name');
@@ -115,14 +123,6 @@ function setButtonsToPage(buttons) {
     });
 }
 
-function saveButtonsToLocalStorage(buttons) {
-    localStorage.setItem('buttons', JSON.stringify(buttons));
-}
-
-function loadButtonsFromLocalStorage() {
-    const buttonsJSON = localStorage.getItem('buttons');
-    return JSON.parse(buttonsJSON) || [];
-}
 
 document.querySelector('.read-button').addEventListener('click', function() {
     const buttons = getButtonsFromPage();
@@ -135,8 +135,3 @@ document.querySelector('.write-button').addEventListener('click', function() {
     console.log('Buttons saved to localStorage.');
 });
 
-// // Load buttons from localStorage and display them on page
-// window.addEventListener('DOMContentLoaded', function() {
-//     const buttons = loadButtonsFromLocalStorage();
-//     setButtonsToPage(buttons);
-// });

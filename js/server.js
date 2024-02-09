@@ -1,10 +1,12 @@
 const WebSocket = require('isomorphic-ws');
 const { exec } = require('child_process');
+const fs = require('fs');
 const os = require('os');
 
 const port = "8008";
 const interfaces = os.networkInterfaces();
 let hostIP;
+let buttons = [];
 
 // Iterate over network interfaces to find the local IP address
 Object.keys(interfaces).forEach((interfaceName) => {
@@ -20,11 +22,18 @@ const wss = new WebSocket.Server({ port });
 
 wss.on('connection', function connection(ws) {
     console.log('Client connected');
+    // ws.send(JSON.stringify(buttons));
 
     ws.on('message', function incoming(message) {
-        executeCommand(message.toString(), ws); // Pass the WebSocket instance
+        const data = JSON.parse(message);
+        console.log('data: ', data);
+        if (data.type === 'button_update') {
+            buttons = data.buttons;
+            saveButtonsToFile();
+        } else {
+            executeCommand(data.command.toString(), ws); 
+        }
     });
-
     ws.send('Hello, client!');
 });
 
@@ -54,3 +63,25 @@ function executeCommand(command, ws) {
     });
 }
 
+function saveButtonsToFile() {
+    fs.writeFile('buttons.json', JSON.stringify(buttons), 'utf8', (err) => {
+        if (err) {
+            console.error('Error saving buttons to file:', err);
+        } else {
+            console.log('Buttons saved to file');
+        }
+    });
+}
+
+function loadButtonsFromFile() {
+    fs.readFile('buttons.json', 'utf8', (err, data) => {
+        if (err) {
+            console.error('Error loading buttons from file:', err);
+        } else {
+            buttons = JSON.parse(data);
+            console.log('Buttons loaded from file');
+        }
+    });
+}
+
+// loadButtonsFromFile(); // Load buttons from file when the server starts
