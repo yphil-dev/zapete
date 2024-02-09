@@ -124,7 +124,7 @@ function moveButtonRight(selectedButton) {
     }
 }
 
-function handleContextMenu(event) {
+function handleContextMenuOld(event) {
     event.preventDefault();
 
     const cmd = event.target.getAttribute('data-cmd');
@@ -164,6 +164,45 @@ function handleContextMenu(event) {
     infoDiv.appendChild(rightButton);
 }
 
+function handleContextMenu(event) {
+    event.preventDefault();
+
+    const cmd = event.target.getAttribute('data-cmd');
+    const icon = event.target.getAttribute('data-icon');
+    const color = event.target.getAttribute('data-color');
+    const name = event.target.getAttribute('name');
+
+    const selectedButton = event.target;
+
+    // Clone the template
+    const template = document.getElementById('button-info-template');
+    const infoDiv = template.cloneNode(true);
+    infoDiv.removeAttribute('id'); // Remove ID to avoid duplication
+
+    infoDiv.style.display = 'block';
+
+    // Populate the cloned template with button information
+    infoDiv.querySelector('.button-name').textContent = name;
+    infoDiv.querySelector('.button-icon').textContent = icon;
+    infoDiv.querySelector('.button-color').textContent = color;
+    infoDiv.querySelector('.button-command').textContent = cmd;
+
+    // Populate the select menu
+    populateIconSelect();
+
+    // Add event listeners to left and right buttons
+    const leftButton = infoDiv.querySelector('.left');
+    const rightButton = infoDiv.querySelector('.right');
+    leftButton.addEventListener('click', () => moveButtonLeft(selectedButton));
+    rightButton.addEventListener('click', () => moveButtonRight(selectedButton));
+
+    // Append the populated template to the infoDiv
+    const container = document.getElementById('button-info');
+    container.innerHTML = ''; // Clear existing content
+    container.appendChild(infoDiv);
+}
+
+
 const buttons = buttonContainer.querySelectorAll('button');
 
 buttons.forEach(button => {
@@ -187,12 +226,14 @@ function getButtonsFromPage() {
     return buttons;
 }
 
+function plop() {
+    console.log('object: ');
+}
+
 function setButtonsToPage(buttons) {
     buttonContainer.innerHTML = '';
     buttons.forEach(button => {
 
-        console.log('button: ', button);
-        
         const buttonElement = document.createElement('button');
         buttonElement.setAttribute('name', button.name);
         buttonElement.classList.add('button', 'is-large', 'column', button.color || '');
@@ -247,7 +288,6 @@ function populateIconSelect() {
 
     const selectMenu = document.getElementById('iconSelect');
     iconNames.forEach(iconName => {
-        console.log('iconName: ', iconName);
         const option = document.createElement('option');
         // Remove the colon from the end of the icon name
         const cleanedIconName = iconName.replace(/:$/, '');
