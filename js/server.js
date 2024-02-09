@@ -50,7 +50,6 @@ function executeCommand(command, ws) {
     exec(command, (error, stdout, stderr) => {
         if (error) {
             console.error(`Error executing command: ${error}`);
-            // Send the error message back to the WebSocket client
             // ws.send(`${error.message}`);
             // return;
         }

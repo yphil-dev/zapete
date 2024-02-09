@@ -91,20 +91,11 @@ function handleContextMenu(event) {
     infoDiv.appendChild(rightButton);
 }
 
-const controlsDiv = document.querySelector('.controls');
-const buttons = controlsDiv.querySelectorAll('button');
-
-buttons.forEach(button => {
-    button.addEventListener('click', () => {
-        console.log(button.getAttribute('data-cmd'));
-        sendMessage(button.getAttribute('data-cmd'));
-    });
-});
+const buttons = buttonContainer.querySelectorAll('button');
 
 function getButtonsFromPage() {
-    const controlsDiv = document.querySelector('.controls');
     const buttons = [];
-    controlsDiv.querySelectorAll('button').forEach(buttonElement => {
+    buttonContainer.querySelectorAll('button').forEach(buttonElement => {
         const button = {
             name: buttonElement.getAttribute('name'),
             icon: buttonElement.getAttribute('data-icon'),
@@ -118,25 +109,39 @@ function getButtonsFromPage() {
 
 // Function to set buttons array to the div.controls in the page
 function setButtonsToPage(buttons) {
-    const controlsDiv = document.querySelector('.controls');
-    controlsDiv.innerHTML = ''; // Clear existing buttons
+    buttonContainer.innerHTML = ''; // Clear existing buttons
     buttons.forEach(button => {
         const buttonElement = document.createElement('button');
         buttonElement.setAttribute('name', button.name);
-        buttonElement.classList.add('button', 'is-info', 'is-large', 'column', button.icon);
-        buttonElement.setAttribute('data-command', button.command);
-        controlsDiv.appendChild(buttonElement);
+        buttonElement.classList.add('button', 'is-large', 'column', button.color || '');
+        if (button.icon !== "none") {
+            buttonElement.classList.add(button.icon);
+        } else {
+            buttonElement.innerHTML = button.name;
+        }
+        buttonElement.setAttribute('data-cmd', button.command);
+        buttonElement.setAttribute('data-color', button.color);
+        buttonElement.setAttribute('data-icon', button.icon);
+        buttonElement.addEventListener('click', () => {
+            console.log("Sending", button.command);
+            sendMessage(button.command);
+        });
+
+        buttonElement.setAttribute('oncontextmenu', 'handleContextMenu(event); return false;');
+
+        buttonContainer.appendChild(buttonElement);
     });
 }
 
-
 document.querySelector('.read-button').addEventListener('click', function() {
     const buttons = getButtonsFromPage();
-    console.log('Buttons:', buttons);
+    console.log('Read Buttons:', buttons);
+    setButtonsToPage(buttons);
 });
 
 document.querySelector('.write-button').addEventListener('click', function() {
     const buttons = getButtonsFromPage();
+    console.log('Write Buttons: ', buttons);
     sendMessage();
     // console.log('Buttons saved to localStorage.');
 });
