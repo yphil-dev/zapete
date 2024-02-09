@@ -29,7 +29,10 @@ wss.on('connection', function connection(ws) {
         console.log('data: ', data);
         if (data.type === 'button_update') {
             buttons = data.buttons;
-            saveButtonsToFile(ws);
+            saveButtonsToServer(ws);
+        } else if (data.type === 'button_request') {
+            // console.log('button_request!!');
+            sendButtonsToClient(ws);
         } else {
             executeCommand(data.command.toString(), ws); 
         }
@@ -62,7 +65,20 @@ function executeCommand(command, ws) {
     });
 }
 
-function saveButtonsToFile(ws) {
+function sendButtonsToClient(ws) {
+    fs.readFile('buttons.json', 'utf8', (err, data) => {
+        if (err) {
+            console.error('Error loading buttons from file:', err);
+        } else {
+            buttons = JSON.parse(data);
+            const jsonData = JSON.stringify(buttons); // Convert JSON data to string
+            ws.send(jsonData);
+            console.log('Buttons loaded from file:', buttons);
+        }
+    });
+}
+
+function saveButtonsToServer(ws) {
     fs.writeFile('buttons.json', JSON.stringify(buttons), 'utf8', (err) => {
         if (err) {
             ws.send('Error saving buttons to server:' + err);
@@ -74,15 +90,4 @@ function saveButtonsToFile(ws) {
     });
 }
 
-function loadButtonsFromFile() {
-    fs.readFile('buttons.json', 'utf8', (err, data) => {
-        if (err) {
-            console.error('Error loading buttons from file:', err);
-        } else {
-            buttons = JSON.parse(data);
-            console.log('Buttons loaded from file');
-        }
-    });
-}
-
-// loadButtonsFromFile(); // Load buttons from file when the server starts
+// sendButtonsToClient(); // Load buttons from file when the server starts

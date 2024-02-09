@@ -17,16 +17,89 @@ function connect() {
     // };
 
     ws.onmessage = function(event) {
-        serverMessages.value = event.data;
+        console.log('event: ', event);
+        try {
+            const buttons = JSON.parse(event.data);
+            console.log('BUTTONS!! ', buttons);
+            setButtonsToPage(buttons);
+        } catch (err) {
+            console.log('err: ', err);
+            serverMessages.value = event.data;
+        }
     };
 
 }
 
+const defaultButtons = [
+    {
+        "name": "prev",
+        "icon": "icon-pl_prev",
+        "color": "is-info",
+        "command": "plop"
+    },
+    {
+        "name": "rewind3",
+        "icon": "icon-rewind3",
+        "color": "is-info",
+        "command": "smplayer -send-action rewind3"
+    },
+    {
+        "name": "rewind1",
+        "icon": "icon-rewind1",
+        "color": "is-info",
+        "command": "smplayer -send-action rewind1"
+    },
+    {
+        "name": "play / pause",
+        "icon": "icon-pause",
+        "color": "is-success",
+        "command": "smplayer -send-action pause"
+    },
+    {
+        "name": "forward1",
+        "icon": "icon-forward1",
+        "color": "is-info",
+        "command": "smplayer -send-action forward1"
+    },
+    {
+        "name": "forward3",
+        "icon": "icon-forward3",
+        "color": "is-info",
+        "command": "smplayer -send-action forward3"
+    },
+    {
+        "name": "pl_next",
+        "icon": "icon-pl_next",
+        "color": "is-info",
+        "command": "smplayer -send-action pl_next"
+    },
+    {
+        "name": "Sub -",
+        "icon": "none",
+        "color": "none",
+        "command": "smplayer -send-action dec_sub_step"
+    },
+    {
+        "name": "fullscreen",
+        "icon": "icon-fullscreen",
+        "color": "none",
+        "command": "smplayer -send-action fullscreen"
+    },
+    {
+        "name": "Sub +",
+        "icon": "none",
+        "color": "none",
+        "command": "smplayer -send-action inc_sub_step"
+    }
+];
+
 function sendMessage(command) {
     if (ws && ws.readyState === WebSocket.OPEN) {
         serverMessages.value = "";
-        if (command) {
+        if (command && command !== "requestButtons") {
             ws.send(JSON.stringify({ type: 'button_command', command: command }));
+        } else if (command && command === "requestButtons") {
+            ws.send(JSON.stringify({ type: 'button_request' }));
         } else {
             ws.send(JSON.stringify({ type: 'button_update', buttons: getButtonsFromPage() }));
         }
@@ -93,6 +166,13 @@ function handleContextMenu(event) {
 
 const buttons = buttonContainer.querySelectorAll('button');
 
+buttons.forEach(button => {
+    button.addEventListener('click', () => {
+        console.log(button.getAttribute('data-cmd'));
+        sendMessage(button.getAttribute('data-cmd'));
+    });
+});
+
 function getButtonsFromPage() {
     const buttons = [];
     buttonContainer.querySelectorAll('button').forEach(buttonElement => {
@@ -107,10 +187,12 @@ function getButtonsFromPage() {
     return buttons;
 }
 
-// Function to set buttons array to the div.controls in the page
 function setButtonsToPage(buttons) {
-    buttonContainer.innerHTML = ''; // Clear existing buttons
+    buttonContainer.innerHTML = '';
     buttons.forEach(button => {
+
+        console.log('button: ', button);
+        
         const buttonElement = document.createElement('button');
         buttonElement.setAttribute('name', button.name);
         buttonElement.classList.add('button', 'is-large', 'column', button.color || '');
@@ -133,15 +215,16 @@ function setButtonsToPage(buttons) {
     });
 }
 
-document.querySelector('.read-button').addEventListener('click', function() {
-    const buttons = getButtonsFromPage();
-    console.log('Read Buttons:', buttons);
-    setButtonsToPage(buttons);
+document.querySelector('.load-button').addEventListener('click', function() {
+    // const buttons = getButtonsFromPage();
+    // console.log('Load Buttons:', buttons);
+    // setButtonsToPage(buttons);
+    sendMessage('requestButtons');
 });
 
-document.querySelector('.write-button').addEventListener('click', function() {
+document.querySelector('.save-button').addEventListener('click', function() {
     const buttons = getButtonsFromPage();
-    console.log('Write Buttons: ', buttons);
+    console.log('Save Buttons: ', buttons);
     sendMessage();
     // console.log('Buttons saved to localStorage.');
 });
