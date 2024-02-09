@@ -124,50 +124,15 @@ function moveButtonRight(selectedButton) {
     }
 }
 
-function handleContextMenuOld(event) {
-    event.preventDefault();
-
-    const cmd = event.target.getAttribute('data-cmd');
-    const icon = event.target.getAttribute('data-icon');
-    const color = event.target.getAttribute('data-color');
-    const name = event.target.getAttribute('name');
-
-    const selectedButton = event.target;
-
-    // Create the left and right buttons
-    const leftButton = document.createElement('button');
-    leftButton.textContent = 'Left';
-    leftButton.className = 'button';
-    leftButton.addEventListener('click', () => moveButtonLeft(selectedButton));
-
-    const rightButton = document.createElement('button');
-    rightButton.textContent = 'Right';
-    rightButton.className = 'button';
-    rightButton.addEventListener('click', () => moveButtonRight(selectedButton));
-
-    // Update content in the info div
-    const infoDiv = document.getElementById('button-info');
-    infoDiv.innerHTML = `
-        <div class="box">
-            <h3 class="h3">Button Information</h3>
-            <p><strong>Name:</strong> ${name}</p>
-            <p><strong>Icon:</strong> ${icon}</p>
-            <p><strong>Color:</strong> ${color}</p>
-            <p><strong>Command:</strong> ${cmd}</p>
-            <div class="select is-primary"><select id="iconSelect"></select></div>
-        </div>
-    `;
-
-    populateIconSelect();
-    
-    infoDiv.appendChild(leftButton);
-    infoDiv.appendChild(rightButton);
-}
+let callerButton = null;
 
 function handleContextMenu(event) {
     event.preventDefault();
 
-    const cmd = event.target.getAttribute('data-cmd');
+    console.log('event.target: ', event.target);
+    callerButton = event.target;
+
+    const command = event.target.getAttribute('data-command');
     const icon = event.target.getAttribute('data-icon');
     const color = event.target.getAttribute('data-color');
     const name = event.target.getAttribute('name');
@@ -182,10 +147,22 @@ function handleContextMenu(event) {
     infoDiv.style.display = 'block';
 
     // Populate the cloned template with button information
-    infoDiv.querySelector('.button-name').value = name;
+    const buttonNameOption = infoDiv.querySelector('.button-name');
+    buttonNameOption.value = name;
+    buttonNameOption.setAttribute('data-name', name);
     // infoDiv.querySelector('.button-icon').value = icon;
     // infoDiv.querySelector('.button-color').value = color;
-    infoDiv.querySelector('.button-command').value = cmd;
+    const buttonCommandOption = infoDiv.querySelector('.button-command');
+    buttonCommandOption.value = command;
+    buttonCommandOption.setAttribute('data-command', command);
+
+    // const buttonIconOption = infoDiv.querySelector('.button-icon');
+    // buttonIconOption.value = command;
+    // buttonIconOption.setAttribute('data-icon', command);
+
+    // const buttonColorOption = infoDiv.querySelector('.button-color');
+    // buttonColorOption.value = command;
+    // buttonColorOption.setAttribute('data-color', command);
 
     // populateIconSelect();
 
@@ -209,16 +186,14 @@ function handleContextMenu(event) {
     const iconOptionToSelect = iconSelect.querySelector('.' + icon);
     iconOptionToSelect.selected = true;
 
-    console.log('button.icon: ', icon);
-
 }
 
 const buttons = buttonContainer.querySelectorAll('button');
 
 buttons.forEach(button => {
     button.addEventListener('click', () => {
-        console.log(button.getAttribute('data-cmd'));
-        sendMessage(button.getAttribute('data-cmd'));
+        console.log(button.getAttribute('data-command'));
+        sendMessage(button.getAttribute('data-command'));
     });
 });
 
@@ -229,7 +204,7 @@ function getButtonsFromPage() {
             name: buttonElement.getAttribute('name'),
             icon: buttonElement.getAttribute('data-icon'),
             color: buttonElement.getAttribute('data-color'),
-            command: buttonElement.getAttribute('data-cmd')
+            command: buttonElement.getAttribute('data-command')
         };
         buttons.push(button);
     });
@@ -239,6 +214,9 @@ function getButtonsFromPage() {
 function editButton(event) {
     event.preventDefault();
 
+    // Access the global variable to get the reference to the caller button
+    const selectedButton = callerButton;
+   
     // Select all input fields
     const buttonNameInput = document.querySelector('.button-name');
     const buttonCommandInput = document.querySelector('.button-command');
@@ -248,14 +226,46 @@ function editButton(event) {
     // Get the values from the input fields
     const buttonName = buttonNameInput.value;
     const buttonCommand = buttonCommandInput.value;
-    const iconValue = iconSelect.value;
-    const colorValue = colorSelect.value;
+    const buttonIcon = "icon-" + iconSelect.value;
+    const buttonColor = "is-" + colorSelect.value;
+
+    const selectedColorIndex = colorSelect.selectedIndex;
+    const selectedColorOption = colorSelect.options[selectedColorIndex];
+    const selectedColorOptionClass = selectedColorOption.className;
+    
+    const selectedIconIndex = iconSelect.selectedIndex;
+    const selectedIconOption = iconSelect.options[selectedIconIndex];
+    const selectedIconOptionClass = selectedIconOption.className;
+    
+    // Get the old values from the class fields
+    const oldName = buttonNameInput.getAttribute("data-name");
+    const oldCommand = buttonCommandInput.getAttribute("data-command");
+    const oldIcon = selectedIconOptionClass;
+    const oldColor = selectedColorOptionClass;
+
+    console.log('buttonName, oldName: ', buttonName, oldName);
+    console.log('buttonCommand, oldCommand: ', buttonCommand, oldCommand);
+    console.log('buttonIcon, oldIcon: ', buttonIcon, oldIcon);
+    console.log('buttonColor, oldColor: ', buttonColor, oldColor);
 
     // Log the values
-    console.log('Button Name:', buttonName);
-    console.log('Button Command:', buttonCommand);
-    console.log('Icon Value:', iconValue);
-    console.log('Color Value:', colorValue);
+    // console.log('Button Name:', buttonName);
+    // console.log('Button Command:', buttonCommand);
+    // console.log('Icon Value:', buttonIcon);
+    // console.log('Color Value:', buttonColor);
+
+    console.log('iconSelect: ', iconSelect);
+    // console.log('selectedButton: ', selectedButton);
+    
+    if (selectedButton.classList.contains("is-" + buttonColor)) {
+        selectedButton.classList.remove("is-" + buttonColor);
+    }
+
+    selectedButton.classList.add("is-danger");
+
+    // Reset the global variable
+    // callerButton = null;
+
 }
 
 function setButtonsToPage(buttons) {
@@ -267,13 +277,14 @@ function setButtonsToPage(buttons) {
 
         const buttonElement = document.createElement('button');
         buttonElement.setAttribute('name', button.name);
-        buttonElement.classList.add('button', 'is-large', 'column', button.color || '');
+        buttonElement.classList.add('button', 'is-large', 'column', button.color || 'none');
         if (button.icon !== "none") {
             buttonElement.classList.add(button.icon);
         } else {
             buttonElement.innerHTML = button.name;
         }
-        buttonElement.setAttribute('data-cmd', button.command);
+        buttonElement.setAttribute('data-command', button.command);
+        buttonElement.setAttribute('data-name', button.name);
         buttonElement.setAttribute('data-color', button.color);
         buttonElement.setAttribute('data-icon', button.icon);
         buttonElement.addEventListener('click', () => {
