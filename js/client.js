@@ -137,8 +137,8 @@ document.querySelector('.read-button').addEventListener('click', function() {
 
 document.querySelector('.write-button').addEventListener('click', function() {
     const buttons = getButtonsFromPage();
-    saveButtonsToLocalStorage(buttons);
-    console.log('Buttons saved to localStorage.');
+    sendMessage();
+    // console.log('Buttons saved to localStorage.');
 });
 
 function populateIconSelect() {

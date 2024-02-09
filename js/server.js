@@ -29,7 +29,7 @@ wss.on('connection', function connection(ws) {
         console.log('data: ', data);
         if (data.type === 'button_update') {
             buttons = data.buttons;
-            saveButtonsToFile();
+            saveButtonsToFile(ws);
         } else {
             executeCommand(data.command.toString(), ws); 
         }
@@ -63,12 +63,14 @@ function executeCommand(command, ws) {
     });
 }
 
-function saveButtonsToFile() {
+function saveButtonsToFile(ws) {
     fs.writeFile('buttons.json', JSON.stringify(buttons), 'utf8', (err) => {
         if (err) {
-            console.error('Error saving buttons to file:', err);
+            ws.send('Error saving buttons to server:' + err);
+            console.error('Error saving buttons to server:', err);
         } else {
-            console.log('Buttons saved to file');
+            ws.send('Buttons saved to server');
+            console.log('Buttons saved to server');
         }
     });
 }
