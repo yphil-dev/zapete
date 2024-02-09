@@ -152,23 +152,24 @@
 
                 <div id="button-info-template" style="display: none;">
                     <div class="box">
-                        <h3 class="h3">Button Information</h3>
-                        <p><strong>Name:</strong> <span class="button-name"></span></p>
-                        <p><strong>Icon:</strong> <span class="button-icon"></span></p>
-                        <p><strong>Color:</strong> <span class="button-color"></span></p>
-                        <p><strong>Command:</strong> <span class="button-command"></span></p>
-                        <form id="serverForm" onsubmit="plop(); return false;">
+                        <h3 class="title is-4">Edit Button</h3>
+                        <!-- <p><strong>Name:</strong> <span class="button-name"></span></p>
+                             <p><strong>Icon:</strong> <span class="button-icon"></span></p>
+                             <p><strong>Color:</strong> <span class="button-color"></span></p>
+                             <p><strong>Command:</strong> <span class="button-command"></span></p> -->
+                        <form id="serverForm" onsubmit="editButton(event); return false;">
+                            
                             <div class="field">
                                 <label class="label">Name</label>
                                 <div class="control">
-                                    <input class="input" type="text" placeholder="e.g Alex Smith">
+                                    <input class="input button-name" value="zob" type="text" placeholder="e.g Alex Smith">
                                 </div>
                             </div>
 
                             <div class="field">
                                 <label class="label">Command</label>
                                 <div class="control">
-                                    <input class="input" type="text" placeholder="e.g. alexsmith@gmail.com">
+                                    <input class="input button-command" type="text" placeholder="e.g. alexsmith@gmail.com">
                                 </div>
                             </div>
 
@@ -182,7 +183,31 @@
                             <div class="field">
                                 <label class="label">Color</label>
                                 <div class="control select">
-                                    <select id="colorSelect"></select>
+                                    <select id="colorSelect">
+                                        <option class="is-primary">primary</option>
+                                        <option class="is-link">link</option>
+                                        <option class="is-info">info</option>
+                                        <option class="is-success">success</option>
+                                        <option class="is-warning">warning</option>
+                                        <option class="is-danger">danger</option>
+                                    </select>
+                                </div>
+                            </div>
+
+
+                            <div class="field">
+                                <label class="label">Position</label>
+                                <div class="field is-grouped">
+                                    <div class="control">
+                                        <a class="button left">
+                                            Left
+                                        </a>
+                                    </div>
+                                    <div class="control">
+                                        <a class="button right">
+                                            Right
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
 
@@ -199,18 +224,6 @@
                                 </p>
                             </div>
 
-                            <div class="field is-grouped">
-                                <p class="control">
-                                    <a class="button left">
-                                        Left
-                                    </a>
-                                </p>
-                                <p class="control">
-                                    <a class="button right">
-                                        Right
-                                    </a>
-                                </p>
-                            </div>
                         </form>
                         
                     </div>

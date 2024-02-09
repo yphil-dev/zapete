@@ -182,13 +182,12 @@ function handleContextMenu(event) {
     infoDiv.style.display = 'block';
 
     // Populate the cloned template with button information
-    infoDiv.querySelector('.button-name').textContent = name;
-    infoDiv.querySelector('.button-icon').textContent = icon;
-    infoDiv.querySelector('.button-color').textContent = color;
-    infoDiv.querySelector('.button-command').textContent = cmd;
+    infoDiv.querySelector('.button-name').value = name;
+    // infoDiv.querySelector('.button-icon').value = icon;
+    // infoDiv.querySelector('.button-color').value = color;
+    infoDiv.querySelector('.button-command').value = cmd;
 
-    // Populate the select menu
-    populateIconSelect();
+    // populateIconSelect();
 
     // Add event listeners to left and right buttons
     const leftButton = infoDiv.querySelector('.left');
@@ -201,7 +200,6 @@ function handleContextMenu(event) {
     container.innerHTML = ''; // Clear existing content
     container.appendChild(infoDiv);
 }
-
 
 const buttons = buttonContainer.querySelectorAll('button');
 
@@ -226,8 +224,26 @@ function getButtonsFromPage() {
     return buttons;
 }
 
-function plop() {
-    console.log('object: ');
+function editButton(event) {
+    event.preventDefault();
+
+    // Select all input fields
+    const buttonNameInput = document.querySelector('.button-name');
+    const buttonCommandInput = document.querySelector('.button-command');
+    const iconSelect = document.querySelector('#iconSelect');
+    const colorSelect = document.querySelector('#colorSelect');
+
+    // Get the values from the input fields
+    const buttonName = buttonNameInput.value;
+    const buttonCommand = buttonCommandInput.value;
+    const iconValue = iconSelect.value;
+    const colorValue = colorSelect.value;
+
+    // Log the values
+    console.log('Button Name:', buttonName);
+    console.log('Button Command:', buttonCommand);
+    console.log('Icon Value:', iconValue);
+    console.log('Color Value:', colorValue);
 }
 
 function setButtonsToPage(buttons) {
@@ -254,6 +270,9 @@ function setButtonsToPage(buttons) {
 
         buttonContainer.appendChild(buttonElement);
     });
+
+    populateIconSelect();
+
 }
 
 document.querySelector('.load-button').addEventListener('click', function() {
