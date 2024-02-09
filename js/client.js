@@ -202,12 +202,14 @@ function handleContextMenu(event) {
 
     
     const colorSelect = document.getElementById('colorSelect');
+    const colorOptionToSelect = colorSelect.querySelector('.' + color);
+    colorOptionToSelect.selected = true;
 
-    const optionToSelect = colorSelect.querySelector('.' + color);
+    const iconSelect = document.getElementById('iconSelect');
+    const iconOptionToSelect = iconSelect.querySelector('.' + icon);
+    iconOptionToSelect.selected = true;
 
-    optionToSelect.selected = true;
-
-    console.log('button.color: ', color);
+    console.log('button.icon: ', icon);
 
 }
 
@@ -318,12 +320,18 @@ function populateIconSelect() {
     });
 
     const selectMenu = document.getElementById('iconSelect');
+    const optionNone = document.createElement('option');
+    optionNone.textContent = "none";
+    optionNone.value = "none";
+    optionNone.classList.add("none");
+    selectMenu.appendChild(optionNone);
     iconNames.forEach(iconName => {
         const option = document.createElement('option');
         // Remove the colon from the end of the icon name
         const cleanedIconName = iconName.replace(/:$/, '');
         option.textContent = cleanedIconName;
         option.value = cleanedIconName;
+        option.classList.add("icon-" + cleanedIconName);
         selectMenu.appendChild(option);
     });
 }
