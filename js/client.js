@@ -56,6 +56,7 @@ function handleContextMenu(event) {
 
     const cmd = event.target.getAttribute('data-cmd');
     const icon = event.target.getAttribute('data-icon');
+    const color = event.target.getAttribute('data-color');
     const name = event.target.getAttribute('name');
 
     const selectedButton = event.target;
@@ -78,10 +79,14 @@ function handleContextMenu(event) {
             <h3 class="h3">Button Information</h3>
             <p><strong>Name:</strong> ${name}</p>
             <p><strong>Icon:</strong> ${icon}</p>
+            <p><strong>Color:</strong> ${color}</p>
             <p><strong>Command:</strong> ${cmd}</p>
+            <div class="select is-primary"><select id="iconSelect"></select></div>
         </div>
     `;
 
+    populateIconSelect();
+    
     infoDiv.appendChild(leftButton);
     infoDiv.appendChild(rightButton);
 }
@@ -102,7 +107,8 @@ function getButtonsFromPage() {
     controlsDiv.querySelectorAll('button').forEach(buttonElement => {
         const button = {
             name: buttonElement.getAttribute('name'),
-            icon: buttonElement.getAttribute('data-icon'), // Assuming the icon class is the fourth class
+            icon: buttonElement.getAttribute('data-icon'),
+            color: buttonElement.getAttribute('data-color'),
             command: buttonElement.getAttribute('data-cmd')
         };
         buttons.push(button);
@@ -134,4 +140,34 @@ document.querySelector('.write-button').addEventListener('click', function() {
     saveButtonsToLocalStorage(buttons);
     console.log('Buttons saved to localStorage.');
 });
+
+function populateIconSelect() {
+    const iconNames = [];
+    const styleSheets = document.styleSheets;
+    Array.from(styleSheets).forEach(styleSheet => {
+        const rules = styleSheet.rules || styleSheet.cssRules;
+        Array.from(rules).forEach(rule => {
+            const selector = rule.selectorText;
+            if (selector && selector.startsWith('.icon-')) {
+                const match = /\.icon-(.*?):before/.exec(selector);
+                if (match && match[1]) {
+                    iconNames.push(match[1]);
+                }
+            }
+        });
+    });
+
+    const selectMenu = document.getElementById('iconSelect');
+    iconNames.forEach(iconName => {
+        console.log('iconName: ', iconName);
+        const option = document.createElement('option');
+        // Remove the colon from the end of the icon name
+        const cleanedIconName = iconName.replace(/:$/, '');
+        option.textContent = cleanedIconName;
+        option.value = cleanedIconName;
+        selectMenu.appendChild(option);
+    });
+}
+
+
 
