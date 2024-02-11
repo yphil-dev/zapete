@@ -10,6 +10,7 @@ function connect() {
 
     ws.onopen = function() {
         serverMessages.value = "Connected to server";
+        sendMessage('requestButtons');
     };
 
     ws.onmessage = function(event) {
@@ -58,50 +59,6 @@ function moveButtonRight(selectedButton) {
 
 let callerButton = null;
 
-function handleContextMenuOld(event) {
-    event.preventDefault();
-
-    const selectedButton = event.target;
-
-    const command = selectedButton.getAttribute('data-command');
-    const icon = selectedButton.getAttribute('data-icon');
-    const color = selectedButton.getAttribute('data-color');
-    const name = selectedButton.getAttribute('name');
-
-    // Create the div container for button information
-    const infoDiv = document.createElement('div');
-    infoDiv.classList.add('box');
-    infoDiv.innerHTML = `
-        <h3 class="h3">Button Information</h3>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Icon:</strong> ${icon}</p>
-        <p><strong>Color:</strong> ${color}</p>
-        <p><strong>Command:</strong> ${command}</p>
-        <div class="select is-primary">
-            <select id="iconSelect"></select>
-        </div>
-        <div class="select is-primary">
-            <select id="colorSelect">
-                <option value="none">none</option>
-                <option value="is-primary">primary</option>
-                <option value="is-link">link</option>
-                <option value="is-info">info</option>
-                <option value="is-success">success</option>
-                <option value="is-warning">warning</option>
-                <option value="is-danger">danger</option>
-            </select>
-        </div>
-    `;
-
-    // Append the div container to the infoDiv
-    buttonInfocontainer.innerHTML = ''; // Clear existing content
-    buttonInfocontainer.appendChild(infoDiv);
-
-    // Select the desired option in the color select menu
-    const colorSelect = document.getElementById('colorSelect');
-    colorSelect.value = "is-danger";
-}
-
 function handleContextMenu(event) {
     event.preventDefault();
 
@@ -112,7 +69,7 @@ function handleContextMenu(event) {
     const command = selectedButton.getAttribute('data-command');
     const icon = selectedButton.getAttribute('data-icon');
     const color = selectedButton.getAttribute('data-color');
-    const name = selectedButton.getAttribute('name');
+    const name = selectedButton.getAttribute('data-name');
 
     // Create the div container for button information
     const infoDiv = document.createElement('div');
@@ -199,13 +156,13 @@ function handleContextMenu(event) {
     const cancelButtonInfo = infoDiv.querySelector('.cancel');
     cancelButtonInfo.addEventListener('click', () => buttonInfocontainer.innerHTML = '');
 
-    const buttonNameOption = infoDiv.querySelector('.button-name');
-    buttonNameOption.value = name;
-    buttonNameOption.setAttribute('data-name', name);
+    const buttonNameInput = infoDiv.querySelector('.button-name');
+    buttonNameInput.value = name;
+    // buttonNameInput.setAttribute('data-name', name);
     
     const buttonCommandOption = infoDiv.querySelector('.button-command');
     buttonCommandOption.value = command;
-    buttonCommandOption.setAttribute('data-command', command);
+    // buttonCommandOption.setAttribute('data-command', command);
 
     const colorSelect = document.getElementById('colorSelect');
     colorSelect.value = color;
@@ -216,8 +173,6 @@ function handleContextMenu(event) {
     const iconSelect = document.getElementById('iconSelect');
     iconSelect.value = icon;
     iconSelect.selected = true;
-
-    console.log('icon: ', icon);
        
     // Add event listeners to left and right buttons
     const leftButton = infoDiv.querySelector('.left');
@@ -239,7 +194,7 @@ function getButtonsFromPage() {
     const buttons = [];
     buttonContainer.querySelectorAll('button').forEach(buttonElement => {
         const button = {
-            name: buttonElement.getAttribute('name'),
+            name: buttonElement.getAttribute('data-name'),
             icon: buttonElement.getAttribute('data-icon'),
             color: buttonElement.getAttribute('data-color'),
             command: buttonElement.getAttribute('data-command')
@@ -286,6 +241,8 @@ function editButton(event) {
     selectedButton.setAttribute('data-icon', buttonIcon);
     selectedButton.setAttribute('data-color', buttonColor);
 
+    selectedButton.setAttribute('title', buttonName);
+
 }
 
 function setButtonsToPage(buttons) {
@@ -311,7 +268,7 @@ function setButtonsToPage(buttons) {
         });
 
         buttonElement.setAttribute('oncontextmenu', 'handleContextMenu(event); return false;');
-        
+        buttonElement.setAttribute('title', button.name);       
         buttonContainer.appendChild(buttonElement);
     });
 
