@@ -7,6 +7,10 @@ const QRCode = require('qrcode');
 const httpServer = require('http-server');
 
 const port = "8008";
+
+const httpPort = process.env.npm_package_http_port || 8009;
+const wsPort = process.env.npm_package_websocket_port || 8008;
+
 const interfaces = os.networkInterfaces();
 let hostIP;
 let buttons = [];
@@ -15,7 +19,11 @@ const imagePath = 'img/zapete-qrcode.png';
 // Configure options for the HTTP server
 const options = {
     cache: -1, // Disable caching
-    port: 8009 // Set the port to 8009
+    port: httpPort
+};
+
+const wsOptions = {
+    port: wsPort
 };
 
 // Start the HTTP server
@@ -25,13 +33,13 @@ server.listen(options.port, () => {
 });
 
 // Handle SIGINT signal (Ctrl+C)
-process.on('SIGINT', () => {
-    console.log('Shutting down HTTP server...');
-    server.close(() => {
-        console.log('HTTP server shut down.');
-        process.exit(0);
-    });
-});
+// process.on('SIGINT', () => {
+//     console.log('Shutting down HTTP server...');
+//     server.close(() => {
+//         console.log('HTTP server shut down.');
+//         process.exit(0);
+//     });
+// });
 
 // Iterate over network interfaces to find the local IP address
 Object.keys(interfaces).forEach((interfaceName) => {
@@ -43,7 +51,7 @@ Object.keys(interfaces).forEach((interfaceName) => {
     });
 });
 
-const wss = new WebSocket.Server({ port });
+const wss = new WebSocket.Server(wsOptions);
 
 wss.on('connection', function connection(ws) {
     console.log('Client connected');
@@ -59,6 +67,10 @@ wss.on('connection', function connection(ws) {
             wss.close(() => {
                 console.log('WebSocket server closed.');
                 process.exit(0); // Exit the process after closing the WebSocket server
+                server.close(() => {
+                    console.log('HTTP server shut down.');
+                    process.exit(0); // Exit the process after closing the servers
+                });
             });
         } else if (data.type === 'button_update') {
             buttons = data.buttons;
