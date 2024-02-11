@@ -1,6 +1,6 @@
 let ws;
-
-let serverMessages = document.getElementById("serverMessages");
+const serverMessages = document.getElementById("serverMessages");
+const buttonContainer = document.getElementById('buttonContainer');
 
 function connect() {
     const serverAddress = document.getElementById("serverAddress").value;
@@ -10,11 +10,6 @@ function connect() {
     ws.onopen = function() {
         serverMessages.value = "Connected to server";
     };
-
-    // ws.onmessage = function(event) {
-    //     const buttons = JSON.parse(event.data);
-    //     setButtonsToPage(buttons);
-    // };
 
     ws.onmessage = function(event) {
         try {
@@ -28,76 +23,16 @@ function connect() {
 
 }
 
-const defaultButtons = [
-    {
-        "name": "prev",
-        "icon": "icon-pl_prev",
-        "color": "is-info",
-        "command": "ploop"
-    },
-    {
-        "name": "rewind3",
-        "icon": "icon-rewind3",
-        "color": "is-info",
-        "command": "smplayer -send-action rewind3"
-    },
-    {
-        "name": "rewind1",
-        "icon": "icon-rewind1",
-        "color": "is-info",
-        "command": "smplayer -send-action rewind1"
-    },
-    {
-        "name": "play / pause",
-        "icon": "icon-pause",
-        "color": "is-success",
-        "command": "smplayer -send-action pause"
-    },
-    {
-        "name": "forward1",
-        "icon": "icon-forward1",
-        "color": "is-info",
-        "command": "smplayer -send-action forward1"
-    },
-    {
-        "name": "forward3",
-        "icon": "icon-forward3",
-        "color": "is-info",
-        "command": "smplayer -send-action forward3"
-    },
-    {
-        "name": "pl_next",
-        "icon": "icon-pl_next",
-        "color": "is-info",
-        "command": "smplayer -send-action pl_next"
-    },
-    {
-        "name": "Sub -",
-        "icon": "none",
-        "color": "none",
-        "command": "smplayer -send-action dec_sub_step"
-    },
-    {
-        "name": "fullscreen",
-        "icon": "icon-fullscreen",
-        "color": "none",
-        "command": "smplayer -send-action fullscreen"
-    },
-    {
-        "name": "Sub +",
-        "icon": "none",
-        "color": "none",
-        "command": "smplayer -send-action inc_sub_step"
-    }
-];
-
 function sendMessage(command) {
     if (ws && ws.readyState === WebSocket.OPEN) {
         serverMessages.value = "";
-        if (command && command !== "requestButtons") {
+        if (command && command !== "requestButtons" && command !== "requestDefaultButtons") {
             ws.send(JSON.stringify({ type: 'button_command', command: command }));
         } else if (command && command === "requestButtons") {
             ws.send(JSON.stringify({ type: 'button_request' }));
+        } else if (command && command === "requestDefaultButtons") {
+            console.log('yup: ');
+            ws.send(JSON.stringify({ type: 'button_defaults_request' }));
         } else {
             ws.send(JSON.stringify({ type: 'button_update', buttons: getButtonsFromPage() }));
         }
@@ -105,8 +40,6 @@ function sendMessage(command) {
         serverMessages.value = "WebSocket connection is not open";
     }
 }
-
-const buttonContainer = document.getElementById('buttonContainer');
 
 function moveButtonLeft(selectedButton) {
     if (selectedButton && selectedButton.previousElementSibling) {
@@ -400,6 +333,9 @@ function editButton(event) {
 }
 
 function setButtonsToPage(buttons) {
+
+    console.log('yoo: ');
+    
     buttonContainer.innerHTML = '';
 
     buttons.forEach(button => {
@@ -415,7 +351,6 @@ function setButtonsToPage(buttons) {
         buttonElement.setAttribute('data-color', button.color);
         buttonElement.setAttribute('data-icon', button.icon);
         buttonElement.addEventListener('click', () => {
-            console.log("Sending", button.command);
             sendMessage(button.command);
         });
 
@@ -442,11 +377,10 @@ document.querySelector('.save-button').addEventListener('click', function() {
 });
 
 document.querySelector('.reset-button').addEventListener('click', function() {
-    setButtonsToPage(defaultButtons);
+    sendMessage('requestDefaultButtons');
 });
 
 function populateIconSelect() {
-    console.log('yo: ');
     const iconNames = [];
     const styleSheets = document.styleSheets;
     Array.from(styleSheets).forEach(styleSheet => {
@@ -470,7 +404,6 @@ function populateIconSelect() {
     optionNone.classList.add("none");
     selectMenu.appendChild(optionNone);
     iconNames.forEach(iconName => {
-        console.log('iconName: ', iconName);
         const option = document.createElement('option');
         option.textContent = iconName;
         option.value = "icon-" + iconName;

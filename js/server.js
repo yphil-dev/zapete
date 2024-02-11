@@ -31,8 +31,10 @@ wss.on('connection', function connection(ws) {
             buttons = data.buttons;
             saveButtonsToServer(ws);
         } else if (data.type === 'button_request') {
-            // console.log('button_request!!');
-            sendButtonsToClient(ws);
+            sendButtonsToClient(ws, 'buttons.json');
+        } else if (data.type === 'button_defaults_request') {
+            console.log('godit: ');
+            sendButtonsToClient(ws, 'buttons-defaults.json');
         } else {
             executeCommand(data.command.toString(), ws); 
         }
@@ -65,8 +67,8 @@ function executeCommand(command, ws) {
     });
 }
 
-function sendButtonsToClient(ws) {
-    fs.readFile('buttons.json', 'utf8', (err, data) => {
+function sendButtonsToClient(ws, fileName) {
+    fs.readFile(fileName, 'utf8', (err, data) => {
         if (err) {
             console.error('Error loading buttons from file:', err);
         } else {
