@@ -2,11 +2,36 @@ const WebSocket = require('isomorphic-ws');
 const { exec } = require('child_process');
 const fs = require('fs');
 const os = require('os');
+const path = require('path');
+const QRCode = require('qrcode');
+const httpServer = require('http-server');
 
 const port = "8008";
 const interfaces = os.networkInterfaces();
 let hostIP;
 let buttons = [];
+const imagePath = 'img/zapete-qrcode.png';
+
+// Configure options for the HTTP server
+const options = {
+    cache: -1, // Disable caching
+    port: 8009 // Set the port to 8009
+};
+
+// Start the HTTP server
+const server = httpServer.createServer(options);
+server.listen(options.port, () => {
+    console.log(`HTTP server started on port ${options.port}`);
+});
+
+// Handle SIGINT signal (Ctrl+C)
+process.on('SIGINT', () => {
+    console.log('Shutting down HTTP server...');
+    server.close(() => {
+        console.log('HTTP server shut down.');
+        process.exit(0);
+    });
+});
 
 // Iterate over network interfaces to find the local IP address
 Object.keys(interfaces).forEach((interfaceName) => {
@@ -26,24 +51,73 @@ wss.on('connection', function connection(ws) {
 
     ws.on('message', function incoming(message) {
         const data = JSON.parse(message);
-        console.log('data: ', data);
-        if (data.type === 'button_update') {
+        console.log('Received message:', data);
+
+        // Check if the message is a shutdown request
+        if (data.type === 'shutdown') {
+            console.log('Received shutdown request. Closing WebSocket server...');
+            wss.close(() => {
+                console.log('WebSocket server closed.');
+                process.exit(0); // Exit the process after closing the WebSocket server
+            });
+        } else if (data.type === 'button_update') {
             buttons = data.buttons;
             saveButtonsToServer(ws);
         } else if (data.type === 'button_request') {
             readButtonsFile(ws, 'buttons.json');
         } else if (data.type === 'button_defaults_request') {
-            console.log('godit: ');
+            console.log('got it');
             readButtonsFile(ws, 'buttons-defaults.json');
         } else {
             executeCommand(data.command.toString(), ws); 
         }
     });
+    
     ws.send('Hello, client!');
+    
 });
+
+function openWithXDG(arg) {
+    exec('which xdg-open', (err, stdout, stderr) => {
+        if (err) {
+            console.error('Error checking xdg-open:', err);
+            return;
+        }
+        if (stdout) {
+
+            let toOpen;
+            
+            try {
+                toOpen = path.resolve(arg);
+            } catch (err) {
+                toOpen = "http://" + arg;
+            } 
+            
+            // const argAbs = path.resolve(arg) || arg;
+            exec(`xdg-open ${toOpen}`, (err, stdout, stderr) => {
+                if (err) {
+                    console.error('Error opening image with xdg-open:', err);
+                    return;
+                }
+            });
+        } else {
+            console.error('xdg-open is not available');
+        }
+    });
+}
 
 wss.on('listening', function() {
     console.log(`WebSocket server is listening on ${hostIP}:${port}`);
+
+    QRCode.toFile('img/zapete-qrcode.png', hostIP + ":" + port, {
+        errorCorrectionLevel: 'H'
+    }, function(err) {
+        if (err) throw err;
+        console.log('QR code saved!');
+    });
+
+    // openWithXDG(hostIP + ":8009");
+    // openWithXDG(imagePath);
 });
 
 wss.on('error', function error(err) {
