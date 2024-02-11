@@ -81,12 +81,14 @@
                 </form>
                 <div id="buttonContainer" class="columns is-mobile is-multiline controls">
                     <button
+                        oncontextmenu="handleContextMenu(event); return false;"
                         name="prev"
                         class="button is-info is-large column icon-pl_prev"
                         data-icon="icon-pl_prev"
                         data-color="is-info"
                         data-command="plop"></button>
                     <button
+                        oncontextmenu="handleContextMenu(event); return false;"
                         name="rewind3"
                         class="button is-info is-large column icon-rewind3"
                         data-icon="icon-rewind3"
@@ -184,13 +186,13 @@
                                 <label class="label">Color</label>
                                 <div class="control select">
                                     <select id="colorSelect">
-                                        <option class="none">none</option>
-                                        <option class="is-primary">primary</option>
-                                        <option class="is-link">link</option>
-                                        <option class="is-info">info</option>
-                                        <option class="is-success">success</option>
-                                        <option class="is-warning">warning</option>
-                                        <option class="is-danger">danger</option>
+                                        <option value="none" class="none">none</option>
+                                        <option value="is-primary" class="is-primary">primary</option>
+                                        <option value="is-link" class="is-link">link</option>
+                                        <option value="is-info" class="is-info">info</option>
+                                        <option value="is-success" class="is-success">success</option>
+                                        <option value="is-warning" class="is-warning">warning</option>
+                                        <option value="is-danger" class="is-danger">danger</option>
                                     </select>
                                 </div>
                             </div>

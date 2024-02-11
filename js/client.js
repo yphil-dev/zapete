@@ -124,6 +124,51 @@ function moveButtonRight(selectedButton) {
 
 let callerButton = null;
 
+function handleContextMenuOld(event) {
+    event.preventDefault();
+
+    const selectedButton = event.target;
+
+    const command = selectedButton.getAttribute('data-command');
+    const icon = selectedButton.getAttribute('data-icon');
+    const color = selectedButton.getAttribute('data-color');
+    const name = selectedButton.getAttribute('name');
+
+    // Create the div container for button information
+    const infoDiv = document.createElement('div');
+    infoDiv.classList.add('box');
+    infoDiv.innerHTML = `
+        <h3 class="h3">Button Information</h3>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Icon:</strong> ${icon}</p>
+        <p><strong>Color:</strong> ${color}</p>
+        <p><strong>Command:</strong> ${command}</p>
+        <div class="select is-primary">
+            <select id="iconSelect"></select>
+        </div>
+        <div class="select is-primary">
+            <select id="colorSelect">
+                <option value="none">none</option>
+                <option value="is-primary">primary</option>
+                <option value="is-link">link</option>
+                <option value="is-info">info</option>
+                <option value="is-success">success</option>
+                <option value="is-warning">warning</option>
+                <option value="is-danger">danger</option>
+            </select>
+        </div>
+    `;
+
+    // Append the div container to the infoDiv
+    const container = document.getElementById('button-info');
+    container.innerHTML = ''; // Clear existing content
+    container.appendChild(infoDiv);
+
+    // Select the desired option in the color select menu
+    const colorSelect = document.getElementById('colorSelect');
+    colorSelect.value = "is-danger";
+}
+
 function handleContextMenu(event) {
     event.preventDefault();
 
@@ -137,14 +182,92 @@ function handleContextMenu(event) {
     const color = selectedButton.getAttribute('data-color');
     const name = selectedButton.getAttribute('name');
 
-    console.log('color: ', color);
-    
     // Clone the template
-    const template = document.getElementById('button-info-template');
-    const infoDiv = template.cloneNode(true);
-    infoDiv.removeAttribute('id'); // Remove ID to avoid duplication
-    infoDiv.style.display = 'block';
+    // const template = document.getElementById('button-info-template');
+    // const infoDiv = template.cloneNode(true);
+    // infoDiv.removeAttribute('id'); // Remove ID to avoid duplication
+    // infoDiv.style.display = 'block';
 
+
+    // Create the div container for button information
+    const infoDiv = document.createElement('div');
+    infoDiv.classList.add('box');
+    infoDiv.innerHTML = `
+                        <h3 class="title is-4">Edit Button</h3>
+                        <!-- <p><strong>Name:</strong> <span class="button-name"></span></p>
+                             <p><strong>Icon:</strong> <span class="button-icon"></span></p>
+                             <p><strong>Color:</strong> <span class="button-color"></span></p>
+                             <p><strong>Command:</strong> <span class="button-command"></span></p> -->
+                        <form id="serverForm" onsubmit="editButton(event); return false;">
+                            
+                            <div class="field">
+                                <label class="label">Name</label>
+                                <div class="control">
+                                    <input class="input button-name" type="text" placeholder="e.g Alex Smith">
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label class="label">Command</label>
+                                <div class="control">
+                                    <input class="input button-command" type="text" placeholder="e.g. alexsmith@gmail.com">
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label class="label">Icon</label>
+                                <div class="control select is-primary">
+                                    <select id="iconSelect"></select>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label class="label">Color</label>
+                                <div class="control select">
+                                    <select id="colorSelect">
+                                        <option value="none" class="none">none</option>
+                                        <option value="is-primary" class="is-primary">primary</option>
+                                        <option value="is-link" class="is-link">link</option>
+                                        <option value="is-info" class="is-info">info</option>
+                                        <option value="is-success" class="is-success">success</option>
+                                        <option value="is-warning" class="is-warning">warning</option>
+                                        <option value="is-danger" class="is-danger">danger</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label class="label">Position</label>
+                                <div class="field is-grouped">
+                                    <div class="control">
+                                        <a class="button left">
+                                            Left
+                                        </a>
+                                    </div>
+                                    <div class="control">
+                                        <a class="button right">
+                                            Right
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="field is-grouped">
+                                <p class="control">
+                                    <button class="button" type="submit">
+                                        Submit
+                                    </button>
+                                </p>
+                                <p class="control">
+                                    <a class="button">
+                                        Cancel
+                                    </a>
+                                </p>
+                            </div>
+
+                        </form>
+    `;
+    
     // Populate the cloned template with button information
     const buttonNameOption = infoDiv.querySelector('.button-name');
     buttonNameOption.value = name;
@@ -154,15 +277,17 @@ function handleContextMenu(event) {
     buttonCommandOption.value = command;
     buttonCommandOption.setAttribute('data-command', command);
 
-    const colorSelect = document.getElementById('colorSelect');
-    const colorOptionToSelect = colorSelect.querySelector('.' + color);
+    // const colorSelect = document.getElementById('colorSelect');
+    // const colorOptionToSelect = colorSelect.querySelector('.is-danger');
+    // colorOptionToSelect.selected = true;
 
-    console.log('colorOptionToSelect: ', colorOptionToSelect);
-    console.log('colorOptionToSelect.selected: ', colorOptionToSelect.selected);
-    
-    const iconSelect = document.getElementById('iconSelect');
-    const iconOptionToSelect = iconSelect.querySelector('.' + icon);
-    iconOptionToSelect.selected = true;
+    const colorSelect = document.getElementById('colorSelect');
+    colorSelect.value = 'is-danger';
+    colorSelect.selected = true;
+
+    // const iconSelect = document.getElementById('iconSelect');
+    // const iconOptionToSelect = iconSelect.querySelector('.' + icon);
+    // iconOptionToSelect.selected = true;
 
     // Add event listeners to left and right buttons
     const leftButton = infoDiv.querySelector('.left');
@@ -174,16 +299,20 @@ function handleContextMenu(event) {
     const container = document.getElementById('button-info');
     container.innerHTML = ''; // Clear existing content
     container.appendChild(infoDiv);
-
     
-    if (colorOptionToSelect) {
-        // If the option exists, set it as selected
-        colorOptionToSelect.selected = true;
-    } else {
-        // If the option doesn't exist, log an error or handle it accordingly
-        console.error(`Option with class "${color}" not found.`);
-    }
+    // if (colorOptionToSelect) {
+    //     // If the option exists, set it as selected
+    //     colorOptionToSelect.selected = true;
+    // } else {
+    //     // If the option doesn't exist, log an error or handle it accordingly
+    //     console.error(`Option with class "${color}" not found.`);
+    // }
 
+    // Select the desired option after a short delay
+    setTimeout(() => {
+        const colorSelect = document.getElementById('colorSelect');
+        colorSelect.value = 'is-danger';
+    }, 100); // Adjust the delay as needed
 }
 
 const buttons = buttonContainer.querySelectorAll('button');
@@ -212,6 +341,8 @@ function getButtonsFromPage() {
 function editButton(event) {
     event.preventDefault();
 
+    console.log('editButton: ');
+    
     // Access the global variable to get the reference to the caller button
     const selectedButton = callerButton;
    
