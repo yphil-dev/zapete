@@ -1,0 +1,30 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg">
+<metadata>Copyright (C) 2024 by original authors @ fontello.com</metadata>
+<defs>
+<font id="zapete-font" horiz-adv-x="1000" >
+<font-face font-family="zapete-font" font-weight="400" font-stretch="normal" units-per-em="1000" ascent="850" descent="-150" />
+<missing-glyph horiz-adv-x="1000" />
+<glyph glyph-name="play" unicode="&#xe800;" d="M0-25l0 750 625-375z" horiz-adv-x="625" />
+
+<glyph glyph-name="pause" unicode="&#xe801;" d="M0-25l0 750 313 0 0-750-313 0z m438 0l0 750 312 0 0-750-312 0z" horiz-adv-x="750" />
+
+<glyph glyph-name="rewind1" unicode="&#xe802;" d="M0 350l344 344 0-313 312 313 0-688-312 313 0-313z" horiz-adv-x="656" />
+
+<glyph glyph-name="rewind3" unicode="&#xe803;" d="M0-25l0 750 125 0 0-344 313 313 0-313 312 313 0-688-312 313 0-313-313 313 0-344-125 0z" horiz-adv-x="750" />
+
+<glyph glyph-name="forward3" unicode="&#xe804;" d="M0 6l0 688 313-313 0 313 312-313 0 344 125 0 0-750-125 0 0 344-312-313 0 313z" horiz-adv-x="750" />
+
+<glyph glyph-name="forward1" unicode="&#xe805;" d="M0 6l0 688 313-313 0 313 343-344-343-344 0 313z" horiz-adv-x="656" />
+
+<glyph glyph-name="pl_prev" unicode="&#xe806;" d="M0-25l0 750 125 0 0-344 313 313 0-688-313 313 0-344-125 0z" horiz-adv-x="437" />
+
+<glyph glyph-name="pl_next" unicode="&#xe807;" d="M0 6l0 688 313-313 0 344 125 0 0-750-125 0 0 344z" horiz-adv-x="437" />
+
+<glyph glyph-name="fullscreen" unicode="&#xe808;" d="M784 111l127 128 0-336-335 0 128 130-128 127 79 79z m-431 686l-129-127 128-127-80-80-126 128-128-129 0 335 335 0z m0-637l-129-127 129-130-335 0 0 336 128-128 128 128z m558 637l0-335-127 129-128-128-79 80 127 127-128 127 335 0z" horiz-adv-x="928" />
+
+<glyph glyph-name="connect" unicode="&#xf1e6;" d="M979 597q21-21 21-50t-21-51l-223-223 83-84-89-89q-91-91-217-104t-230 56l-202-202h-101v101l202 202q-69 103-56 230t104 217l89 89 84-83 223 223q21 21 51 21t50-21 21-50-21-51l-223-223 131-131 223 223q22 21 51 21t50-21z" horiz-adv-x="1000" />
+</font>
+</defs>
+</svg>

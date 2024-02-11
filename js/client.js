@@ -150,7 +150,7 @@ function handleContextMenu(event) {
         <label class="label">Color</label>
         <div class="control select">
             <select id="colorSelect">
-                <option value="none" class="none">none</option>
+                <option value="is-none" class="is-none">none</option>
                 <option value="is-primary" class="is-primary">primary</option>
                 <option value="is-link" class="is-link">link</option>
                 <option value="is-info" class="is-info">info</option>
@@ -198,7 +198,7 @@ function handleContextMenu(event) {
 
     const cancelButtonInfo = infoDiv.querySelector('.cancel');
     cancelButtonInfo.addEventListener('click', () => buttonInfocontainer.innerHTML = '');
-    // Populate the cloned template with button information
+
     const buttonNameOption = infoDiv.querySelector('.button-name');
     buttonNameOption.value = name;
     buttonNameOption.setAttribute('data-name', name);
@@ -251,9 +251,7 @@ function getButtonsFromPage() {
 
 function editButton(event) {
     event.preventDefault();
-
-    console.log('editButton: ');
-    
+   
     // Access the global variable to get the reference to the caller button
     const selectedButton = callerButton;
    
@@ -262,50 +260,31 @@ function editButton(event) {
     const buttonCommandInput = document.querySelector('.button-command');
     const iconSelect = document.querySelector('#iconSelect');
     const colorSelect = document.querySelector('#colorSelect');
-
+    
     // Get the values from the input fields
     const buttonName = buttonNameInput.value;
     const buttonCommand = buttonCommandInput.value;
-    const buttonIcon = "icon-" + iconSelect.value;
+    const buttonIcon = iconSelect.value;
     const buttonColor = colorSelect.value;
 
-    const selectedColorIndex = colorSelect.selectedIndex;
-    const selectedColorOption = colorSelect.options[selectedColorIndex];
-    const selectedColorOptionClass = selectedColorOption.className;
+    console.log('buttonColor: ', buttonColor);
     
-    const selectedIconIndex = iconSelect.selectedIndex;
-    const selectedIconOption = iconSelect.options[selectedIconIndex];
-    const selectedIconOptionClass = selectedIconOption.className;
+    selectedButton.classList.forEach(className => {
+        if ((className.startsWith('is-') || className.startsWith('icon-')) && className !== 'is-large') {
+            console.log('Removing class:', className);
+            selectedButton.classList.remove(className);
+        }
+    });
     
-    // Get the old values from the class fields
-    const oldName = buttonNameInput.getAttribute("data-name");
-    const oldCommand = buttonCommandInput.getAttribute("data-command");
-    const oldIcon = selectedIconOptionClass;
-    const oldColor = selectedColorOptionClass;
-
-    console.log('buttonName, oldName: ', buttonName, oldName);
-    console.log('buttonCommand, oldCommand: ', buttonCommand, oldCommand);
-    console.log('buttonIcon, oldIcon: ', buttonIcon, oldIcon);
-    console.log('buttonColor, oldColor: ', buttonColor, oldColor);
-
-    // Log the values
-    // console.log('Button Name:', buttonName);
-    // console.log('Button Command:', buttonCommand);
-    // console.log('Icon Value:', buttonIcon);
-    // console.log('Color Value:', buttonColor);
-
-    console.log('iconSelect: ', iconSelect);
-    // console.log('selectedButton: ', selectedButton);
-    
-    if (selectedButton.classList.contains(buttonColor)) {
-        selectedButton.classList.remove(buttonColor);
-    }
+    selectedButton.textContent = (buttonIcon === "icon-none") ? buttonName : '';
 
     selectedButton.classList.add(buttonColor);
-    selectedButton.setAttribute('data-color', buttonColor);
+    selectedButton.classList.add(buttonIcon);
 
-    // Reset the global variable
-    // callerButton = null;
+    selectedButton.setAttribute('data-name', buttonName);
+    selectedButton.setAttribute('data-command', buttonCommand);
+    selectedButton.setAttribute('data-icon', buttonIcon);
+    selectedButton.setAttribute('data-color', buttonColor);
 
 }
 
@@ -320,7 +299,7 @@ function setButtonsToPage(buttons) {
         const buttonElement = document.createElement('button');
         buttonElement.setAttribute('name', button.name);
         buttonElement.classList.add('button', 'is-large', 'column', button.color, button.icon);
-        if (button.icon === "none") {
+        if (button.icon === "icon-none") {
             buttonElement.innerHTML = button.name;
         } 
         buttonElement.setAttribute('data-command', button.command);
@@ -376,9 +355,9 @@ function populateIconSelect() {
 
     const selectMenu = document.getElementById('iconSelect');
     const optionNone = document.createElement('option');
-    optionNone.textContent = "none";
+    optionNone.textContent = "is-none";
     optionNone.value = "none";
-    optionNone.classList.add("none");
+    optionNone.classList.add("is-none");
     selectMenu.appendChild(optionNone);
     iconNames.forEach(iconName => {
         const option = document.createElement('option');

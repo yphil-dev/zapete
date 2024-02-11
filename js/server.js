@@ -31,10 +31,10 @@ wss.on('connection', function connection(ws) {
             buttons = data.buttons;
             saveButtonsToServer(ws);
         } else if (data.type === 'button_request') {
-            sendButtonsToClient(ws, 'buttons.json');
+            readButtonsFile(ws, 'buttons.json');
         } else if (data.type === 'button_defaults_request') {
             console.log('godit: ');
-            sendButtonsToClient(ws, 'buttons-defaults.json');
+            readButtonsFile(ws, 'buttons-defaults.json');
         } else {
             executeCommand(data.command.toString(), ws); 
         }
@@ -67,7 +67,7 @@ function executeCommand(command, ws) {
     });
 }
 
-function sendButtonsToClient(ws) {
+function readButtonsFile(ws) {
     let customFileName = 'buttons.json';
     let defaultFileName = 'buttons-defaults.json';
 
@@ -77,7 +77,7 @@ function sendButtonsToClient(ws) {
             try {
                 buttons = JSON.parse(data);
                 if (Array.isArray(buttons) && buttons.length > 0) {
-                    sendFileContents(ws, customFileName);
+                    sendButtonsToClient(ws, customFileName);
                     return;
                 } else {
                     console.error('Custom buttons file is empty or not an array.');
@@ -88,11 +88,11 @@ function sendButtonsToClient(ws) {
         }
 
         // If custom file doesn't exist or is invalid, fallback to defaults
-        sendFileContents(ws, defaultFileName);
+        sendButtonsToClient(ws, defaultFileName);
     });
 }
 
-function sendFileContents(ws, fileName) {
+function sendButtonsToClient(ws, fileName) {
     fs.readFile(fileName, 'utf8', (err, data) => {
         if (err) {
             console.error('Error loading buttons from file:', err);
@@ -116,5 +116,3 @@ function saveButtonsToServer(ws) {
         }
     });
 }
-
-// sendButtonsToClient(); // Load buttons from file when the server starts
