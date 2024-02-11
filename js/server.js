@@ -67,16 +67,41 @@ function executeCommand(command, ws) {
     });
 }
 
-function sendButtonsToClient(ws, fileName) {
+function sendButtonsToClient(ws) {
+    let customFileName = 'buttons.json';
+    let defaultFileName = 'buttons-defaults.json';
+
+    fs.readFile(customFileName, 'utf8', (err, data) => {
+        if (!err) {
+            let buttons = [];
+            try {
+                buttons = JSON.parse(data);
+                if (Array.isArray(buttons) && buttons.length > 0) {
+                    sendFileContents(ws, customFileName);
+                    return;
+                } else {
+                    console.error('Custom buttons file is empty or not an array.');
+                }
+            } catch (parseError) {
+                console.error('Error parsing custom buttons file:', parseError);
+            }
+        }
+
+        // If custom file doesn't exist or is invalid, fallback to defaults
+        sendFileContents(ws, defaultFileName);
+    });
+}
+
+function sendFileContents(ws, fileName) {
     fs.readFile(fileName, 'utf8', (err, data) => {
         if (err) {
             console.error('Error loading buttons from file:', err);
-        } else {
-            buttons = JSON.parse(data);
-            const jsonData = JSON.stringify(buttons); // Convert JSON data to string
-            ws.send(jsonData);
-            console.log('Buttons loaded from file:', buttons);
+            return;
         }
+
+        // Send the file contents to the client
+        ws.send(data);
+        console.log('File contents sent:', fileName);
     });
 }
 

@@ -1,6 +1,7 @@
 let ws;
 const serverMessages = document.getElementById("serverMessages");
 const buttonContainer = document.getElementById('buttonContainer');
+const buttonInfocontainer = document.getElementById('button-info');
 
 function connect() {
     const serverAddress = document.getElementById("serverAddress").value;
@@ -93,9 +94,8 @@ function handleContextMenuOld(event) {
     `;
 
     // Append the div container to the infoDiv
-    const container = document.getElementById('button-info');
-    container.innerHTML = ''; // Clear existing content
-    container.appendChild(infoDiv);
+    buttonInfocontainer.innerHTML = ''; // Clear existing content
+    buttonInfocontainer.appendChild(infoDiv);
 
     // Select the desired option in the color select menu
     const colorSelect = document.getElementById('colorSelect');
@@ -184,7 +184,7 @@ function handleContextMenu(event) {
             </button>
         </p>
         <p class="control">
-            <a class="button">
+            <a class="button cancel">
                 Cancel
             </a>
         </p>
@@ -192,14 +192,12 @@ function handleContextMenu(event) {
 
 </form>
     `;
-    
-    // populateIconSelect();
-    
-    // Append the populated template to the infoDiv
-    const container = document.getElementById('button-info');
-    container.innerHTML = ''; // Clear existing content
-    container.appendChild(infoDiv);
+        
+    buttonInfocontainer.innerHTML = ''; // Clear existing content
+    buttonInfocontainer.appendChild(infoDiv);
 
+    const cancelButtonInfo = infoDiv.querySelector('.cancel');
+    cancelButtonInfo.addEventListener('click', () => buttonInfocontainer.innerHTML = '');
     // Populate the cloned template with button information
     const buttonNameOption = infoDiv.querySelector('.button-name');
     buttonNameOption.value = name;
@@ -214,34 +212,13 @@ function handleContextMenu(event) {
     colorSelect.selected = true;
 
     populateIconSelect();
-
     
     const iconSelect = document.getElementById('iconSelect');
     iconSelect.value = icon;
     iconSelect.selected = true;
 
     console.log('icon: ', icon);
-    
-    // const selectMenu = document.getElementById('iconSelect');
-    // if (selectMenu) {
-    //     console.log('selectMenu: ', selectMenu);
-    // }
-    // const optionNone = document.createElement('option');
-    // optionNone.textContent = "none";
-    // optionNone.value = "none";
-    // optionNone.classList.add("none");
-    // selectMenu.appendChild(optionNone);
-    // // iconNames.forEach(iconName => {
-    // //     console.log('iconName: ', iconName);
-    // //     const option = document.createElement('option');
-    // //     // Remove the colon from the end of the icon name
-    // //     const cleanedIconName = iconName.replace(/:$/, '');
-    // //     option.textContent = iconName;
-    // //     option.value = iconName;
-    // //     selectMenu.appendChild(option);
-    // // });
-
-    
+       
     // Add event listeners to left and right buttons
     const leftButton = infoDiv.querySelector('.left');
     const rightButton = infoDiv.querySelector('.right');
@@ -290,7 +267,7 @@ function editButton(event) {
     const buttonName = buttonNameInput.value;
     const buttonCommand = buttonCommandInput.value;
     const buttonIcon = "icon-" + iconSelect.value;
-    const buttonColor = "is-" + colorSelect.value;
+    const buttonColor = colorSelect.value;
 
     const selectedColorIndex = colorSelect.selectedIndex;
     const selectedColorOption = colorSelect.options[selectedColorIndex];
@@ -320,8 +297,8 @@ function editButton(event) {
     console.log('iconSelect: ', iconSelect);
     // console.log('selectedButton: ', selectedButton);
     
-    if (selectedButton.classList.contains("is-" + buttonColor)) {
-        selectedButton.classList.remove("is-" + buttonColor);
+    if (selectedButton.classList.contains(buttonColor)) {
+        selectedButton.classList.remove(buttonColor);
     }
 
     selectedButton.classList.add(buttonColor);
