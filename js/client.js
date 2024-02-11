@@ -76,24 +76,23 @@ function handleContextMenu(event) {
     infoDiv.classList.add('box');
     infoDiv.innerHTML = `
 <h3 class="title is-4">Edit Button</h3>
-<!-- <p><strong>Name:</strong> <span class="button-name"></span></p>
-     <p><strong>Icon:</strong> <span class="button-icon"></span></p>
-     <p><strong>Color:</strong> <span class="button-color"></span></p>
-     <p><strong>Command:</strong> <span class="button-command"></span></p> -->
+
 <form id="serverForm" onsubmit="editButton(event); return false;">
     
     <div class="field">
         <label class="label">Name</label>
         <div class="control">
-            <input class="input button-name" type="text" placeholder="e.g Alex Smith">
+            <input class="input button-name" type="text" placeholder="e.g. Play / Pause">
         </div>
+        <p class="help help-name is-danger"></p>
     </div>
 
     <div class="field">
         <label class="label">Command</label>
         <div class="control">
-            <input class="input button-command" type="text" placeholder="e.g. alexsmith@gmail.com">
+            <input class="input button-command" type="text" placeholder="e.g. ls /">
         </div>
+        <p class="help help-command is-danger"></p>
     </div>
 
     <div class="field">
@@ -207,22 +206,29 @@ function getButtonsFromPage() {
 function editButton(event) {
     event.preventDefault();
    
-    // Access the global variable to get the reference to the caller button
     const selectedButton = callerButton;
    
-    // Select all input fields
     const buttonNameInput = document.querySelector('.button-name');
     const buttonCommandInput = document.querySelector('.button-command');
     const iconSelect = document.querySelector('#iconSelect');
     const colorSelect = document.querySelector('#colorSelect');
     
-    // Get the values from the input fields
     const buttonName = buttonNameInput.value;
     const buttonCommand = buttonCommandInput.value;
     const buttonIcon = iconSelect.value;
     const buttonColor = colorSelect.value;
 
-    console.log('buttonColor: ', buttonColor);
+    document.querySelector('.help').textContent = "";
+    
+    if (!buttonCommand) {
+        document.querySelector('.help-command').textContent = 'Please provide a valid name.';
+        return;
+    }
+
+    if (!buttonName) {
+        document.querySelector('.help-name').textContent = 'Please provide a valid command.';
+        return;
+    }
     
     selectedButton.classList.forEach(className => {
         if ((className.startsWith('is-') || className.startsWith('icon-')) && className !== 'is-large') {
@@ -312,7 +318,7 @@ function populateIconSelect() {
 
     const selectMenu = document.getElementById('iconSelect');
     const optionNone = document.createElement('option');
-    optionNone.textContent = "is-none";
+    optionNone.textContent = "none";
     optionNone.value = "none";
     optionNone.classList.add("is-none");
     selectMenu.appendChild(optionNone);

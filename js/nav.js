@@ -1,4 +1,4 @@
-const PPS = (function () {
+const ZPT = (function () {
     let pages = [];
     let links = [];
 
