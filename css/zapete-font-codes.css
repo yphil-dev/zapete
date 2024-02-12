@@ -8,4 +8,16 @@
 .icon-pl_prev:before { content: '\e806'; } /* '' */
 .icon-pl_next:before { content: '\e807'; } /* '' */
 .icon-fullscreen:before { content: '\e808'; } /* '' */
+.icon-play-pause:before { content: '\e809'; } /* '' */
+.icon-note-beamed:before { content: '\e80a'; } /* '' */
+.icon-search:before { content: '\e80b'; } /* '' */
+.icon-flashlight:before { content: '\e80c'; } /* '' */
+.icon-mail:before { content: '\e80d'; } /* '' */
+.icon-star:before { content: '\e80e'; } /* '' */
+.icon-video:before { content: '\e80f'; } /* '' */
+.icon-camera:before { content: '\e810'; } /* '' */
+.icon-direction:before { content: '\e811'; } /* '' */
+.icon-folder:before { content: '\e812'; } /* '' */
+.icon-print:before { content: '\e813'; } /* '' */
+.icon-bell:before { content: '\f03f'; } /* '' */
 .icon-connect:before { content: '\f1e6'; } /* '' */

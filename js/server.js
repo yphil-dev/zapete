@@ -107,7 +107,6 @@ function openWithXDG(arg) {
         }
         if (stdout) {
             
-            // const argAbs = path.resolve(arg) || arg;
             exec(`xdg-open ${toOpen}`, (err, stdout, stderr) => {
                 if (err) {
                     console.error('Error opening image with xdg-open:', err);
@@ -186,7 +185,6 @@ function sendButtonsToClient(ws, fileName) {
             return;
         }
 
-        // Send the file contents to the client
         ws.send(data);
         console.log('File contents sent:', fileName);
     });
