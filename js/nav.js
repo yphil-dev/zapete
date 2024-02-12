@@ -2,7 +2,7 @@ const ZPT = (function () {
     let pages = [];
     let links = [];
 
-    let versionNumber = '0.0.2';
+    let versionNumber = '0.1.2';
 
     const versionNumberSpans = document.querySelectorAll('.version-number');
 
@@ -62,60 +62,4 @@ const ZPT = (function () {
 
         return false;
     }
-
-
-    function openTab(event, tabName) {
-
-        let i, tabcontent, tablinks;
-
-        tabcontent = document.getElementsByClassName('content-container');
-        for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = 'none';
-        }
-
-        tablinks = document.getElementsByClassName('tablinks');
-        for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(' active', '');
-            tablinks[i].parentNode.classList.remove('is-active');
-        }
-
-        document.getElementById(tabName).style.display = 'block';
-        for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(' active', '');
-            tablinks[i].parentNode.classList.remove('is-active');
-        }
-
-        event.currentTarget.parentNode.classList.add('is-active');
-    }
-
-    document.addEventListener("DOMContentLoaded", function() {
-        var rsWidgetButton = document.querySelector('.rs-connect');
-        var rsWidgetInput = document.querySelector('form.rs-sign-in-form input[type=text]');
-        var rsSyncButtons = document.querySelectorAll('.rs-button');
-        // var wIcon = document.querySelector('.rs-widget-icon');
-
-        var element = document.querySelector("form.rs-sign-in-form input[name='rs-user-address']");
-
-        const classesToRemove = ['rs-button', 'rs-button-small'];
-        const classesToAdd = ['button', 'is-info'];
-
-        rsSyncButtons.forEach(function(button) {
-            button.classList.remove(...classesToRemove);
-            button.classList.add(...classesToAdd);
-        });
-
-        if (element) {
-            element.style.borderRadius = "0.4em";
-            element.style.height = "2.5em";
-        }
-
-        // wIcon.style.display = 'none';
-
-        // rsWidgetInput.classList.add('input');
-        // rsWidgetButton.classList.add(...classesToAdd);
-    });
-
-    return {
-        openTab
-    };
 })();

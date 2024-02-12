@@ -25,6 +25,10 @@
   margin-top: 1em;
 }
 
+#buttonInfoContainer {
+    margin: 0 !important;
+}
+
 #buttonInfoContainer article {
     margin-bottom: 1.2em !important;
     margin-top: 0.8em !important;

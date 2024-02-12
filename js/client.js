@@ -44,6 +44,9 @@ function connect() {
         serverMessages.value = "Connected to server";
         newButton.style.display = 'block';
         refreshButtons.style.display = 'block';
+        refreshButtons.addEventListener('click', function() {
+            sendMessage('requestButtons');
+        });
         sendMessage('requestButtons');
     };
 
@@ -107,7 +110,7 @@ function openButtonForm(event, isNew) {
         .then(response => response.text())
         .then(html => {
             const buttonForm = document.createElement('article');
-            buttonForm.classList.add('message', 'column', 'is-fullwidth');
+            buttonForm.classList.add('message', 'is-fullwidth');
             buttonForm.innerHTML = html;
             buttonInfocontainer.innerHTML = '';
             buttonInfocontainer.appendChild(buttonForm);
@@ -185,12 +188,12 @@ function editButton(event, isNew) {
     document.querySelector('.help').textContent = "";
     
     if (!buttonCommand) {
-        document.querySelector('.help-command').textContent = 'Please provide a valid name.';
+        document.querySelector('.help-command').textContent = 'Please provide a valid command name.';
         return;
     }
 
     if (!buttonName) {
-        document.querySelector('.help-name').textContent = 'Please provide a valid command.';
+        document.querySelector('.help-name').textContent = 'Please provide a valid name.';
         return;
     }
 
@@ -280,10 +283,6 @@ function setButtonsToPage(buttons) {
         
     });
 }
-
-document.querySelector('.load-button').addEventListener('click', function() {
-    sendMessage('requestButtons');
-});
 
 document.querySelector('.reset-button').addEventListener('click', function() {
     sendMessage('requestDefaultButtons');
