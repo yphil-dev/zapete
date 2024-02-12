@@ -37,19 +37,21 @@
 
         <section data-page="home" id="home" class="section active">
 
-            <form id="serverForm" onsubmit="connect(); return false;" class="is-fullwidth">
-                <div class="columns is-mobile is-multiline controls">
-
+            <form id="serverForm" onsubmit="connect(); return false;">
+                <div class="columns is-half-desktop is-multiline">
                     <div class="column field has-addons">
                         <p class="control is-expanded">
                             <input class="input" type="text" id="serverAddressInput" placeholder="Enter server IP">
                         </p>
                         <p class="control">
+                            <button id="refreshButtons" class="button icon-refresh" title="Refresh"></button>
+                        </p>
+                        <p class="control">
                             <button type="submit" class="button icon-connect" title="Connect"></button>
                         </p>
                     </div>
-                    <div class="column serverMessages">
-                        <p class="control">
+                    <div class="column serverMessages field has-addons">
+                        <p class="control is-expanded">
                             <input disabled class="input" type="text" id="serverMessages" placeholder="server MSGs">
                         </p>
                     </div>
@@ -60,11 +62,11 @@
             <div id="buttonInfoContainer" class="columns is-desktop controls is-fullwidth"></div>
             <div id="buttonNewContainer" class="columns is-mobile is-multiline controls">
 
-                <button id="newButton" class="button is-fullwidth" style="display:none">
+                <button id="newButton" class="button is-fullwidth">
                     <span class="icon is-small">
-                        <i class="icon-connect"></i>
+                        <i class="icon-plus"></i>
                     </span>
-                    <span>New Button</span>
+                    <span>Add Button</span>
                 </button>
                 
             </div>
@@ -112,8 +114,7 @@
 
                             <div class="column block">
                                 <div class="field">
-                                    <button class="button reset-button">Reset Buttons to defaults</button>
-                                    <button class="button load-button icon-refresh">Refresh buttons</button>
+                                    <button class="button reset-button is-fullwidth">Reset Buttons to defaults</button>
                                 </div>
                             </div>
 

@@ -155,6 +155,7 @@ function executeCommand(command, ws) {
             ws.send(`${stderr}`);
             console.error(`Command stderr: ${stderr}`);
         }
+        console.log('stdout: ', stdout);
         return;
     });
 }

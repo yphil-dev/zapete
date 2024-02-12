@@ -1,12 +1,15 @@
 let ws;
 const serverMessages = document.getElementById("serverMessages");
-const buttonContainer = document.getElementById('buttonContainer');
-const buttonInfocontainer = document.getElementById('buttonInfoContainer');
+const buttonContainer = document.getElementById("buttonContainer");
+const buttonInfocontainer = document.getElementById("buttonInfoContainer");
 const serverAddressInput = document.getElementById("serverAddressInput");
-const buttons = buttonContainer.querySelectorAll('button');
+const buttons = buttonContainer.querySelectorAll("button");
+const refreshButtons = document.getElementById("refreshButtons");
+refreshButtons.style.display = "none";
 
-const newButton = document.querySelector('#newButton');
-newButton.addEventListener('click', (event) => openButtonForm(event, true));
+const newButton = document.querySelector("#newButton");
+newButton.style.display = "none";
+newButton.addEventListener("click", (event) => openButtonForm(event, true));
 
 function parseUrl(elt) {
 
@@ -40,6 +43,7 @@ function connect() {
     ws.onopen = function() {
         serverMessages.value = "Connected to server";
         newButton.style.display = 'block';
+        refreshButtons.style.display = 'block';
         sendMessage('requestButtons');
     };
 
