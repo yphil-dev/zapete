@@ -90,20 +90,23 @@ wss.on('connection', function connection(ws) {
 });
 
 function openWithXDG(arg) {
+
+    let toOpen;
+    
+    if (arg.startsWith('http')) {
+        toOpen = arg;
+        console.log('arg starts with "http"');
+    } else {
+        toOpen = path.resolve(arg);
+        console.log('arg does not start with "http"');
+    }
+
     exec('which xdg-open', (err, stdout, stderr) => {
         if (err) {
             console.error('Error checking xdg-open:', err);
             return;
         }
         if (stdout) {
-
-            let toOpen;
-            
-            try {
-                toOpen = path.resolve(arg);
-            } catch (err) {
-                toOpen = "http://" + arg;
-            } 
             
             // const argAbs = path.resolve(arg) || arg;
             exec(`xdg-open ${toOpen}`, (err, stdout, stderr) => {
@@ -121,15 +124,15 @@ function openWithXDG(arg) {
 wss.on('listening', function() {
     console.log(`WebSocket server is listening on ${hostIP}:${port}`);
 
-    QRCode.toFile('img/zapete-qrcode.png', hostIP + ":" + port, {
+    QRCode.toFile('img/zapete-qrcode.png', hostIP + ":" + port + "?ws=" + wsPort, {
         errorCorrectionLevel: 'H'
     }, function(err) {
         if (err) throw err;
         console.log('QR code saved!');
     });
 
-    // openWithXDG(hostIP + ":8009");
-    // openWithXDG(imagePath);
+    openWithXDG("http://localhost:" + httpPort + "?ws=" + wsPort);
+    openWithXDG(imagePath);
 });
 
 wss.on('error', function error(err) {

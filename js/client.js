@@ -2,9 +2,33 @@ let ws;
 const serverMessages = document.getElementById("serverMessages");
 const buttonContainer = document.getElementById('buttonContainer');
 const buttonInfocontainer = document.getElementById('button-info');
+const serverAddressInput = document.getElementById("serverAddressInput");
+
+function parseUrl(elt) {
+
+    const hostname = document.location.hostname;
+    const queryString = document.location.search.slice(1);
+    const queryParams = new URLSearchParams(queryString);
+
+    if (elt.type === "queryString") {
+        return queryParams.get('ws');
+    }
+
+    return hostname;
+}
+
+const wsValue = parseUrl({type:"queryString"});
+const hostname = parseUrl({type:"hostname"});
+
+console.log('wsValue: ', wsValue);
+console.log('hostname: ', hostname);
+
+if (hostname && wsValue) {
+    serverAddressInput.value = hostname + ":" + wsValue;
+}
 
 function connect() {
-    const serverAddress = document.getElementById("serverAddress").value;
+    const serverAddress = serverAddressInput.value;
     serverMessages.value = "Connecting to server";
     ws = new WebSocket(`ws://${serverAddress}`);
 
