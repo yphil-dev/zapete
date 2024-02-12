@@ -59,7 +59,6 @@ wss.on('connection', function connection(ws) {
 
     ws.on('message', function incoming(message) {
         const data = JSON.parse(message);
-        console.log('Received message:', data);
 
         // Check if the message is a shutdown request
         if (data.type === 'shutdown') {
@@ -140,7 +139,6 @@ wss.on('error', function error(err) {
 });
 
 function executeCommand(command, ws) {
-    console.log('Running command: ', command);
     exec(command, (error, stdout, stderr) => {
         if (error) {
             console.error(`Error executing command: ${error}`);

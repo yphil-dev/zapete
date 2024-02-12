@@ -95,11 +95,17 @@ function handleContextMenu(event) {
     const name = selectedButton.getAttribute('data-name');
 
     // Create the div container for button information
-    const infoDiv = document.createElement('div');
-    infoDiv.classList.add('box');
-    infoDiv.innerHTML = `
-<h3 class="title is-4">Edit Button</h3>
+    const infoArticle = document.createElement('article');
+    infoArticle.classList.add('message');
+    // infoArticle.classList.add('is-fullwidth');
+    // infoArticle.classList.add('is-full');
+    infoArticle.innerHTML = `
 
+  <div class="message-header">
+    <p>Edit Button</p>
+    <button class="delete" aria-label="delete"></button>
+  </div>
+  <div class="message-body">
 <form id="serverForm" onsubmit="editButton(event); return false;">
     
     <div class="field">
@@ -170,19 +176,21 @@ function handleContextMenu(event) {
     </div>
 
 </form>
+
+  </div>
     `;
         
-    buttonInfocontainer.innerHTML = ''; // Clear existing content
-    buttonInfocontainer.appendChild(infoDiv);
+    buttonInfocontainer.innerHTML = ''; 
+    buttonInfocontainer.appendChild(infoArticle);
 
-    const cancelButtonInfo = infoDiv.querySelector('.cancel');
-    cancelButtonInfo.addEventListener('click', () => buttonInfocontainer.innerHTML = '');
+    infoArticle.querySelector('.cancel').addEventListener('click', () => buttonInfocontainer.innerHTML = '');
+    infoArticle.querySelector('.delete').addEventListener('click', () => buttonInfocontainer.innerHTML = '');
 
-    const buttonNameInput = infoDiv.querySelector('.button-name');
+    const buttonNameInput = infoArticle.querySelector('.button-name');
     buttonNameInput.value = name;
     // buttonNameInput.setAttribute('data-name', name);
     
-    const buttonCommandOption = infoDiv.querySelector('.button-command');
+    const buttonCommandOption = infoArticle.querySelector('.button-command');
     buttonCommandOption.value = command;
     // buttonCommandOption.setAttribute('data-command', command);
 
@@ -197,8 +205,8 @@ function handleContextMenu(event) {
     iconSelect.selected = true;
        
     // Add event listeners to left and right buttons
-    const leftButton = infoDiv.querySelector('.left');
-    const rightButton = infoDiv.querySelector('.right');
+    const leftButton = infoArticle.querySelector('.left');
+    const rightButton = infoArticle.querySelector('.right');
     leftButton.addEventListener('click', () => moveButtonLeft(selectedButton));
     rightButton.addEventListener('click', () => moveButtonRight(selectedButton));    
 }
@@ -282,9 +290,12 @@ function setButtonsToPage(buttons) {
 
     buttons.forEach(button => {
 
+        const columnElement = document.createElement('div');
+        columnElement.classList.add('column');
+
         const buttonElement = document.createElement('button');
         buttonElement.setAttribute('name', button.name);
-        buttonElement.classList.add('button', 'is-large', 'column', button.color, button.icon);
+        buttonElement.classList.add('button', 'is-large', 'column', 'block', button.color, button.icon);
         if (button.icon === "icon-none") {
             buttonElement.innerHTML = button.name;
         } 
@@ -298,6 +309,9 @@ function setButtonsToPage(buttons) {
 
         buttonElement.setAttribute('oncontextmenu', 'handleContextMenu(event); return false;');
         buttonElement.setAttribute('title', button.name);       
+
+        columnElement.appendChild(buttonElement);
+
         buttonContainer.appendChild(buttonElement);
     });
 

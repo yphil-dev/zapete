@@ -14,27 +14,32 @@
     z-index: 100;
 }
 
-#buttonContainer button {
-  margin-right: 1em;
-  margin-bottom: 1em;
+
+/* #buttonContainer { */
+/*   justify-content: space-between !important; */
+/* } */
+
+#buttonContainer button,
+#buttonInfoContainer article,
+#buttonNewContainer button {
+  margin-bottom: .40rem !important;
+  margin-right: .40rem !important;
+  /* margin-right: 1em; */
+  /* margin-bottom: 1em; */
 }
 
-/* #serverAddress, #serverMessages { */
-/*   min-width: 28vw; */
-/* } */
+#buttonInfoContainer article {
+    margin-bottom: 1.2em !important;
+}
 
-/* #serverMessages { */
-/*   min-width: 43vw; */
-/* } */
+#serverForm {
+  padding-left: 0;
+}
 
-/* #serverControl { */
-/*   margin-bottom: 1em; */
-/* } */
+#serverForm div {
+  padding-left: 0;
+}
 
-/* .serverMessages { */
-/*     display: flex; */
-/* } */
-
-/* .serverMessages input { */
-/*     flex-grow: 1; */
-/* } */
+.hero-body, .section {
+    padding: 1.5rem 1.5rem !important;
+}
