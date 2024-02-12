@@ -57,13 +57,9 @@
         <section data-page="home" id="home" class="section active">
 
                 <form id="serverForm" onsubmit="connect(); return false;">
-                    <div class="columns is-mobile is-multiline">
-                        <!-- <input class="input column is-three-quarters" type="text" id="serverAddress" placeholder="Enter server IP"> -->
-                        <!-- <button class="button column is-one-quarter" type="submit"><i class="icon-connect"></i></button> -->
-                    </div>
 
-                    <div id="serverControl" class="columns is-mobile is-multiline">
-                        <div class="field has-addons">
+                    <div id="serverControl" class="content columns is-mobile is-multiline controls">
+                        <div class="column field has-addons">
                             <p class="control is-expanded">
                                 <input class="input" type="text" id="serverAddressInput" placeholder="Enter server IP">
                             </p>
@@ -71,20 +67,18 @@
                                 <button type="submit" class="button icon-connect" title="Connect"></button>
                             </p>
                         </div>
-                        <div class="serverMessages field has-addons">
+                        <div class="column serverMessages">
                             <p class="control">
                                 <input disabled class="input" type="text" id="serverMessages" placeholder="server MSGs">
                             </p>
 
                         </div>
                     </div>
-
                 </form>
-                <div id="buttonContainer" class="content columns is-mobile is-multiline controls">
-                    <p class="help is-warning">Connect to server to see your buttons</p>
-                </div>
 
-                <div id="button-info"></div>
+                <div id="buttonContainer" class="content columns is-mobile is-multiline controls"></div>
+
+                <div id="buttonInfoContainer"></div>
 
         </section>
 

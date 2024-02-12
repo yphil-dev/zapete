@@ -1,7 +1,7 @@
 let ws;
 const serverMessages = document.getElementById("serverMessages");
 const buttonContainer = document.getElementById('buttonContainer');
-const buttonInfocontainer = document.getElementById('button-info');
+const buttonInfocontainer = document.getElementById('buttonInfoContainer');
 const serverAddressInput = document.getElementById("serverAddressInput");
 
 function parseUrl(elt) {
@@ -20,12 +20,11 @@ function parseUrl(elt) {
 const wsValue = parseUrl({type:"queryString"});
 const hostname = parseUrl({type:"hostname"});
 
-console.log('wsValue: ', wsValue);
-console.log('hostname: ', hostname);
-
 if (hostname && wsValue) {
     serverAddressInput.value = hostname + ":" + wsValue;
 }
+
+serverMessages.value = "Connect to server to see your buttons";
 
 function connect() {
     const serverAddress = serverAddressInput.value;
@@ -343,8 +342,8 @@ function populateIconSelect() {
     const selectMenu = document.getElementById('iconSelect');
     const optionNone = document.createElement('option');
     optionNone.textContent = "none";
-    optionNone.value = "none";
-    optionNone.classList.add("is-none");
+    optionNone.value = "icon-none";
+    optionNone.classList.add("icon-none");
     selectMenu.appendChild(optionNone);
     iconNames.forEach(iconName => {
         const option = document.createElement('option');

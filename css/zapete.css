@@ -14,27 +14,27 @@
     z-index: 100;
 }
 
-.controls button {
+#buttonContainer button {
   margin-right: 1em;
   margin-bottom: 1em;
 }
 
-#serverAddress, #serverMessages {
-  min-width: 28vw;
-}
+/* #serverAddress, #serverMessages { */
+/*   min-width: 28vw; */
+/* } */
 
-#serverMessages {
-  min-width: 43vw;
-}
+/* #serverMessages { */
+/*   min-width: 43vw; */
+/* } */
 
-#serverControl {
-  margin-bottom: 1em;
-}
+/* #serverControl { */
+/*   margin-bottom: 1em; */
+/* } */
 
-.serverMessages {
-    display: flex;
-}
+/* .serverMessages { */
+/*     display: flex; */
+/* } */
 
-.serverMessages input {
-    flex-grow: 1;
-}
+/* .serverMessages input { */
+/*     flex-grow: 1; */
+/* } */
