@@ -21,12 +21,14 @@ function parseUrl(elt) {
     return hostname;
 }
 
-const wsValue = parseUrl({type:"queryString"});
+const wsValue = parseUrl({type:"queryString"}) || "8008";
 const hostname = parseUrl({type:"hostname"});
 
 if (hostname && wsValue) {
     serverAddressInput.value = hostname + ":" + wsValue;
 }
+
+console.log('serverAddressInput.value: ', serverAddressInput.value);
 
 serverMessages.value = "Connect to server to see your buttons";
 
@@ -97,6 +99,8 @@ function openButtonForm(event, isNew) {
             const buttonForm = document.createElement('article');
             buttonForm.classList.add('message');
             buttonForm.innerHTML = html;
+            buttonInfocontainer.innerHTML = '';
+            buttonInfocontainer.appendChild(buttonForm);
 
             const command = callerButton.getAttribute('data-command');
             const icon = callerButton.getAttribute('data-icon');
@@ -104,25 +108,22 @@ function openButtonForm(event, isNew) {
             const name = callerButton.getAttribute('data-name');
 
             const positionButtons = buttonForm.querySelector('#positionButtons');
-            positionButtons.style.display = 'none';
-
-            buttonInfocontainer.innerHTML = '';
-            buttonInfocontainer.appendChild(buttonForm);
+            positionButtons.style.display = isNew ? 'none' : 'block';
 
             const formTitle = buttonForm.querySelector('#formTitle');
-            // formTitle.textContent = "Edit button";
 
             const saveButton = buttonForm.querySelector('#saveButton');
+            const cancelButton = buttonForm.querySelector('#cancelButton');
 
             formTitle.textContent = isNew ? "Add button" : "Edit button";
             saveButton.textContent = isNew ? "Add" : "Save";
+            cancelButton.textContent = isNew ? "Cancel" : "Delete";
+            cancelButton.classList.add(isNew ? 'is-info' : 'is-danger');
 
-            if (isNew) {
-                console.log('isNew: ', isNew);
-            } else {
-                console.log('NOPE isNew: ', isNew);
-                positionButtons.style.display = 'block';
-            }
+            saveButton.addEventListener('click', () => {
+                editButton(event, isNew);
+                return false;
+            });
 
             const buttonNameInput = buttonForm.querySelector('.button-name');
             buttonNameInput.value = name;
@@ -152,7 +153,7 @@ function openButtonForm(event, isNew) {
         .catch(error => console.error('Error loading template:', error));
 }
 
-function editButton(event) {
+function editButton(event, isNew) {
     event.preventDefault();
    
     const selectedButton = callerButton;
@@ -176,6 +177,20 @@ function editButton(event) {
 
     if (!buttonName) {
         document.querySelector('.help-name').textContent = 'Please provide a valid command.';
+        return;
+    }
+
+    if (isNew) {
+        
+        makeButton({
+            name: buttonName,
+            command: buttonCommand,
+            icon: buttonIcon,
+            color: buttonColor
+        });
+
+        buttonInfocontainer.innerHTML = '';
+        sendMessage();
         return;
     }
     

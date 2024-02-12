@@ -3,7 +3,6 @@
     <button class="delete" aria-label="delete"></button>
 </div>
 <div class="message-body">
-    <form id="serverForm" onsubmit="editButton(event); return false;">
         
         <div class="field">
             <label class="label">Name</label>
@@ -61,17 +60,16 @@
 
         <div class="field is-grouped">
             <p class="control">
-                <button id="saveButton" class="button" type="submit">
+                <button id="saveButton" class="button is-info">
                     Submit
                 </button>
             </p>
             <p class="control">
-                <a class="button cancel">
+                <button id="cancelButton" class="button cancel is-info">
                     Cancel
-                </a>
+                </button>
             </p>
         </div>
 
-    </form>
 
 </div>
