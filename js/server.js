@@ -97,7 +97,7 @@ wss.on('connection', function connection(ws) {
         }
     });
     
-    ws.send('Hello, client!');
+    ws.send('OK');
     
 });
 

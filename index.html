@@ -2,31 +2,12 @@
 <html lang="en">
     <head>
         <title>Zapete</title>
-
-        <!-- <link rel="manifest" href="manifest.json">
-        -->
         <link rel="shortcut icon" href="img/zapete-logo.png">
-
-        <!-- <link rel="apple-touch-icon" sizes="180x180" href="img/icons/apple-touch-icon.png">
-             <link rel="icon" type="image/png" sizes="32x32" href="img/icons/favicon-32x32.png">
-             <link rel="icon" type="image/png" sizes="16x16" href="img/icons/favicon-16x16.png">
-             <link rel="mask-icon" href="img/icons/safari-pinned-tab.svg" color="#5bbad5">
-             <meta name="msapplication-TileColor" content="#375a7f">
-             <meta name="msapplication-config" content="img/icons/browserconfig.xml">
-             <meta name="theme-color" content="#375a7f"> -->
-        
-        <!-- <script src="node_modules/remotestoragejs/release/remotestorage.js"></script> -->
-        <!-- <script src="node_modules/remotestorage-widget/build/widget.js"></script>
-        -->
         <link rel="stylesheet" type="text/css" href="css/zapete-font.css">
         <link rel="stylesheet" type="text/css" href="css/zapete.css">
         <link rel="stylesheet" id="theme-link" type="text/css" href="css/zapete-bulma-dark.css">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
         <meta name="description" content="A simple but powerful note-taking app that syncs with your own cloud">
-
-        <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; object-src 'none';">
-        -->
     </head>
     <body>
 
@@ -76,7 +57,7 @@
             </form>
             
             <div id="buttonContainer" class="columns is-mobile is-multiline controls block"></div>
-            <div id="buttonInfoContainer" class="columns is-multiline controls is-fullwidth"></div>
+            <div id="buttonInfoContainer" class="columns is-desktop controls is-fullwidth"></div>
             <div id="buttonNewContainer" class="columns is-mobile is-multiline controls">
 
                 <button id="newButton" class="button is-fullwidth" style="display:none">
@@ -132,6 +113,7 @@
                             <div class="column block">
                                 <div class="field">
                                     <button class="button reset-button">Reset Buttons to defaults</button>
+                                    <button class="button load-button icon-refresh">Refresh buttons</button>
                                 </div>
                             </div>
 

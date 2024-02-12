@@ -49,7 +49,13 @@ function connect() {
             setButtonsToPage(buttons);
         } catch (err) {
             console.log('err: ', err);
-            serverMessages.value = event.data;
+
+            if (event.data === "OK") {
+                serverMessages.value = "Right click / long press a button to edit";
+            } else {
+                serverMessages.value = event.data;
+            }
+            
         }
     };
 }
@@ -97,7 +103,7 @@ function openButtonForm(event, isNew) {
         .then(response => response.text())
         .then(html => {
             const buttonForm = document.createElement('article');
-            buttonForm.classList.add('message');
+            buttonForm.classList.add('message', 'column', 'is-fullwidth');
             buttonForm.innerHTML = html;
             buttonInfocontainer.innerHTML = '';
             buttonInfocontainer.appendChild(buttonForm);
@@ -271,15 +277,9 @@ function setButtonsToPage(buttons) {
     });
 }
 
-// document.querySelector('.load-button').addEventListener('click', function() {
-//     sendMessage('requestButtons');
-// });
-
-// document.querySelector('.save-button').addEventListener('click', function() {
-//     const buttons = getButtonsFromPage();
-//     console.log('Save Buttons: ', buttons);
-//     sendMessage();
-// });
+document.querySelector('.load-button').addEventListener('click', function() {
+    sendMessage('requestButtons');
+});
 
 document.querySelector('.reset-button').addEventListener('click', function() {
     sendMessage('requestDefaultButtons');
@@ -315,6 +315,4 @@ function populateIconSelect() {
         selectMenu.appendChild(option);
     });
 }
-
-
 

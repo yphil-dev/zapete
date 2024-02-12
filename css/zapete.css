@@ -14,22 +14,16 @@
     z-index: 100;
 }
 
-
-/* #buttonContainer { */
-/*   justify-content: space-between !important; */
-/* } */
-
 #buttonContainer button,
 #buttonInfoContainer article,
 #buttonNewContainer button {
   margin-bottom: .40rem !important;
   margin-right: .40rem !important;
-  /* margin-right: 1em; */
-  /* margin-bottom: 1em; */
 }
 
 #buttonInfoContainer article {
     margin-bottom: 1.2em !important;
+    margin-top: 0.8em !important;
 }
 
 #serverForm {
