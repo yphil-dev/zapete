@@ -1,6 +1,8 @@
 # Zapete
 
-A simple web socket-based remote control for any computer in your local network.
+A remote control for any computer in your local network.
+
+![Zapete](https://mobilohm.gitlab.io/img/shots/zapete.png)
 
 ## Installation
 
@@ -12,7 +14,6 @@ npm install
 ``` ejs
 npm start
 ```
-
 Scan the QRcode or follow the instructions.
 
 ## Contribute

@@ -233,6 +233,7 @@ function makeButton(buttonData) {
     buttonElement.setAttribute('title', buttonData.name);       
     
     buttonElement.addEventListener('click', () => {
+        buttonInfocontainer.innerHTML = '';
         const command = buttonElement.getAttribute('data-command');
         sendMessage(command);
     });
@@ -270,15 +271,15 @@ function setButtonsToPage(buttons) {
     });
 }
 
-document.querySelector('.load-button').addEventListener('click', function() {
-    sendMessage('requestButtons');
-});
+// document.querySelector('.load-button').addEventListener('click', function() {
+//     sendMessage('requestButtons');
+// });
 
-document.querySelector('.save-button').addEventListener('click', function() {
-    const buttons = getButtonsFromPage();
-    console.log('Save Buttons: ', buttons);
-    sendMessage();
-});
+// document.querySelector('.save-button').addEventListener('click', function() {
+//     const buttons = getButtonsFromPage();
+//     console.log('Save Buttons: ', buttons);
+//     sendMessage();
+// });
 
 document.querySelector('.reset-button').addEventListener('click', function() {
     sendMessage('requestDefaultButtons');
