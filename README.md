@@ -1,13 +1,21 @@
 # Zapete
 
-A simple web socket-based remote control for your desktop PC. right now it only sends mplayer commands, but if I can be bothered maybe I'll implement custom buttons / commands.
+A simple web socket-based remote control for any computer in your local network.
 
 ## Installation
 
 ``` ejs
-cd gitlab.zapete.io
+npm install
+```
+## Usage
+
+``` ejs
 npm start
 ```
+
+Scan the QRcode or follow the instructions.
+
+## Contribute
 
 If you find one of the [MobilOhm](https://mobilohm.gitlab.io/) apps helpful and would like to support its development, consider making a contribution through [Ko-fi](https://ko-fi.com/yphil) or [Liberapay](https://liberapay.com/yPhil/).
 
