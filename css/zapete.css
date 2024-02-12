@@ -21,9 +21,21 @@
   margin-right: .40rem !important;
 }
 
+#buttonContainer {
+  margin-top: 1em;
+}
+
 #buttonInfoContainer article {
     margin-bottom: 1.2em !important;
     margin-top: 0.8em !important;
+}
+
+#serverControls,
+#serverMessagesControls {
+  margin-top: 0 !important;
+  margin-bottom: 0.4em !important;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 #serverForm {

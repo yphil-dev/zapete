@@ -4,8 +4,8 @@
         <title>Zapete</title>
         <link rel="shortcut icon" href="img/zapete-logo.png">
         <link rel="stylesheet" type="text/css" href="css/zapete-font.css">
-        <link rel="stylesheet" type="text/css" href="css/zapete.css">
         <link rel="stylesheet" id="theme-link" type="text/css" href="css/zapete-bulma-dark.css">
+        <link rel="stylesheet" type="text/css" href="css/zapete.css">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="A simple but powerful note-taking app that syncs with your own cloud">
     </head>
@@ -39,7 +39,7 @@
 
             <form id="serverForm" onsubmit="connect(); return false;">
                 <div class="columns is-half-desktop is-multiline">
-                    <div class="column field has-addons">
+                    <div id="serverControls" class="column field has-addons">
                         <p class="control is-expanded">
                             <input class="input" type="text" id="serverAddressInput" placeholder="Enter server IP">
                         </p>
@@ -50,7 +50,7 @@
                             <button type="submit" class="button icon-connect" title="Connect"></button>
                         </p>
                     </div>
-                    <div class="column serverMessages field has-addons">
+                    <div id="serverMessagesControls" class="column field has-addons">
                         <p class="control is-expanded">
                             <input disabled class="input" type="text" id="serverMessages" placeholder="server MSGs">
                         </p>
