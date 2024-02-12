@@ -6,10 +6,11 @@ const path = require('path');
 const QRCode = require('qrcode');
 const httpServer = require('http-server');
 
-const port = "8008";
+// const port = "8008";
 
 const httpPort = process.env.npm_package_http_port || 8009;
 const wsPort = process.env.npm_package_websocket_port || 8008;
+
 
 const interfaces = os.networkInterfaces();
 let hostIP;
@@ -26,20 +27,24 @@ const wsOptions = {
     port: wsPort
 };
 
+
 // Start the HTTP server
 const server = httpServer.createServer(options);
 server.listen(options.port, () => {
     console.log(`HTTP server started on port ${options.port}`);
 });
 
+const wss = new WebSocket.Server(wsOptions);
+
 // Handle SIGINT signal (Ctrl+C)
-// process.on('SIGINT', () => {
-//     console.log('Shutting down HTTP server...');
-//     server.close(() => {
-//         console.log('HTTP server shut down.');
-//         process.exit(0);
-//     });
-// });
+process.on('SIGINT', () => {
+    console.log('Shutting down HTTP server...');
+    closeWebSocketServer();
+    server.close(() => {
+        console.log('HTTP server shut down.');
+        process.exit(0);
+    });
+});
 
 // Iterate over network interfaces to find the local IP address
 Object.keys(interfaces).forEach((interfaceName) => {
@@ -51,7 +56,15 @@ Object.keys(interfaces).forEach((interfaceName) => {
     });
 });
 
-const wss = new WebSocket.Server(wsOptions);
+function closeWebSocketServer() {
+    wss.close((error) => {
+        if (error) {
+            console.error('Error closing WebSocket server:', error);
+        } else {
+            console.log('WebSocket server closed.');
+        }
+    });
+}
 
 wss.on('connection', function connection(ws) {
     console.log('Client connected');
@@ -92,13 +105,7 @@ function openWithXDG(arg) {
 
     let toOpen;
     
-    if (arg.startsWith('http')) {
-        toOpen = arg;
-        console.log('arg starts with "http"');
-    } else {
-        toOpen = path.resolve(arg);
-        console.log('arg does not start with "http"');
-    }
+    toOpen = (arg.startsWith('http')) ? arg : path.resolve(arg);
 
     exec('which xdg-open', (err, stdout, stderr) => {
         if (err) {
@@ -109,7 +116,7 @@ function openWithXDG(arg) {
             
             exec(`xdg-open ${toOpen}`, (err, stdout, stderr) => {
                 if (err) {
-                    console.error('Error opening image with xdg-open:', err);
+                    console.error('Error opening with xdg-open:', err);
                     return;
                 }
             });
@@ -120,9 +127,9 @@ function openWithXDG(arg) {
 }
 
 wss.on('listening', function() {
-    console.log(`WebSocket server is listening on ${hostIP}:${port}`);
+    console.log(`WebSocket server is listening on ${hostIP}:${wsPort}`);
 
-    QRCode.toFile('img/zapete-qrcode.png', hostIP + ":" + port + "?ws=" + wsPort, {
+    QRCode.toFile('img/zapete-qrcode.png', "http://" + hostIP + ":" + httpPort + "?ws=" + wsPort, {
         errorCorrectionLevel: 'H'
     }, function(err) {
         if (err) throw err;
@@ -148,7 +155,6 @@ function executeCommand(command, ws) {
             ws.send(`${stderr}`);
             console.error(`Command stderr: ${stderr}`);
         }
-        console.log(`Command stdout: ${stdout}`);
         return;
     });
 }
@@ -186,7 +192,7 @@ function sendButtonsToClient(ws, fileName) {
         }
 
         ws.send(data);
-        console.log('File contents sent:', fileName);
+        // console.log('File contents sent:', fileName);
     });
 }
 
@@ -194,10 +200,10 @@ function saveButtonsToServer(ws) {
     fs.writeFile('buttons.json', JSON.stringify(buttons), 'utf8', (err) => {
         if (err) {
             ws.send('Error saving buttons to server:' + err);
-            console.error('Error saving buttons to server:', err);
+            // console.error('Error saving buttons to server:', err);
         } else {
             ws.send('Buttons saved to server');
-            console.log('Buttons saved to server');
+            // console.log('Buttons saved to server');
         }
     });
 }

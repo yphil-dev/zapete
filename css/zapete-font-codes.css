@@ -19,5 +19,7 @@
 .icon-direction:before { content: '\e811'; } /* '' */
 .icon-folder:before { content: '\e812'; } /* '' */
 .icon-print:before { content: '\e813'; } /* '' */
+.icon-left:before { content: '\e814'; } /* '' */
+.icon-right:before { content: '\e815'; } /* '' */
 .icon-bell:before { content: '\f03f'; } /* '' */
 .icon-connect:before { content: '\f1e6'; } /* '' */

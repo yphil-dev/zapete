@@ -43,3 +43,8 @@
 .hero-body, .section {
     padding: 1.5rem 1.5rem !important;
 }
+
+.big-logo {
+  margin: 2em;
+  text-align: center;
+}

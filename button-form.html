@@ -3,73 +3,70 @@
     <button class="delete" aria-label="delete"></button>
 </div>
 <div class="message-body">
-        
-        <div class="field">
-            <label class="label">Name</label>
-            <div class="control">
-                <input class="input button-name" type="text" placeholder="e.g. Play / Pause">
-            </div>
-            <p class="help help-name is-danger"></p>
+    
+    <div class="field">
+        <label class="label">Name</label>
+        <div class="control">
+            <input class="input button-name" type="text" placeholder="e.g. Play / Pause">
         </div>
+        <p class="help help-name is-danger"></p>
+    </div>
 
-        <div class="field">
-            <label class="label">Command</label>
-            <div class="control">
-                <input class="input button-command" type="text" placeholder="e.g. ls /">
-            </div>
-            <p class="help help-command is-danger"></p>
+    <div class="field">
+        <label class="label">Command</label>
+        <div class="control">
+            <input class="input button-command" type="text" placeholder="e.g. ls /">
         </div>
+        <p class="help help-command is-danger"></p>
+    </div>
 
-        <div class="field">
-            <label class="label">Icon</label>
-            <div class="control select is-primary">
-                <select id="iconSelect"></select>
-            </div>
+    <div class="field">
+        <label class="label">Icon</label>
+        <div class="control select is-primary">
+            <select id="iconSelect"></select>
         </div>
+    </div>
 
-        <div class="field">
-            <label class="label">Color</label>
-            <div class="control select">
-                <select id="colorSelect">
-                    <option value="is-none" class="is-none">none</option>
-                    <option value="is-primary" class="is-primary">primary</option>
-                    <option value="is-link" class="is-link">link</option>
-                    <option value="is-info" class="is-info">info</option>
-                    <option value="is-success" class="is-success">success</option>
-                    <option value="is-warning" class="is-warning">warning</option>
-                    <option value="is-danger" class="is-danger">danger</option>
-                </select>
-            </div>
+    <div class="field">
+        <label class="label">Color</label>
+        <div class="control select">
+            <select id="colorSelect">
+                <option value="is-none" class="is-none">none</option>
+                <option value="is-primary" class="is-primary">primary</option>
+                <option value="is-link" class="is-link">link</option>
+                <option value="is-info" class="is-info">info</option>
+                <option value="is-success" class="is-success">success</option>
+                <option value="is-warning" class="is-warning">warning</option>
+                <option value="is-danger" class="is-danger">danger</option>
+            </select>
         </div>
+    </div>
 
-        <div id="positionButtons" class="field">
-            <label class="label">Position</label>
-            <div class="field is-grouped">
-                <div class="control">
-                    <a class="button left">
-                        Left
-                    </a>
-                </div>
-                <div class="control">
-                    <a class="button right">
-                        Right
-                    </a>
-                </div>
-            </div>
-        </div>
-
+    <div id="positionButtons" class="field">
+        <label class="label">Position</label>
         <div class="field is-grouped">
-            <p class="control">
-                <button id="saveButton" class="button is-info">
-                    Submit
-                </button>
-            </p>
-            <p class="control">
-                <button id="cancelButton" class="button cancel is-info">
-                    Cancel
-                </button>
-            </p>
+            <div class="control">
+                <a class="button left icon-left">
+                </a>
+            </div>
+            <div class="control">
+                <a class="button right icon-right">
+                </a>
+            </div>
         </div>
+    </div>
 
+    <div class="field is-grouped">
+        <p class="control">
+            <button id="saveButton" class="button is-info">
+                Submit
+            </button>
+        </p>
+        <p class="control">
+            <button id="cancelButton" class="button cancel is-info">
+                Cancel
+            </button>
+        </p>
+    </div>
 
 </div>

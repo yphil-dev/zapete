@@ -75,14 +75,14 @@ function sendMessage(command) {
 function moveButtonLeft(selectedButton) {
     if (selectedButton && selectedButton.previousElementSibling) {
         buttonContainer.insertBefore(selectedButton, selectedButton.previousElementSibling);
-        // sendMessage();
+        sendMessage();
     }
 }
 
 function moveButtonRight(selectedButton) {
     if (selectedButton && selectedButton.nextElementSibling) {
         buttonContainer.insertBefore(selectedButton.nextElementSibling, selectedButton);
-        // sendMessage();
+        sendMessage();
     }
 }
 
@@ -124,6 +124,10 @@ function openButtonForm(event, isNew) {
                 editButton(event, isNew);
                 return false;
             });
+
+            if (!isNew) {
+                cancelButton.addEventListener('click', () => callerButton.remove());
+            }
 
             const buttonNameInput = buttonForm.querySelector('.button-name');
             buttonNameInput.value = name;
@@ -203,15 +207,15 @@ function editButton(event, isNew) {
     
     selectedButton.textContent = (buttonIcon === "icon-none") ? buttonName : '';
 
-    selectedButton.classList.add(buttonColor);
-    selectedButton.classList.add(buttonIcon);
+    selectedButton.classList.add(buttonColor, buttonIcon);
 
     selectedButton.setAttribute('data-name', buttonName);
     selectedButton.setAttribute('data-command', buttonCommand);
-    selectedButton.setAttribute('data-icon', buttonIcon);
     selectedButton.setAttribute('data-color', buttonColor);
+    selectedButton.setAttribute('data-icon', buttonIcon);
 
     selectedButton.setAttribute('title', buttonName);
+    sendMessage();
 }
 
 function makeButton(buttonData) {
@@ -227,8 +231,11 @@ function makeButton(buttonData) {
 
     buttonElement.setAttribute('oncontextmenu', 'openButtonForm(event, false); return false;');
     buttonElement.setAttribute('title', buttonData.name);       
-
-    buttonElement.addEventListener('click', () => sendMessage(buttonData.command));
+    
+    buttonElement.addEventListener('click', () => {
+        const command = buttonElement.getAttribute('data-command');
+        sendMessage(command);
+    });
 
     buttonContainer.appendChild(buttonElement);
     

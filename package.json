@@ -5,7 +5,7 @@
   "http-port": "8009",
   "websocket-port": "8008",
   "scripts": {
-      "start": "node js/server.js &",
+      "start": "node js/server.js",
       "stop": "node js/stop.js"
   },
   "dependencies": {
