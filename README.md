@@ -7,6 +7,8 @@ A remote control for any computer in your local network.
 ## Installation
 
 ``` ejs
+git clone https://gitlab.com/yphil/zapete.git
+cd zapete
 npm install
 ```
 ## Usage
@@ -14,7 +16,7 @@ npm install
 ``` ejs
 npm start
 ```
-Scan the QRcode or follow the instructions.
+Scan the QRcode or point any browser to the displayed address.
 
 ## Contribute
 
