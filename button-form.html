@@ -1,0 +1,77 @@
+<div class="message-header">
+    <p id="formTitle">Edit Button</p>
+    <button class="delete" aria-label="delete"></button>
+</div>
+<div class="message-body">
+    <form id="serverForm" onsubmit="editButton(event); return false;">
+        
+        <div class="field">
+            <label class="label">Name</label>
+            <div class="control">
+                <input class="input button-name" type="text" placeholder="e.g. Play / Pause">
+            </div>
+            <p class="help help-name is-danger"></p>
+        </div>
+
+        <div class="field">
+            <label class="label">Command</label>
+            <div class="control">
+                <input class="input button-command" type="text" placeholder="e.g. ls /">
+            </div>
+            <p class="help help-command is-danger"></p>
+        </div>
+
+        <div class="field">
+            <label class="label">Icon</label>
+            <div class="control select is-primary">
+                <select id="iconSelect"></select>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Color</label>
+            <div class="control select">
+                <select id="colorSelect">
+                    <option value="is-none" class="is-none">none</option>
+                    <option value="is-primary" class="is-primary">primary</option>
+                    <option value="is-link" class="is-link">link</option>
+                    <option value="is-info" class="is-info">info</option>
+                    <option value="is-success" class="is-success">success</option>
+                    <option value="is-warning" class="is-warning">warning</option>
+                    <option value="is-danger" class="is-danger">danger</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Position</label>
+            <div class="field is-grouped">
+                <div class="control">
+                    <a class="button left">
+                        Left
+                    </a>
+                </div>
+                <div class="control">
+                    <a class="button right">
+                        Right
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="field is-grouped">
+            <p class="control">
+                <button class="button" type="submit">
+                    Submit
+                </button>
+            </p>
+            <p class="control">
+                <a class="button cancel">
+                    Cancel
+                </a>
+            </p>
+        </div>
+
+    </form>
+
+</div>

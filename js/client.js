@@ -3,6 +3,10 @@ const serverMessages = document.getElementById("serverMessages");
 const buttonContainer = document.getElementById('buttonContainer');
 const buttonInfocontainer = document.getElementById('buttonInfoContainer');
 const serverAddressInput = document.getElementById("serverAddressInput");
+const buttons = buttonContainer.querySelectorAll('button');
+
+const newButton = document.querySelector('#newButton');
+newButton.addEventListener('click', (event) => openButtonForm(event, true));
 
 function parseUrl(elt) {
 
@@ -33,6 +37,7 @@ function connect() {
 
     ws.onopen = function() {
         serverMessages.value = "Connected to server";
+        newButton.style.display = 'block';
         sendMessage('requestButtons');
     };
 
@@ -45,7 +50,6 @@ function connect() {
             serverMessages.value = event.data;
         }
     };
-
 }
 
 function sendMessage(command) {
@@ -82,143 +86,64 @@ function moveButtonRight(selectedButton) {
 
 let callerButton = null;
 
-function handleContextMenu(event) {
+function openButtonForm(event, isNew) {
     event.preventDefault();
-
+    
     callerButton = event.target;
 
-    const selectedButton = event.target;
+    fetch('button-form.html')
+        .then(response => response.text())
+        .then(html => {
+            const infoArticle = document.createElement('article');
+            infoArticle.classList.add('message');
+            infoArticle.innerHTML = html;
 
-    const command = selectedButton.getAttribute('data-command');
-    const icon = selectedButton.getAttribute('data-icon');
-    const color = selectedButton.getAttribute('data-color');
-    const name = selectedButton.getAttribute('data-name');
+            const command = callerButton.getAttribute('data-command');
+            const icon = callerButton.getAttribute('data-icon');
+            const color = callerButton.getAttribute('data-color');
+            const name = callerButton.getAttribute('data-name');
 
-    // Create the div container for button information
-    const infoArticle = document.createElement('article');
-    infoArticle.classList.add('message');
-    // infoArticle.classList.add('is-fullwidth');
-    // infoArticle.classList.add('is-full');
-    infoArticle.innerHTML = `
+            buttonInfocontainer.innerHTML = '';
+            buttonInfocontainer.appendChild(infoArticle);
 
-  <div class="message-header">
-    <p>Edit Button</p>
-    <button class="delete" aria-label="delete"></button>
-  </div>
-  <div class="message-body">
-<form id="serverForm" onsubmit="editButton(event); return false;">
-    
-    <div class="field">
-        <label class="label">Name</label>
-        <div class="control">
-            <input class="input button-name" type="text" placeholder="e.g. Play / Pause">
-        </div>
-        <p class="help help-name is-danger"></p>
-    </div>
+            const formTitle = infoArticle.querySelector('#formTitle');
+            // formTitle.textContent = "Edit button";
 
-    <div class="field">
-        <label class="label">Command</label>
-        <div class="control">
-            <input class="input button-command" type="text" placeholder="e.g. ls /">
-        </div>
-        <p class="help help-command is-danger"></p>
-    </div>
+            formTitle.textContent = isNew ? "New button" : "Edit button";
+            
+            if (isNew) {
+                console.log('isNew: ', isNew);
+            } else {
+                console.log('NOPE isNew: ', isNew);
+            }
 
-    <div class="field">
-        <label class="label">Icon</label>
-        <div class="control select is-primary">
-            <select id="iconSelect"></select>
-        </div>
-    </div>
+            const buttonNameInput = infoArticle.querySelector('.button-name');
+            buttonNameInput.value = name;
+            
+            const buttonCommandOption = infoArticle.querySelector('.button-command');
+            buttonCommandOption.value = command;
 
-    <div class="field">
-        <label class="label">Color</label>
-        <div class="control select">
-            <select id="colorSelect">
-                <option value="is-none" class="is-none">none</option>
-                <option value="is-primary" class="is-primary">primary</option>
-                <option value="is-link" class="is-link">link</option>
-                <option value="is-info" class="is-info">info</option>
-                <option value="is-success" class="is-success">success</option>
-                <option value="is-warning" class="is-warning">warning</option>
-                <option value="is-danger" class="is-danger">danger</option>
-            </select>
-        </div>
-    </div>
+            const colorSelect = document.getElementById('colorSelect');
+            colorSelect.value = color;
+            colorSelect.selected = true;
 
-    <div class="field">
-        <label class="label">Position</label>
-        <div class="field is-grouped">
-            <div class="control">
-                <a class="button left">
-                    Left
-                </a>
-            </div>
-            <div class="control">
-                <a class="button right">
-                    Right
-                </a>
-            </div>
-        </div>
-    </div>
+            populateIconSelect();
+            
+            const iconSelect = document.getElementById('iconSelect');
+            iconSelect.value = icon;
+            iconSelect.selected = true;
+            
+            const leftButton = infoArticle.querySelector('.left');
+            const rightButton = infoArticle.querySelector('.right');
+            leftButton.addEventListener('click', () => moveButtonLeft(callerButton));
+            rightButton.addEventListener('click', () => moveButtonRight(callerButton));    
 
-    <div class="field is-grouped">
-        <p class="control">
-            <button class="button" type="submit">
-                Submit
-            </button>
-        </p>
-        <p class="control">
-            <a class="button cancel">
-                Cancel
-            </a>
-        </p>
-    </div>
+            infoArticle.querySelector('.cancel').addEventListener('click', () => buttonInfocontainer.innerHTML = '');
+            infoArticle.querySelector('.delete').addEventListener('click', () => buttonInfocontainer.innerHTML = '');
 
-</form>
-
-  </div>
-    `;
-        
-    buttonInfocontainer.innerHTML = ''; 
-    buttonInfocontainer.appendChild(infoArticle);
-
-    infoArticle.querySelector('.cancel').addEventListener('click', () => buttonInfocontainer.innerHTML = '');
-    infoArticle.querySelector('.delete').addEventListener('click', () => buttonInfocontainer.innerHTML = '');
-
-    const buttonNameInput = infoArticle.querySelector('.button-name');
-    buttonNameInput.value = name;
-    // buttonNameInput.setAttribute('data-name', name);
-    
-    const buttonCommandOption = infoArticle.querySelector('.button-command');
-    buttonCommandOption.value = command;
-    // buttonCommandOption.setAttribute('data-command', command);
-
-    const colorSelect = document.getElementById('colorSelect');
-    colorSelect.value = color;
-    colorSelect.selected = true;
-
-    populateIconSelect();
-    
-    const iconSelect = document.getElementById('iconSelect');
-    iconSelect.value = icon;
-    iconSelect.selected = true;
-       
-    // Add event listeners to left and right buttons
-    const leftButton = infoArticle.querySelector('.left');
-    const rightButton = infoArticle.querySelector('.right');
-    leftButton.addEventListener('click', () => moveButtonLeft(selectedButton));
-    rightButton.addEventListener('click', () => moveButtonRight(selectedButton));    
+        })
+        .catch(error => console.error('Error loading template:', error));
 }
-
-const buttons = buttonContainer.querySelectorAll('button');
-
-buttons.forEach(button => {
-    button.addEventListener('click', () => {
-        console.log(button.getAttribute('data-command'));
-        sendMessage(button.getAttribute('data-command'));
-    });
-});
 
 function getButtonsFromPage() {
     const buttons = [];
@@ -283,45 +208,42 @@ function editButton(event) {
 }
 
 function setButtonsToPage(buttons) {
-
-    console.log('yoo: ');
     
     buttonContainer.innerHTML = '';
 
     buttons.forEach(button => {
 
-        const columnElement = document.createElement('div');
-        columnElement.classList.add('column');
-
-        const buttonElement = document.createElement('button');
-        buttonElement.setAttribute('name', button.name);
-        buttonElement.classList.add('button', 'is-large', 'column', 'block', button.color, button.icon);
-        if (button.icon === "icon-none") {
-            buttonElement.innerHTML = button.name;
-        } 
-        buttonElement.setAttribute('data-command', button.command);
-        buttonElement.setAttribute('data-name', button.name);
-        buttonElement.setAttribute('data-color', button.color);
-        buttonElement.setAttribute('data-icon', button.icon);
-        buttonElement.addEventListener('click', () => {
-            sendMessage(button.command);
+        makeButton({
+            name: button.name,
+            command: button.command,
+            icon: button.icon,
+            color: button.color
         });
-
-        buttonElement.setAttribute('oncontextmenu', 'handleContextMenu(event); return false;');
-        buttonElement.setAttribute('title', button.name);       
-
-        columnElement.appendChild(buttonElement);
-
-        buttonContainer.appendChild(buttonElement);
+        
     });
+}
 
+function makeButton(buttonData) {
+    const buttonElement = document.createElement('button');
+    buttonElement.classList.add('button', 'is-large', 'column', 'block', buttonData.color, buttonData.icon);
+    buttonElement.innerHTML = (buttonData.icon === "icon-none") ? buttonData.name : "";
 
+    buttonElement.setAttribute('name', buttonData.name);
+    buttonElement.setAttribute('data-name', buttonData.name);
+    buttonElement.setAttribute('data-command', buttonData.command);
+    buttonElement.setAttribute('data-color', buttonData.color);
+    buttonElement.setAttribute('data-icon', buttonData.icon);
+
+    buttonElement.setAttribute('oncontextmenu', 'openButtonForm(event, false); return false;');
+    buttonElement.setAttribute('title', buttonData.name);       
+
+    buttonElement.addEventListener('click', () => sendMessage(buttonData.command));
+
+    buttonContainer.appendChild(buttonElement);
+    
 }
 
 document.querySelector('.load-button').addEventListener('click', function() {
-    // const buttons = getButtonsFromPage();
-    // console.log('Load Buttons:', buttons);
-    // setButtonsToPage(buttons);
     sendMessage('requestButtons');
 });
 
@@ -329,7 +251,6 @@ document.querySelector('.save-button').addEventListener('click', function() {
     const buttons = getButtonsFromPage();
     console.log('Save Buttons: ', buttons);
     sendMessage();
-    // console.log('Buttons saved to localStorage.');
 });
 
 document.querySelector('.reset-button').addEventListener('click', function() {
