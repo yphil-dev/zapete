@@ -21,7 +21,6 @@ ZPT.settings = (function () {
     }
 
     function saveTheme(event) {
-        console.log('object: ');
         let themeRadioButtons = document.getElementsByName('theme');
         let selectedTheme = '';
 
