@@ -1,14 +1,25 @@
 const ZPT = (function () {
     let pages = [];
     let links = [];
-
-    let versionNumber = '0.1.2';
-
     const versionNumberSpans = document.querySelectorAll('.version-number');
 
-    versionNumberSpans.forEach(function(versionNumberSpan) {
-        versionNumberSpan.textContent = versionNumber;
-    });
+    fetch('/package.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+
+            versionNumberSpans.forEach(function(versionNumberSpan) {
+                versionNumberSpan.textContent = data.version;
+            });
+
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
 
     document.addEventListener("DOMContentLoaded", function(){
         pages = document.querySelectorAll('[data-page]');
@@ -63,7 +74,5 @@ const ZPT = (function () {
         return false;
     }
 
-    return {
-        versionNumber
-    };
+    return {};
 })();

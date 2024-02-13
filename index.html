@@ -26,7 +26,7 @@
 
             <div id="zapeteNavbar" class="navbar-menu">
                 <div class="navbar-start">
-                    <a href="#home" id="home" data-role="link" class="navbar-item active-link">Zapete</a>
+                    <a href="#home" id="home" data-role="link" class="has-text-link	navbar-item active-link">Zapete</a>
                     <a href="#settings" id="settings" data-role="link" class="navbar-item active-link">Settings</a>
                     <a href="#about" id="about" data-role="link" class="navbar-item">About</a>
                 </div>
@@ -37,7 +37,7 @@
         <section data-page="home" id="home" class="section active">
 
             <form id="serverForm" onsubmit="connect(); return false;">
-                <div class="columns is-half-desktop is-multiline">
+                <div class="columns is-half-desktop is-multiline is-fullwidth">
                     <div id="serverControls" class="column field has-addons">
                         <p class="control is-expanded">
                             <input class="input" type="text" id="serverAddressInput" placeholder="Enter server IP">
@@ -69,7 +69,7 @@
                 </button>
                 
             </div>
-
+            
         </section>
 
         <section class="section" data-page="settings" id="settings">
@@ -195,7 +195,7 @@
                 </div>
             </article>
         </template>
-
+        
         <script src="js/nav.js"></script>
         <script src="js/client.js"></script>
         <script src="js/settings.js"></script>

@@ -58,7 +58,6 @@ function connect() {
             const buttons = JSON.parse(event.data); // If the server res parses, it's the buttons
             setButtonsToPage(buttons);
         } catch (err) {
-            console.log('err: ', err);
 
             if (event.data === "OK") {
                 serverMessages.value = "Right click / long press a button to edit";

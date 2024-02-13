@@ -9,6 +9,9 @@ const httpServer = require('http-server');
 const httpPort = process.env.npm_package_http_port || 8009;
 const wsPort = process.env.npm_package_websocket_port || 8008;
 
+const version = process.env.npm_package_version;
+
+console.log('version: ', version);
 
 const interfaces = os.networkInterfaces();
 let hostIP;
@@ -23,7 +26,6 @@ const options = {
 const wsOptions = {
     port: wsPort
 };
-
 
 const server = httpServer.createServer(options);
 server.listen(options.port, () => {

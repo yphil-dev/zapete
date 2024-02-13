@@ -1,6 +1,6 @@
 # Zapete
 
-A remote control for any computer in your local network.
+Remote control for any computer in your local network.
 
 [![Zapete](https://mobilohm.gitlab.io/img/shots/zapete.png)](https://gitlab.com/yphil/zapete)
 

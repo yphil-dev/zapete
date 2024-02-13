@@ -1,16 +1,24 @@
 {
-  "name": "Zapete",
-  "version": "1.0.0",
-  "description": "Phone remote control for your PC media player",
-  "http-port": "8009",
-  "websocket-port": "8008",
-  "scripts": {
-      "start": "node js/server.js",
-      "stop": "node js/stop.js"
-  },
-  "dependencies": {
-    "http-server": "^14.1.1",
-    "isomorphic-ws": "^5.0.0",
-    "qrcode": "^1.5.3"
-  }
+    "name": "Zapete",
+    "version": "0.1.3",
+    "description": "Remote control for any computer in your local network",
+    "http-port": "8009",
+    "websocket-port": "8008",
+    "scripts": {
+        "start": "node js/server.js",
+        "stop": "node js/stop.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://gitlab.com/yphil/zapete"
+    },
+    "bugs": {
+        "url": "https://gitlab.com/yphil/zapete/-/issues"
+    },
+    "homepage": "https://gitlab.com/yphil/zapete",
+    "dependencies": {
+        "http-server": "^14.1.1",
+        "isomorphic-ws": "^5.0.0",
+        "qrcode": "^1.5.3"
+    }
 }
