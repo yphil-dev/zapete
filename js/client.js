@@ -1,15 +1,18 @@
-let ws;
 const serverMessages = document.getElementById("serverMessages");
 const buttonContainer = document.getElementById("buttonContainer");
 const buttonInfocontainer = document.getElementById("buttonInfoContainer");
 const serverAddressInput = document.getElementById("serverAddressInput");
 const buttons = buttonContainer.querySelectorAll("button");
 const refreshButtons = document.getElementById("refreshButtons");
+const addButton = document.querySelector("#addButton");
+let ws;
+let callerButton = null;
+
+
 refreshButtons.style.display = "none";
 
-const newButton = document.querySelector("#newButton");
-newButton.style.display = "none";
-newButton.addEventListener("click", (event) => openButtonForm(event, true));
+addButton.style.display = "none";
+addButton.addEventListener("click", (event) => openButtonForm(event, true));
 
 function parseUrl(elt) {
 
@@ -31,8 +34,6 @@ if (hostname && wsValue) {
     serverAddressInput.value = hostname + ":" + wsValue;
 }
 
-console.log('serverAddressInput.value: ', serverAddressInput.value);
-
 serverMessages.value = "Connect to server to see your buttons";
 
 function connect() {
@@ -42,7 +43,7 @@ function connect() {
 
     ws.onopen = function() {
         serverMessages.value = "Connected to server";
-        newButton.style.display = 'block';
+        addButton.style.display = 'block';
         refreshButtons.style.display = 'block';
         refreshButtons.addEventListener('click', function() {
             sendMessage('requestButtons');
@@ -52,10 +53,10 @@ function connect() {
 
     ws.onmessage = function(event) {
         try {
-            const buttons = JSON.parse(event.data);
+            const buttons = JSON.parse(event.data); // If the server res parses, it's the buttons
             setButtonsToPage(buttons);
         } catch (err) {
-            console.log('err: ', err);
+            // console.log('err: ', err);
 
             if (event.data === "OK") {
                 serverMessages.value = "Right click / long press a button to edit";
@@ -75,7 +76,6 @@ function sendMessage(command) {
         } else if (command && command === "requestButtons") {
             ws.send(JSON.stringify({ type: 'button_request' }));
         } else if (command && command === "requestDefaultButtons") {
-            console.log('yup: ');
             ws.send(JSON.stringify({ type: 'button_defaults_request' }));
         } else {
             ws.send(JSON.stringify({ type: 'button_update', buttons: getButtonsFromPage() }));
@@ -98,8 +98,6 @@ function moveButtonRight(selectedButton) {
         sendMessage();
     }
 }
-
-let callerButton = null;
 
 function openButtonForm(event, isNew) {
     event.preventDefault();
@@ -229,8 +227,8 @@ function editButton(event, isNew) {
 
     selectedButton.setAttribute('data-name', buttonName);
     selectedButton.setAttribute('data-command', buttonCommand);
-    selectedButton.setAttribute('data-color', buttonColor);
     selectedButton.setAttribute('data-icon', buttonIcon);
+    selectedButton.setAttribute('data-color', buttonColor);
 
     selectedButton.setAttribute('title', buttonName);
     sendMessage();
@@ -244,8 +242,8 @@ function makeButton(buttonData) {
     buttonElement.setAttribute('name', buttonData.name);
     buttonElement.setAttribute('data-name', buttonData.name);
     buttonElement.setAttribute('data-command', buttonData.command);
-    buttonElement.setAttribute('data-color', buttonData.color);
     buttonElement.setAttribute('data-icon', buttonData.icon);
+    buttonElement.setAttribute('data-color', buttonData.color);
 
     buttonElement.setAttribute('oncontextmenu', 'openButtonForm(event, false); return false;');
     buttonElement.setAttribute('title', buttonData.name);       
@@ -265,9 +263,9 @@ function getButtonsFromPage() {
     buttonContainer.querySelectorAll('button').forEach(buttonElement => {
         buttons.push({
             name: buttonElement.getAttribute('data-name'),
+            command: buttonElement.getAttribute('data-command'),
             icon: buttonElement.getAttribute('data-icon'),
-            color: buttonElement.getAttribute('data-color'),
-            command: buttonElement.getAttribute('data-command')
+            color: buttonElement.getAttribute('data-color')
         });
     });
     return buttons;
