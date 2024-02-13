@@ -2,7 +2,7 @@
 
 A remote control for any computer in your local network.
 
-![Zapete](https://mobilohm.gitlab.io/img/shots/zapete.png)
+[![Zapete](https://mobilohm.gitlab.io/img/shots/zapete.png)](https://gitlab.com/yphil/zapete)
 
 ## Installation
 
@@ -11,12 +11,16 @@ git clone https://gitlab.com/yphil/zapete.git
 cd zapete
 npm install
 ```
+
 ## Usage
 
-``` ejs
+Run in on the target machine
+
+```js
 npm start
 ```
-Scan the QRcode or point any browser to the displayed address.
+
+Scan the QRcode or point any browser to the displayed address, and tap "connect". Create buttons, send commands, everything is peachy.
 
 ## Contribute
 
