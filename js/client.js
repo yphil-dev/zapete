@@ -121,13 +121,15 @@ function openButtonForm(event, isNew) {
             const name = callerButton.getAttribute('data-name');
 
             const positionButtons = buttonForm.querySelector('#positionButtons');
-            positionButtons.style.display = isNew ? 'none' : 'block';
-
             const formTitle = buttonForm.querySelector('#formTitle');
-
             const saveButton = buttonForm.querySelector('#saveButton');
             const cancelButton = buttonForm.querySelector('#cancelButton');
+            const buttonNameInput = buttonForm.querySelector('.button-name');
+            const buttonCommandOption = buttonForm.querySelector('.button-command');
 
+            const colorSelect = document.getElementById('colorSelect');
+
+            positionButtons.style.display = isNew ? 'none' : 'block';
             formTitle.textContent = isNew ? "Add button" : "Edit button";
             saveButton.textContent = isNew ? "Add" : "Save";
             cancelButton.textContent = isNew ? "Cancel" : "Delete";
@@ -139,16 +141,15 @@ function openButtonForm(event, isNew) {
             });
 
             if (!isNew) {
-                cancelButton.addEventListener('click', () => callerButton.remove());
+                cancelButton.addEventListener('click', () => {
+                    callerButton.remove();
+                    sendMessage();
+                    return;
+                });
             }
 
-            const buttonNameInput = buttonForm.querySelector('.button-name');
             buttonNameInput.value = name;
-            
-            const buttonCommandOption = buttonForm.querySelector('.button-command');
             buttonCommandOption.value = command;
-
-            const colorSelect = document.getElementById('colorSelect');
             colorSelect.value = color || "is-none";
             colorSelect.selected = true;
 

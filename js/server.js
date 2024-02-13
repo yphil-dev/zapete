@@ -201,10 +201,10 @@ function saveButtonsToServer(ws) {
     fs.writeFile('buttons.json', JSON.stringify(buttons), 'utf8', (err) => {
         if (err) {
             ws.send('Error saving buttons to server:' + err);
-            // console.error('Error saving buttons to server:', err);
+            console.error('Error saving buttons to server:', err);
         } else {
             ws.send('Buttons saved to server');
-            // console.log('Buttons saved to server');
+            console.log('Buttons saved to server');
         }
     });
 }
