@@ -110,11 +110,14 @@ function openButtonForm(event, isNew) {
         .then(response => response.text())
         .then(html => {
             const buttonForm = document.createElement('article');
+            
             buttonForm.classList.add('message', 'is-fullwidth');
             buttonForm.innerHTML = html;
             buttonInfocontainer.innerHTML = '';
             buttonInfocontainer.appendChild(buttonForm);
 
+            populateIconSelect();
+            
             const command = callerButton.getAttribute('data-command');
             const icon = callerButton.getAttribute('data-icon');
             const color = callerButton.getAttribute('data-color');
@@ -126,8 +129,11 @@ function openButtonForm(event, isNew) {
             const cancelButton = buttonForm.querySelector('#cancelButton');
             const buttonNameInput = buttonForm.querySelector('.button-name');
             const buttonCommandOption = buttonForm.querySelector('.button-command');
+            const leftButton = buttonForm.querySelector('.left');
+            const rightButton = buttonForm.querySelector('.right');
 
-            const colorSelect = document.getElementById('colorSelect');
+            const iconSelect = buttonForm.querySelector('#iconSelect');
+            const colorSelect = buttonForm.querySelector('#colorSelect');
 
             positionButtons.style.display = isNew ? 'none' : 'block';
             formTitle.textContent = isNew ? "Add button" : "Edit button";
@@ -153,14 +159,9 @@ function openButtonForm(event, isNew) {
             colorSelect.value = color || "is-none";
             colorSelect.selected = true;
 
-            populateIconSelect();
-            
-            const iconSelect = document.getElementById('iconSelect');
             iconSelect.value = icon || "icon-none";
             iconSelect.selected = true;
             
-            const leftButton = buttonForm.querySelector('.left');
-            const rightButton = buttonForm.querySelector('.right');
             leftButton.addEventListener('click', () => moveButtonLeft(callerButton));
             rightButton.addEventListener('click', () => moveButtonRight(callerButton));    
 
@@ -211,14 +212,17 @@ function editButton(event, isNew) {
         sendMessage();
         return;
     }
-    
+
+    let classesToRemove = [];
+
     selectedButton.classList.forEach(className => {
         if ((className.startsWith('is-') || className.startsWith('icon-')) && className !== 'is-large') {
-            console.log('Removing class:', className);
-            selectedButton.classList.remove(className);
+            classesToRemove.push(className);
         }
     });
-    
+
+    classesToRemove.forEach(className => selectedButton.classList.remove(className));
+
     selectedButton.textContent = (buttonIcon === "icon-none") ? buttonName : '';
 
     selectedButton.classList.add(buttonColor, buttonIcon);
