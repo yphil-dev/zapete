@@ -6,8 +6,6 @@ const path = require('path');
 const QRCode = require('qrcode');
 const httpServer = require('http-server');
 
-// const port = "8008";
-
 const httpPort = process.env.npm_package_http_port || 8009;
 const wsPort = process.env.npm_package_websocket_port || 8008;
 
@@ -17,7 +15,6 @@ let hostIP;
 let buttons = [];
 const imagePath = 'img/zapete-qrcode.png';
 
-// Configure options for the HTTP server
 const options = {
     cache: -1, // Disable caching
     port: httpPort
@@ -28,7 +25,6 @@ const wsOptions = {
 };
 
 
-// Start the HTTP server
 const server = httpServer.createServer(options);
 server.listen(options.port, () => {
     console.log(`HTTP server started on port ${options.port}`);
@@ -36,7 +32,6 @@ server.listen(options.port, () => {
 
 const wss = new WebSocket.Server(wsOptions);
 
-// Handle SIGINT signal (Ctrl+C)
 process.on('SIGINT', () => {
     console.log('Shutting down HTTP server...');
     closeWebSocketServer();
@@ -46,7 +41,6 @@ process.on('SIGINT', () => {
     });
 });
 
-// Iterate over network interfaces to find the local IP address
 Object.keys(interfaces).forEach((interfaceName) => {
     interfaces[interfaceName].forEach((interface) => {
         // Skip over loopback and non-IPv4 addresses
@@ -67,21 +61,20 @@ function closeWebSocketServer() {
 }
 
 wss.on('connection', function connection(ws) {
+
     console.log('Client connected');
-    // ws.send(JSON.stringify(buttons));
 
     ws.on('message', function incoming(message) {
         const data = JSON.parse(message);
 
-        // Check if the message is a shutdown request
         if (data.type === 'shutdown') {
             console.log('Received shutdown request. Closing WebSocket server...');
             wss.close(() => {
                 console.log('WebSocket server closed.');
-                process.exit(0); // Exit the process after closing the WebSocket server
+                process.exit(0); 
                 server.close(() => {
                     console.log('HTTP server shut down.');
-                    process.exit(0); // Exit the process after closing the servers
+                    process.exit(0);
                 });
             });
         } else if (data.type === 'button_update') {
@@ -90,7 +83,6 @@ wss.on('connection', function connection(ws) {
         } else if (data.type === 'button_request') {
             readButtonsFile(ws, 'buttons.json');
         } else if (data.type === 'button_defaults_request') {
-            console.log('got it');
             readButtonsFile(ws, 'buttons-defaults.json');
         } else {
             executeCommand(data.command.toString(), ws); 
@@ -160,28 +152,25 @@ function executeCommand(command, ws) {
     });
 }
 
-function readButtonsFile(ws) {
-    let customFileName = 'buttons.json';
-    let defaultFileName = 'buttons-defaults.json';
+function readButtonsFile(ws, fileName) {
 
-    fs.readFile(customFileName, 'utf8', (err, data) => {
+    fs.readFile(fileName, 'utf8', (err, data) => {
         if (!err) {
             let buttons = [];
             try {
                 buttons = JSON.parse(data);
                 if (Array.isArray(buttons) && buttons.length > 0) {
-                    sendButtonsToClient(ws, customFileName);
+                    sendButtonsToClient(ws, fileName);
                     return;
                 } else {
-                    console.error('Custom buttons file is empty or not an array.');
+                    console.error('Buttons file is empty or not an array.');
                 }
             } catch (parseError) {
-                console.error('Error parsing custom buttons file:', parseError);
+                console.error('Error parsing buttons file:', parseError);
             }
         }
 
-        // If custom file doesn't exist or is invalid, fallback to defaults
-        sendButtonsToClient(ws, defaultFileName);
+        sendButtonsToClient(ws, 'buttons-defaults.json');
     });
 }
 
@@ -193,7 +182,6 @@ function sendButtonsToClient(ws, fileName) {
         }
 
         ws.send(data);
-        // console.log('File contents sent:', fileName);
     });
 }
 

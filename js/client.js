@@ -7,9 +7,10 @@ const refreshButtons = document.getElementById("refreshButtons");
 const addButton = document.querySelector("#addButton");
 let ws;
 let callerButton = null;
-
+const resetButton = document.querySelector('#resetButton');
 
 refreshButtons.style.display = "none";
+resetButton.style.display = "none";
 
 addButton.style.display = "none";
 addButton.addEventListener("click", (event) => openButtonForm(event, true));
@@ -45,6 +46,7 @@ function connect() {
         serverMessages.value = "Connected to server";
         addButton.style.display = 'block';
         refreshButtons.style.display = 'block';
+        resetButton.style.display = 'block';
         refreshButtons.addEventListener('click', function() {
             sendMessage('requestButtons');
         });
@@ -56,7 +58,7 @@ function connect() {
             const buttons = JSON.parse(event.data); // If the server res parses, it's the buttons
             setButtonsToPage(buttons);
         } catch (err) {
-            // console.log('err: ', err);
+            console.log('err: ', err);
 
             if (event.data === "OK") {
                 serverMessages.value = "Right click / long press a button to edit";
@@ -287,8 +289,13 @@ function setButtonsToPage(buttons) {
     });
 }
 
-document.querySelector('.reset-button').addEventListener('click', function() {
-    sendMessage('requestDefaultButtons');
+resetButton.addEventListener('click', function() {
+    const confirmed = window.confirm("Are you sure? This can't be undone");
+
+    if (confirmed) {
+        sendMessage('requestDefaultButtons');
+    } 
+
 });
 
 function populateIconSelect() {
