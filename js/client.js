@@ -58,13 +58,7 @@ function connect() {
             const buttons = JSON.parse(event.data); // If the server res parses, it's the buttons
             setButtonsToPage(buttons);
         } catch (err) {
-
-            if (event.data === "OK") {
-                serverMessages.value = "Right click / long press a button to edit";
-            } else {
-                serverMessages.value = event.data;
-            }
-            
+            serverMessages.value = event.data;
         }
     };
 }

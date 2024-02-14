@@ -91,7 +91,7 @@ wss.on('connection', function connection(ws) {
         }
     });
     
-    ws.send('OK');
+    ws.send('Right click / long press a button to edit');
     
 });
 

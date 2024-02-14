@@ -20,5 +20,9 @@
         "http-server": "^14.1.1",
         "isomorphic-ws": "^5.0.0",
         "qrcode": "^1.5.3"
+    },
+    "devDependencies": {
+        "bulma": "^0.9.4",
+        "node-sass": "^9.0.0"
     }
 }
