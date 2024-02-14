@@ -28,7 +28,7 @@ const ZPT = (function () {
     function navigate(event) {
 
         event.preventDefault();
-        let id = event.currentTarget.href.split("#")[1];
+        let id = event.currentTarget.href.split("#")[1] + '-page';
 
         let currentTargetId = event.currentTarget.id;
         var burger = document.querySelector('.navbar-burger');

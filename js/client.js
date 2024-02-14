@@ -229,8 +229,10 @@ function editButton(event, isNew) {
 
     let classesToRemove = [];
 
+    const classesToKeep = ['is-large'];
+
     selectedButton.classList.forEach(className => {
-        if ((className.startsWith('is-') || className.startsWith('icon-')) && className !== 'is-large') {
+        if ((/^is-|^icon-/).test(className) && !classesToKeep.includes(className)) {
             classesToRemove.push(className);
         }
     });
