@@ -38,27 +38,44 @@ if (hostname && wsValue) {
 serverMessages.value = "Connect to server to see your buttons";
 
 function connect() {
-    const serverAddress = serverAddressInput.value;
-    serverMessages.value = "Connecting to server";
-    ws = new WebSocket(`ws://${serverAddress}`);
+    return new Promise((resolve, reject) => {
+        const serverAddress = serverAddressInput.value;
+        serverMessages.value = "Connecting to server";
+        ws = new WebSocket(`ws://${serverAddress}`);
 
-    ws.onopen = function() {
-        serverMessages.value = "Connected to server";
-        addButton.style.display = 'block';
-        refreshButtons.style.display = 'block';
-        resetButton.style.display = 'block';
-        refreshButtons.addEventListener('click', messageServer({type: 'button_request'}));
-        messageServer({type: 'button_request'});
-    };
+        ws.onopen = function() {
+            serverMessages.value = "Connected to server";
+            addButton.style.display = 'block';
+            refreshButtons.style.display = 'block';
+            resetButton.style.display = 'block';
+            refreshButtons.addEventListener('click', function() {
+                messageServer({type: 'button_request'});
+            });
+            messageServer({type: 'button_request'});
+            
+            resolve();
+        };
 
-    ws.onmessage = function(event) {
-        try {
-            const buttons = JSON.parse(event.data); // If the server res parses, it's the buttons
-            setButtonsToPage(buttons);
-        } catch (err) {
-            serverMessages.value = event.data;
-        }
-    };
+        ws.onerror = function(error) {
+            reject(error); 
+        };
+
+        ws.onmessage = function(event) {
+            try {
+                const buttons = JSON.parse(event.data); // If the server response parses, it's the buttons
+                setButtonsToPage(buttons);
+            } catch (err) {
+                serverMessages.value = event.data;
+            }
+        };
+    });
+}
+
+function closeConnection() {
+    if (ws) {
+        ws.close();
+        serverMessages.value = "Connection to server closed";
+    }
 }
 
 function messageServer(message) {
@@ -66,8 +83,8 @@ function messageServer(message) {
         sendMessage(message);
     } else {
         connect().then(() => {
-            serverMessages.value = "WebSocket connection is not open";
-            sendMessage(message);
+            serverMessages.value = "Connection to server not open";
+            messageServer(message);
         });
     }
 }
@@ -117,7 +134,10 @@ function openButtonForm(event, isNew) {
             const icon = callerButton.getAttribute('data-icon');
             const color = callerButton.getAttribute('data-color');
 
-            const positionButtons = buttonForm.querySelector('#positionButtons');
+            buttonForm.querySelectorAll('.positionButton').forEach(button => {
+                button.style.display = isNew ? 'none' : 'block';
+            });
+
             const formTitle = buttonForm.querySelector('#formTitle');
             const saveButton = buttonForm.querySelector('#saveButton');
             const cancelButton = buttonForm.querySelector('#cancelButton');
@@ -129,7 +149,6 @@ function openButtonForm(event, isNew) {
             const iconSelect = buttonForm.querySelector('#iconSelect');
             const colorSelect = buttonForm.querySelector('#colorSelect');
 
-            positionButtons.style.display = isNew ? 'none' : 'block';
             formTitle.textContent = isNew ? "Add button" : "Edit button";
             saveButton.textContent = isNew ? "Add" : "Save";
             cancelButton.textContent = isNew ? "Cancel" : "Delete";
@@ -142,12 +161,13 @@ function openButtonForm(event, isNew) {
 
             if (!isNew) {
                 cancelButton.addEventListener('click', () => {
-                    callerButton.remove();
-                    messageServer({type: 'button_update'});
-                    return;
+                    if (window.confirm("Are you sure? This can't be undone")) {
+                        callerButton.remove();
+                        messageServer({type: 'button_update'});
+                    } 
                 });
             }
-
+           
             buttonNameInput.value = name;
             buttonCommandOption.value = command;
             colorSelect.value = color || "is-none";
@@ -284,12 +304,9 @@ function setButtonsToPage(buttons) {
 }
 
 resetButton.addEventListener('click', function() {
-    const confirmed = window.confirm("Are you sure? This can't be undone");
-
-    if (confirmed) {
+    if (window.confirm("Are you sure? This can't be undone")) {
         messageServer({type: 'button_defaults_request'});
     } 
-
 });
 
 function populateIconSelect() {

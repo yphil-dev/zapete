@@ -3,7 +3,29 @@
     <button class="delete" aria-label="delete"></button>
 </div>
 <div class="message-body">
-    
+
+    <div class="field has-addons">
+        <p class="control">
+            <button id="saveButton" class="button is-success">
+                Add
+            </button>
+        </p>
+        <p class="control">
+            <a class="positionButton button left icon-left">
+            </a>
+        </p>
+        <p class="control">
+            <a class="positionButton button right icon-right">
+            </a>
+        </p>
+        <p class="control">
+            <button id="cancelButton" class="button cancel is-info">
+                Cancel
+            </button>
+        </p>
+
+    </div>
+
     <div class="field">
         <label class="label">Name</label>
         <div class="control">
@@ -40,33 +62,6 @@
                 <option value="is-danger" class="is-danger">danger</option>
             </select>
         </div>
-    </div>
-
-    <div id="positionButtons" class="field">
-        <label class="label">Position</label>
-        <div class="field is-grouped">
-            <div class="control">
-                <a class="button left icon-left">
-                </a>
-            </div>
-            <div class="control">
-                <a class="button right icon-right">
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <div class="field is-grouped">
-        <p class="control">
-            <button id="saveButton" class="button is-info">
-                Submit
-            </button>
-        </p>
-        <p class="control">
-            <button id="cancelButton" class="button cancel is-info">
-                Cancel
-            </button>
-        </p>
     </div>
 
 </div>
