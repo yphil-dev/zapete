@@ -47,10 +47,8 @@ function connect() {
         addButton.style.display = 'block';
         refreshButtons.style.display = 'block';
         resetButton.style.display = 'block';
-        refreshButtons.addEventListener('click', function() {
-            sendMessage('requestButtons');
-        });
-        sendMessage('requestButtons');
+        refreshButtons.addEventListener('click', messageServer({type: 'button_request'}));
+        messageServer({type: 'button_request'});
     };
 
     ws.onmessage = function(event) {
@@ -63,34 +61,37 @@ function connect() {
     };
 }
 
-function sendMessage(command) {
+function messageServer(message) {
     if (ws && ws.readyState === WebSocket.OPEN) {
-        serverMessages.value = "";
-        if (command && command !== "requestButtons" && command !== "requestDefaultButtons") {
-            ws.send(JSON.stringify({ type: 'button_command', command: command }));
-        } else if (command && command === "requestButtons") {
-            ws.send(JSON.stringify({ type: 'button_request' }));
-        } else if (command && command === "requestDefaultButtons") {
-            ws.send(JSON.stringify({ type: 'button_defaults_request' }));
-        } else {
-            ws.send(JSON.stringify({ type: 'button_update', buttons: getButtonsFromPage() }));
-        }
+        sendMessage(message);
     } else {
-        serverMessages.value = "WebSocket connection is not open";
+        connect().then(() => {
+            serverMessages.value = "WebSocket connection is not open";
+            sendMessage(message);
+        });
     }
+}
+
+function sendMessage(message) {
+    serverMessages.value = '';
+    ws.send(JSON.stringify({
+        type: message.type,
+        command: message.type === 'button_command' ? message.command : '',
+        buttons: message.type === 'button_update' ? getButtonsFromPage() : ''
+    }));
 }
 
 function moveButtonLeft(selectedButton) {
     if (selectedButton && selectedButton.previousElementSibling) {
         buttonContainer.insertBefore(selectedButton, selectedButton.previousElementSibling);
-        sendMessage();
+        messageServer({type: 'button_update'});
     }
 }
 
 function moveButtonRight(selectedButton) {
     if (selectedButton && selectedButton.nextElementSibling) {
         buttonContainer.insertBefore(selectedButton.nextElementSibling, selectedButton);
-        sendMessage();
+        messageServer({type: 'button_update'});
     }
 }
 
@@ -111,10 +112,10 @@ function openButtonForm(event, isNew) {
 
             populateIconSelect();
             
+            const name = callerButton.getAttribute('data-name');
             const command = callerButton.getAttribute('data-command');
             const icon = callerButton.getAttribute('data-icon');
             const color = callerButton.getAttribute('data-color');
-            const name = callerButton.getAttribute('data-name');
 
             const positionButtons = buttonForm.querySelector('#positionButtons');
             const formTitle = buttonForm.querySelector('#formTitle');
@@ -142,7 +143,7 @@ function openButtonForm(event, isNew) {
             if (!isNew) {
                 cancelButton.addEventListener('click', () => {
                     callerButton.remove();
-                    sendMessage();
+                    messageServer({type: 'button_update'});
                     return;
                 });
             }
@@ -202,7 +203,7 @@ function editButton(event, isNew) {
         });
 
         buttonInfocontainer.innerHTML = '';
-        sendMessage();
+        messageServer({type: 'button_update'});
         return;
     }
 
@@ -226,7 +227,7 @@ function editButton(event, isNew) {
     selectedButton.setAttribute('data-color', buttonColor);
 
     selectedButton.setAttribute('title', buttonName);
-    sendMessage();
+    messageServer({type: 'button_update'});
 }
 
 function makeButton(buttonData) {
@@ -246,7 +247,7 @@ function makeButton(buttonData) {
     buttonElement.addEventListener('click', () => {
         buttonInfocontainer.innerHTML = '';
         const command = buttonElement.getAttribute('data-command');
-        sendMessage(command);
+        messageServer({type: 'button_command', command: command});
     });
 
     buttonContainer.appendChild(buttonElement);
@@ -286,7 +287,7 @@ resetButton.addEventListener('click', function() {
     const confirmed = window.confirm("Are you sure? This can't be undone");
 
     if (confirmed) {
-        sendMessage('requestDefaultButtons');
+        messageServer({type: 'button_defaults_request'});
     } 
 
 });

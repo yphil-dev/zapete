@@ -1,7 +1,6 @@
 const ZPT = (function () {
     let pages = [];
     let links = [];
-    const versionNumberSpans = document.querySelectorAll('.version-number');
 
     fetch('/package.json')
         .then(response => {
@@ -11,11 +10,7 @@ const ZPT = (function () {
             return response.json();
         })
         .then(data => {
-
-            versionNumberSpans.forEach(function(versionNumberSpan) {
-                versionNumberSpan.textContent = data.version;
-            });
-
+            document.querySelectorAll('.version-number').forEach(elt => elt.textContent = data.version);
         })
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
@@ -25,7 +20,7 @@ const ZPT = (function () {
         pages = document.querySelectorAll('[data-page]');
         links = document.querySelectorAll('[data-role="link"]');
         //pages[0].className = "active";  - already done in the HTML
-        [].forEach.call(links, function(link){
+        links.forEach(link => {
             link.addEventListener("click", navigate);
         });
     });
@@ -39,7 +34,7 @@ const ZPT = (function () {
         var burger = document.querySelector('.navbar-burger');
         var menu = document.querySelector('#' + burger.dataset.target);
 
-        [].forEach.call(links, function(link){
+        links.forEach(link => {
             if (link.href.split("#")[1] === id){
                 link.classList.add('active-link');
             } else {
@@ -52,8 +47,7 @@ const ZPT = (function () {
             menu.classList.toggle('is-active');
         }
 
-        [].forEach.call(pages, function(page){
-
+        pages.forEach(page => {
             if (event.currentTarget.id !== 'logo') {
                 burger.classList.toggle('is-active');
             }
@@ -68,7 +62,6 @@ const ZPT = (function () {
                 }
 
             }
-
         });
 
         return false;

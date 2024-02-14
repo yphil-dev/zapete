@@ -171,7 +171,6 @@ function readButtonsFile(ws, fileName) {
                 console.error('Error parsing buttons file:', parseError);
             }
         }
-
         sendButtonsToClient(ws, 'buttons-defaults.json');
     });
 }
@@ -182,7 +181,6 @@ function sendButtonsToClient(ws, fileName) {
             console.error('Error loading buttons from file:', err);
             return;
         }
-
         ws.send(data);
     });
 }
