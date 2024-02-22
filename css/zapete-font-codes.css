@@ -28,6 +28,8 @@
 .icon-volume-middle:before { content: '\e81a'; } /* '' */
 .icon-volume-high:before { content: '\e81b'; } /* '' */
 .icon-minus:before { content: '\e81c'; } /* '' */
+.icon-plus-outline:before { content: '\e81d'; } /* '' */
+.icon-minus-outline:before { content: '\e81e'; } /* '' */
 .icon-plus:before { content: '\e81f'; } /* '' */
 .icon-up-circle:before { content: '\e820'; } /* '' */
 .icon-left-circle:before { content: '\e821'; } /* '' */
@@ -39,9 +41,17 @@
 .icon-plus-circle:before { content: '\e827'; } /* '' */
 .icon-minus-circle:before { content: '\e828'; } /* '' */
 .icon-cancel-circle:before { content: '\e829'; } /* '' */
+.icon-home-outline:before { content: '\e82a'; } /* '' */
+.icon-down:before { content: '\e82b'; } /* '' */
+.icon-up:before { content: '\e82c'; } /* '' */
+.icon-loop-alt:before { content: '\e82d'; } /* '' */
+.icon-flash-outline:before { content: '\e82e'; } /* '' */
+.icon-resize-small:before { content: '\e82f'; } /* '' */
+.icon-petrolette.space:before { content: '\e830'; } /* '' */
 .icon-firefox:before { content: '\e840'; } /* '' */
 .icon-chrome:before { content: '\e841'; } /* '' */
 .icon-bell:before { content: '\f03f'; } /* '' */
+.icon-link:before { content: '\f07b'; } /* '' */
 .icon-up-circled:before { content: '\f0aa'; } /* '' */
 .icon-youtube:before { content: '\f16a'; } /* '' */
 .icon-connect:before { content: '\f1e6'; } /* '' */
