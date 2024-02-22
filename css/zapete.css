@@ -76,3 +76,8 @@ nav.navbar {
 .buttonButtons {
   justify-content: center !important;
 }
+
+[class^="icon-"]:before, [class*=" icon-"]:before {
+  margin-left: 0 !important;
+  font-size: 120%;
+}
