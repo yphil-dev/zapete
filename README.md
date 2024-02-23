@@ -6,19 +6,16 @@ Remote control for any computer in your local network.
 
 ## Installation
 
+Install and run in on the target machine
+
 ``` ejs
 git clone https://gitlab.com/yphil/zapete.git
 cd zapete
 npm install
+npm start
 ```
 
 ## Usage
-
-Run in on the target machine
-
-```js
-npm start
-```
 
 Scan the QRcode or point any browser to the displayed address, and tap "connect". Create buttons to send commands, run scripts, use your imagination.
 
