@@ -6,7 +6,7 @@ Remote control for any computer in your local network.
 
 ## Installation
 
-Install and run in on the target machine
+Install and run it on the target machine
 
 ``` ejs
 git clone https://gitlab.com/yphil/zapete.git
