@@ -78,6 +78,6 @@ nav.navbar {
 }
 
 [class^="icon-"]:before, [class*=" icon-"]:before {
-  margin-left: 0 !important;
+  margin: 0 !important;
   font-size: 120%;
 }

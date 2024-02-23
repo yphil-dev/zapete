@@ -20,7 +20,7 @@ Run in on the target machine
 npm start
 ```
 
-Scan the QRcode or point any browser to the displayed address, and tap "connect". Create buttons, send commands, everything is peachy.
+Scan the QRcode or point any browser to the displayed address, and tap "connect". Create buttons to send commands, run scripts, use your imagination.
 
 ## Contribute
 

@@ -47,9 +47,8 @@
 .icon-loop-alt:before { content: '\e82d'; } /* '' */
 .icon-flash-outline:before { content: '\e82e'; } /* '' */
 .icon-resize-small:before { content: '\e82f'; } /* '' */
-.icon-brand-petrolette.space:before { content: '\e830'; } /* '' */
-.icon-brand-firefox:before { content: '\e840'; } /* '' */
-.icon-brand-chrome:before { content: '\e841'; } /* '' */
+.icon-firefox:before { content: '\e840'; } /* '' */
+.icon-chrome:before { content: '\e841'; } /* '' */
 .icon-bell:before { content: '\f03f'; } /* '' */
 .icon-link:before { content: '\f07b'; } /* '' */
 .icon-up-circled:before { content: '\f0aa'; } /* '' */
