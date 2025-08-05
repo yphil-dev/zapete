@@ -1,5 +1,6 @@
 node_modules/
 package-lock.json
-fontello-*
 tmp/
 TAGS
+buttons.json
+img/zapete-qrcode.png
