@@ -359,6 +359,8 @@ function populateIconGrid() {
     noneOption.addEventListener('click', selectIcon);
     iconGrid.appendChild(noneOption);
 
+    let i = 0;
+
     // Create all icon options
     iconNames.forEach(iconName => {
         const iconOption = document.createElement('button');
@@ -366,7 +368,7 @@ function populateIconGrid() {
         iconOption.className = 'icon-option';
         iconOption.dataset.icon = `icon-${iconName}`;
         iconOption.innerHTML = `<i class="icon-${iconName}"></i>`;
-        iconOption.title = iconName;
+        iconOption.title = iconName + ": " + i++;
         iconOption.addEventListener('click', selectIcon);
         iconGrid.appendChild(iconOption);
     });
