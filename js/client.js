@@ -202,12 +202,12 @@ function editButton(event, isNew) {
 
     const buttonNameInput = document.querySelector('.button-name');
     const buttonCommandInput = document.querySelector('.button-command');
-    const iconSelect = document.querySelector('#iconSelect');
+    const selectedIconInput = document.getElementById('selectedIcon'); // Changed from iconSelect
     const colorSelect = document.querySelector('#colorSelect');
 
     const buttonName = buttonNameInput.value;
     const buttonCommand = buttonCommandInput.value;
-    const buttonIcon = iconSelect.value;
+    const buttonIcon = selectedIconInput.value; // Get value from hidden input now
     const buttonColor = colorSelect.value;
 
     document.querySelector('.help').textContent = "";
@@ -223,7 +223,6 @@ function editButton(event, isNew) {
     }
 
     if (isNew) {
-
         makeButton({
             name: buttonName,
             command: buttonCommand,
@@ -237,7 +236,6 @@ function editButton(event, isNew) {
     }
 
     let classesToRemove = [];
-
     const classesToKeep = ['is-large'];
 
     selectedButton.classList.forEach(className => {
@@ -250,8 +248,13 @@ function editButton(event, isNew) {
 
     selectedButton.textContent = (buttonIcon === "icon-none") ? buttonName : '';
 
-    selectedButton.classList.add(buttonColor, buttonIcon);
+    // Add the selected classes
+    selectedButton.classList.add(buttonColor);
+    if (buttonIcon !== "icon-none") {
+        selectedButton.classList.add(buttonIcon);
+    }
 
+    // Update data attributes
     selectedButton.setAttribute('data-name', buttonName);
     selectedButton.setAttribute('data-command', buttonCommand);
     selectedButton.setAttribute('data-icon', buttonIcon);
