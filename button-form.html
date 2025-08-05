@@ -43,13 +43,6 @@
     </div>
 
     <div class="field">
-        <label class="label">Icon</label>
-        <div class="control select is-primary">
-            <select id="iconSelect"></select>
-        </div>
-    </div>
-
-    <div class="field">
         <label class="label">Color</label>
         <div class="control select">
             <select id="colorSelect">
@@ -62,6 +55,12 @@
                 <option value="is-danger" class="is-danger">danger</option>
             </select>
         </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Icon</label>
+        <input type="hidden" id="selectedIcon" value="">
+        <div id="iconGrid" class="icon-grid"></div>
     </div>
 
 </div>

@@ -52,12 +52,12 @@ function connect() {
                 messageServer({type: 'button_request'});
             });
             messageServer({type: 'button_request'});
-            
+
             resolve();
         };
 
         ws.onerror = function(error) {
-            reject(error); 
+            reject(error);
         };
 
         ws.onmessage = function(event) {
@@ -114,21 +114,22 @@ function moveButtonRight(selectedButton) {
 
 function openButtonForm(event, isNew) {
     event.preventDefault();
-    
+
     callerButton = event.target;
 
     fetch('button-form.html')
         .then(response => response.text())
         .then(html => {
             const buttonForm = document.createElement('article');
-            
+
             buttonForm.classList.add('message', 'is-fullwidth');
             buttonForm.innerHTML = html;
             buttonInfocontainer.innerHTML = '';
             buttonInfocontainer.appendChild(buttonForm);
 
-            populateIconSelect();
-            
+            // Populate the icon grid instead of select
+            populateIconGrid();
+
             const name = callerButton.getAttribute('data-name');
             const command = callerButton.getAttribute('data-command');
             const icon = callerButton.getAttribute('data-icon');
@@ -145,9 +146,8 @@ function openButtonForm(event, isNew) {
             const buttonCommandOption = buttonForm.querySelector('.button-command');
             const leftButton = buttonForm.querySelector('.left');
             const rightButton = buttonForm.querySelector('.right');
-
-            const iconSelect = buttonForm.querySelector('#iconSelect');
             const colorSelect = buttonForm.querySelector('#colorSelect');
+            const selectedIconInput = buttonForm.querySelector('#selectedIcon');
 
             formTitle.textContent = isNew ? "Add button" : "Edit button";
             saveButton.textContent = isNew ? "Add" : "Save";
@@ -164,20 +164,29 @@ function openButtonForm(event, isNew) {
                     if (window.confirm("Are you sure? This can't be undone")) {
                         callerButton.remove();
                         messageServer({type: 'button_update'});
-                    } 
+                    }
                 });
             }
-           
+
             buttonNameInput.value = name;
             buttonCommandOption.value = command;
             colorSelect.value = color || "is-none";
             colorSelect.selected = true;
 
-            iconSelect.value = icon || "icon-none";
-            iconSelect.selected = true;
-            
+            // Set the selected icon value
+            selectedIconInput.value = icon || "icon-none";
+
+            // Select the corresponding icon visually after a small delay
+            setTimeout(() => {
+                const selectedIcon = icon || "icon-none";
+                const iconButton = buttonForm.querySelector(`.icon-option[data-icon="${selectedIcon}"]`);
+                if (iconButton) {
+                    iconButton.classList.add('selected');
+                }
+            }, 100);
+
             leftButton.addEventListener('click', () => moveButtonLeft(callerButton));
-            rightButton.addEventListener('click', () => moveButtonRight(callerButton));    
+            rightButton.addEventListener('click', () => moveButtonRight(callerButton));
 
             buttonForm.querySelector('.cancel').addEventListener('click', () => buttonInfocontainer.innerHTML = '');
             buttonForm.querySelector('.delete').addEventListener('click', () => buttonInfocontainer.innerHTML = '');
@@ -188,21 +197,21 @@ function openButtonForm(event, isNew) {
 
 function editButton(event, isNew) {
     event.preventDefault();
-   
+
     const selectedButton = callerButton;
-   
+
     const buttonNameInput = document.querySelector('.button-name');
     const buttonCommandInput = document.querySelector('.button-command');
     const iconSelect = document.querySelector('#iconSelect');
     const colorSelect = document.querySelector('#colorSelect');
-    
+
     const buttonName = buttonNameInput.value;
     const buttonCommand = buttonCommandInput.value;
     const buttonIcon = iconSelect.value;
     const buttonColor = colorSelect.value;
 
     document.querySelector('.help').textContent = "";
-    
+
     if (!buttonCommand) {
         document.querySelector('.help-command').textContent = 'Please provide a valid command name.';
         return;
@@ -214,7 +223,7 @@ function editButton(event, isNew) {
     }
 
     if (isNew) {
-        
+
         makeButton({
             name: buttonName,
             command: buttonCommand,
@@ -264,8 +273,8 @@ function makeButton(buttonData) {
     buttonElement.setAttribute('data-color', buttonData.color);
 
     buttonElement.setAttribute('oncontextmenu', 'openButtonForm(event, false); return false;');
-    buttonElement.setAttribute('title', buttonData.name);       
-    
+    buttonElement.setAttribute('title', buttonData.name);
+
     buttonElement.addEventListener('click', () => {
         buttonInfocontainer.innerHTML = '';
         const command = buttonElement.getAttribute('data-command');
@@ -273,7 +282,7 @@ function makeButton(buttonData) {
     });
 
     buttonContainer.appendChild(buttonElement);
-    
+
 }
 
 function getButtonsFromPage() {
@@ -290,7 +299,7 @@ function getButtonsFromPage() {
 }
 
 function setButtonsToPage(buttons) {
-    
+
     buttonContainer.innerHTML = '';
 
     buttons.forEach(button => {
@@ -301,44 +310,75 @@ function setButtonsToPage(buttons) {
             icon: button.icon,
             color: button.color
         });
-        
+
     });
 }
 
 resetButton.addEventListener('click', function() {
     if (window.confirm("Are you sure? This can't be undone")) {
         messageServer({type: 'button_defaults_request'});
-    } 
+    }
 });
 
-function populateIconSelect() {
+function populateIconGrid() {
     const iconNames = [];
     const styleSheets = document.styleSheets;
+
+    // Collect all icon names from stylesheets
     Array.from(styleSheets).forEach(styleSheet => {
-        const rules = styleSheet.rules || styleSheet.cssRules;
-        Array.from(rules).forEach(rule => {
-            const selector = rule.selectorText;
-            if (selector && selector.startsWith('.icon-')) {
-                const match = /\.icon-(.*?):before/.exec(selector);
-                if (match && match[1]) {
-                    const cleanedIconName = match[1].replace(/:$/, '');
-                    iconNames.push(cleanedIconName);
+        try {
+            const rules = styleSheet.rules || styleSheet.cssRules;
+            Array.from(rules).forEach(rule => {
+                const selector = rule.selectorText;
+                if (selector && selector.startsWith('.icon-')) {
+                    const match = /\.icon-(.*?):before/.exec(selector);
+                    if (match && match[1]) {
+                        const cleanedIconName = match[1].replace(/:$/, '');
+                        iconNames.push(cleanedIconName);
+                    }
                 }
-            }
-        });
+            });
+        } catch (e) {
+            console.warn('Could not access stylesheet:', e);
+        }
     });
 
-    const selectMenu = document.getElementById('iconSelect');
-    const optionNone = document.createElement('option');
-    optionNone.textContent = "none";
-    optionNone.value = "icon-none";
-    optionNone.classList.add("icon-none");
-    selectMenu.appendChild(optionNone);
+    const iconGrid = document.getElementById('iconGrid');
+    iconGrid.innerHTML = '';
+
+    // Create "none" option
+    const noneOption = document.createElement('button');
+    noneOption.type = 'button';
+    noneOption.className = 'icon-option';
+    noneOption.dataset.icon = 'icon-none';
+    noneOption.innerHTML = '<div class="icon-placeholder">×</div>';
+    noneOption.title = "No icon";
+    noneOption.addEventListener('click', selectIcon);
+    iconGrid.appendChild(noneOption);
+
+    // Create all icon options
     iconNames.forEach(iconName => {
-        const option = document.createElement('option');
-        option.textContent = iconName;
-        option.value = "icon-" + iconName;
-        selectMenu.appendChild(option);
+        const iconOption = document.createElement('button');
+        iconOption.type = 'button';
+        iconOption.className = 'icon-option';
+        iconOption.dataset.icon = `icon-${iconName}`;
+        iconOption.innerHTML = `<i class="icon-${iconName}"></i>`;
+        iconOption.title = iconName;
+        iconOption.addEventListener('click', selectIcon);
+        iconGrid.appendChild(iconOption);
     });
 }
 
+function selectIcon(event) {
+    // Remove selection from all buttons
+    document.querySelectorAll('.icon-option').forEach(btn => {
+        btn.classList.remove('selected');
+    });
+
+    // Add selection to clicked button
+    const selectedButton = event.currentTarget;
+    selectedButton.classList.add('selected');
+
+    // Set hidden input value
+    document.getElementById('selectedIcon').value = selectedButton.dataset.icon;
+}

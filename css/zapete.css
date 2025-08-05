@@ -81,3 +81,40 @@ nav.navbar {
   margin: 0 !important;
   font-size: 120%;
 }
+
+/* Icon grid */
+
+/* Icon Grid Styles */
+.icon-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.icon-option {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #dbdbdb;
+    border-radius: 4px;
+    background: white;
+    cursor: pointer;
+    padding: 0;
+}
+
+.icon-option:hover {
+    border-color: #3273dc;
+}
+
+.icon-option.selected {
+    border: 2px solid #3273dc;
+    background-color: #eef4ff;
+}
+
+.icon-placeholder {
+    font-size: 20px;
+    color: #7a7a7a;
+}
