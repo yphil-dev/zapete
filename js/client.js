@@ -127,7 +127,7 @@ function openButtonForm(event, isNew) {
             buttonInfocontainer.innerHTML = '';
             buttonInfocontainer.appendChild(buttonForm);
 
-            // Populate the icon grid instead of select
+            initColorPicker();
             populateIconGrid();
 
             const name = callerButton.getAttribute('data-name');
@@ -222,6 +222,19 @@ function editButton(event, isNew) {
     const buttonIcon = selectedIconInput.value; // Get value from hidden input now
     const buttonColor = colorSelect.value;
 
+    function getSelectedColor() {
+        const selectedOption = document.querySelector('#colorGrid .selected');
+        console.log("selectedOption: ", selectedOption);
+        if (!selectedOption) return null; // No selection
+
+        // Return the hex color or "none" if that's what's selected
+        return selectedOption.dataset.color === 'none'
+            ? null
+            : selectedOption.dataset.color;
+    }
+
+    const hexColor = getSelectedColor();
+
     document.querySelector('.help').textContent = "";
 
     if (!buttonCommand) {
@@ -239,7 +252,8 @@ function editButton(event, isNew) {
             name: buttonName,
             command: buttonCommand,
             icon: buttonIcon,
-            color: buttonColor
+            color: buttonColor,
+            hexcolor: hexColor
         });
 
         buttonInfocontainer.innerHTML = '';
@@ -261,7 +275,7 @@ function editButton(event, isNew) {
     selectedButton.textContent = (buttonIcon === "icon-none") ? buttonName : '';
 
     // Add the selected classes
-    selectedButton.classList.add(buttonColor);
+    // selectedButton.classList.add(buttonColor);
     if (buttonIcon !== "icon-none") {
         selectedButton.classList.add(buttonIcon);
     }
@@ -271,6 +285,10 @@ function editButton(event, isNew) {
     selectedButton.setAttribute('data-command', buttonCommand);
     selectedButton.setAttribute('data-icon', buttonIcon);
     selectedButton.setAttribute('data-color', buttonColor);
+    selectedButton.setAttribute('data-hexcolor', hexColor);
+    selectedButton.style.backgroundColor = hexColor;
+
+    console.log("hexColor: ", hexColor);
 
     selectedButton.setAttribute('title', buttonName);
     messageServer({type: 'button_update'});
@@ -310,7 +328,8 @@ function getButtonsFromPage() {
             name: buttonElement.getAttribute('data-name'),
             command: buttonElement.getAttribute('data-command'),
             icon: buttonElement.getAttribute('data-icon'),
-            color: buttonElement.getAttribute('data-color')
+            color: buttonElement.getAttribute('data-color'),
+            hexcolor: buttonElement.getAttribute('data-hexcolor')
         });
     });
     return buttons;
@@ -338,6 +357,27 @@ resetButton.addEventListener('click', function() {
         messageServer({type: 'button_defaults_request'});
     }
 });
+
+function initColorPicker() {
+  const colorGrid = document.getElementById('colorGrid');
+  const colorOptions = colorGrid.querySelectorAll('.color-option');
+
+  colorOptions.forEach(option => {
+    option.addEventListener('click', function() {
+      // Remove selected class from all options
+      colorOptions.forEach(opt => opt.classList.remove('selected'));
+
+      // Add selected class to clicked option
+      this.classList.add('selected');
+
+      // Update the hidden input value
+      document.getElementById('selectedColor').value = this.dataset.color;
+
+      // For debugging - can remove later
+      console.log('Selected color:', this.dataset.color);
+    });
+  });
+}
 
 function populateIconGrid() {
     const iconNames = [];
@@ -384,7 +424,7 @@ function populateIconGrid() {
         iconOption.className = 'icon-option';
         iconOption.dataset.icon = `icon-${iconName}`;
         iconOption.innerHTML = `<i class="icon-${iconName}"></i>`;
-        iconOption.title = iconName + ": " + i++;
+        iconOption.title = iconName;
         iconOption.addEventListener('click', selectIcon);
         iconGrid.appendChild(iconOption);
     });
@@ -402,4 +442,18 @@ function selectIcon(event) {
 
     // Set hidden input value
     document.getElementById('selectedIcon').value = selectedButton.dataset.icon;
+}
+
+function selectColor() {
+    // Remove selected class from all options
+    colorOptions.forEach(opt => opt.classList.remove('selected'));
+
+    // Add selected class to clicked option
+    this.classList.add('selected');
+
+    // Update the hidden input value
+    document.getElementById('selectedColor').value = this.dataset.color;
+
+    // For debugging - can remove later
+    console.log('Selected color:', this.dataset.color);
 }
