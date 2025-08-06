@@ -15,6 +15,10 @@ const configDir = path.join(os.homedir(), '.config', 'zapete');
 const buttonsPath = path.join(configDir, 'buttons.json');
 const defaultsPath = path.join(__dirname, '..', 'buttons-defaults.json');
 
+function prettyConfigPath(fullPath) {
+  return fullPath.replace(os.homedir(), '~');
+}
+
 if (!fs.existsSync(configDir)) {
     fs.mkdirSync(configDir, { recursive: true });
 }
@@ -219,8 +223,8 @@ function saveButtonsToServer(ws) {
             ws.send('Error saving buttons to server:' + err);
             console.error('Error saving buttons to server:', err);
         } else {
-            ws.send(`Buttons saved to ${buttonsPath}`);
-            console.log('Buttons saved to', buttonsPath);
+            ws.send(`Buttons saved to ${prettyConfigPath(buttonsPath)}`);
+            console.log('Buttons saved to', prettyConfigPath(buttonsPath));
         }
     });
 }

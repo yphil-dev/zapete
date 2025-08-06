@@ -133,7 +133,6 @@ function openButtonForm(event, isNew) {
             const name = callerButton.getAttribute('data-name');
             const command = callerButton.getAttribute('data-command');
             const icon = callerButton.getAttribute('data-icon');
-            const color = callerButton.getAttribute('data-color');
             const hexcolor = callerButton.getAttribute('data-hexcolor');
 
             buttonForm.querySelectorAll('.positionButton').forEach(button => {
@@ -147,7 +146,6 @@ function openButtonForm(event, isNew) {
             const buttonCommandOption = buttonForm.querySelector('.button-command');
             const leftButton = buttonForm.querySelector('.left');
             const rightButton = buttonForm.querySelector('.right');
-            const colorSelect = buttonForm.querySelector('#colorSelect');
             const selectedIconInput = buttonForm.querySelector('#selectedIcon');
 
             formTitle.textContent = isNew ? "Add button" : "Edit button";
@@ -171,8 +169,6 @@ function openButtonForm(event, isNew) {
 
             buttonNameInput.value = name;
             buttonCommandOption.value = command;
-            colorSelect.value = color || "is-none";
-            colorSelect.selected = true;
 
             // Set the selected icon value
             selectedIconInput.value = icon || "icon-none";
@@ -189,9 +185,7 @@ function openButtonForm(event, isNew) {
             // Select the corresponding color visually after a small delay
             setTimeout(() => {
                 const selectedColor = hexcolor || "none";
-                console.log("selectedColor: ", selectedColor);
                 const colorButton = buttonForm.querySelector(`.color-option[data-color="${selectedColor}"]`);
-                console.log("colorButton: ", colorButton);
                 if (colorButton) {
                     colorButton.classList.add('selected');
                 }
@@ -215,16 +209,13 @@ function editButton(event, isNew) {
     const buttonNameInput = document.querySelector('.button-name');
     const buttonCommandInput = document.querySelector('.button-command');
     const selectedIconInput = document.getElementById('selectedIcon'); // Changed from iconSelect
-    const colorSelect = document.querySelector('#colorSelect');
 
     const buttonName = buttonNameInput.value;
     const buttonCommand = buttonCommandInput.value;
     const buttonIcon = selectedIconInput.value; // Get value from hidden input now
-    const buttonColor = colorSelect.value;
 
     function getSelectedColor() {
         const selectedOption = document.querySelector('#colorGrid .selected');
-        console.log("selectedOption: ", selectedOption);
         if (!selectedOption) return null; // No selection
 
         // Return the hex color or "none" if that's what's selected
@@ -252,7 +243,6 @@ function editButton(event, isNew) {
             name: buttonName,
             command: buttonCommand,
             icon: buttonIcon,
-            color: buttonColor,
             hexcolor: hexColor
         });
 
@@ -284,11 +274,8 @@ function editButton(event, isNew) {
     selectedButton.setAttribute('data-name', buttonName);
     selectedButton.setAttribute('data-command', buttonCommand);
     selectedButton.setAttribute('data-icon', buttonIcon);
-    selectedButton.setAttribute('data-color', buttonColor);
     selectedButton.setAttribute('data-hexcolor', hexColor);
     selectedButton.style.backgroundColor = hexColor;
-
-    console.log("hexColor: ", hexColor);
 
     selectedButton.setAttribute('title', buttonName);
     messageServer({type: 'button_update'});
@@ -328,7 +315,6 @@ function getButtonsFromPage() {
             name: buttonElement.getAttribute('data-name'),
             command: buttonElement.getAttribute('data-command'),
             icon: buttonElement.getAttribute('data-icon'),
-            color: buttonElement.getAttribute('data-color'),
             hexcolor: buttonElement.getAttribute('data-hexcolor')
         });
     });
@@ -364,17 +350,8 @@ function initColorPicker() {
 
   colorOptions.forEach(option => {
     option.addEventListener('click', function() {
-      // Remove selected class from all options
       colorOptions.forEach(opt => opt.classList.remove('selected'));
-
-      // Add selected class to clicked option
       this.classList.add('selected');
-
-      // Update the hidden input value
-      document.getElementById('selectedColor').value = this.dataset.color;
-
-      // For debugging - can remove later
-      console.log('Selected color:', this.dataset.color);
     });
   });
 }
@@ -442,18 +419,4 @@ function selectIcon(event) {
 
     // Set hidden input value
     document.getElementById('selectedIcon').value = selectedButton.dataset.icon;
-}
-
-function selectColor() {
-    // Remove selected class from all options
-    colorOptions.forEach(opt => opt.classList.remove('selected'));
-
-    // Add selected class to clicked option
-    this.classList.add('selected');
-
-    // Update the hidden input value
-    document.getElementById('selectedColor').value = this.dataset.color;
-
-    // For debugging - can remove later
-    console.log('Selected color:', this.dataset.color);
 }
