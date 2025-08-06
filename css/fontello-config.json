@@ -195,6 +195,30 @@
       "src": "fontawesome"
     },
     {
+      "uid": "dfec4ffa849d8594c2e4b86f6320b8a6",
+      "css": "page-down",
+      "code": 59416,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "63b3012c8cbe3654ba5bea598235aa3a",
+      "css": "page-up",
+      "code": 59417,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "dea706a9bd3144316ce37406ec10f469",
+      "css": "home",
+      "code": 61768,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "4684e690bad65fb618329dfe52017475",
+      "css": "end",
+      "code": 59425,
+      "src": "fontawesome"
+    },
+    {
       "uid": "0111ac0cc364656c6168769b78bab24c",
       "css": ".notdef",
       "code": 59392,

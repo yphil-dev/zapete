@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'zapete-font';
-  src: url('../font/zapete-font.eot?16793568');
-  src: url('../font/zapete-font.eot?16793568#iefix') format('embedded-opentype'),
-       url('../font/zapete-font.woff2?16793568') format('woff2'),
-       url('../font/zapete-font.woff?16793568') format('woff'),
-       url('../font/zapete-font.ttf?16793568') format('truetype'),
-       url('../font/zapete-font.svg?16793568#zapete-font') format('svg');
+  src: url('../font/zapete-font.eot?91142200');
+  src: url('../font/zapete-font.eot?91142200#iefix') format('embedded-opentype'),
+       url('../font/zapete-font.woff2?91142200') format('woff2'),
+       url('../font/zapete-font.woff?91142200') format('woff'),
+       url('../font/zapete-font.ttf?91142200') format('truetype'),
+       url('../font/zapete-font.svg?91142200#zapete-font') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -15,7 +15,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'zapete-font';
-    src: url('../font/zapete-font.svg?16793568#zapete-font') format('svg');
+    src: url('../font/zapete-font.svg?91142200#zapete-font') format('svg');
   }
 }
 */
@@ -73,6 +73,9 @@
 .icon-volume-up:before { content: '\e815'; } /* '' */
 .icon-up:before { content: '\e816'; } /* '' */
 .icon-down:before { content: '\e817'; } /* '' */
+.icon-page-down:before { content: '\e818'; } /* '' */
+.icon-page-up:before { content: '\e819'; } /* '' */
+.icon-end:before { content: '\e821'; } /* '' */
 .icon-link:before { content: '\e830'; } /* '' */
 .icon-refresh:before { content: '\e831'; } /* '' */
 .icon-mail:before { content: '\e832'; } /* '' */
@@ -83,4 +86,5 @@
 .icon-bell:before { content: '\f03f'; } /* '' */
 .icon-mic-off:before { content: '\f047'; } /* '' */
 .icon-unlink:before { content: '\f127'; } /* '' */
+.icon-home:before { content: '\f148'; } /* '' */
 .icon-plug:before { content: '\f1e6'; } /* '' */

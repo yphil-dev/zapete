@@ -202,7 +202,7 @@ function saveButtonsToServer(ws) {
             ws.send('Error saving buttons to server:' + err);
             console.error('Error saving buttons to server:', err);
         } else {
-            ws.send('Buttons saved to server');
+            ws.send(`Buttons saved to ${buttonsPath}`);
             console.log('Buttons saved to', buttonsPath);
         }
     });

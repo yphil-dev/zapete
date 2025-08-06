@@ -18,6 +18,9 @@
 .icon-volume-up:before { content: '\e815'; } /* '' */
 .icon-up:before { content: '\e816'; } /* '' */
 .icon-down:before { content: '\e817'; } /* '' */
+.icon-page-down:before { content: '\e818'; } /* '' */
+.icon-page-up:before { content: '\e819'; } /* '' */
+.icon-end:before { content: '\e821'; } /* '' */
 .icon-link:before { content: '\e830'; } /* '' */
 .icon-refresh:before { content: '\e831'; } /* '' */
 .icon-mail:before { content: '\e832'; } /* '' */
@@ -28,4 +31,5 @@
 .icon-bell:before { content: '\f03f'; } /* '' */
 .icon-mic-off:before { content: '\f047'; } /* '' */
 .icon-unlink:before { content: '\f127'; } /* '' */
+.icon-home:before { content: '\f148'; } /* '' */
 .icon-plug:before { content: '\f1e6'; } /* '' */
