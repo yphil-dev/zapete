@@ -48,14 +48,31 @@ server.listen(options.port, () => {
 
 const wss = new WebSocket.Server(wsOptions);
 
+let isShuttingDown = false;
+
 process.on('SIGINT', () => {
-    console.log('Shutting down HTTP server...');
-    closeWebSocketServer();
+  if (isShuttingDown) return;
+  isShuttingDown = true;
+
+  console.log('\nShutting down gracefully...');
+
+  // Close WebSocket server first
+  wss.clients.forEach(client => client.terminate());
+  wss.close(() => {
+    console.log('WebSocket server closed');
+
+    // Then close HTTP server
     server.close(() => {
-        console.log('HTTP server shut down.');
-        process.exit(0);
+      console.log('HTTP server closed');
+      process.exit(0);
     });
+  });
 });
+
+// Make server start return the prompt by detaching properly
+if (require.main === module) {
+  process.stdin.resume(); // Keep stdin open to catch SIGINT
+}
 
 Object.keys(interfaces).forEach((interfaceName) => {
     interfaces[interfaceName].forEach((interface) => {
