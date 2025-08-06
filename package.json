@@ -1,6 +1,6 @@
 {
     "name": "Zapete",
-    "version": "0.1.3",
+    "version": "0.2.1",
     "description": "Remote control for any computer in your local network",
     "http-port": "8009",
     "websocket-port": "8008",

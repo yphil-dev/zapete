@@ -11,6 +11,20 @@ const wsPort = process.env.npm_package_websocket_port || 8008;
 
 const version = process.env.npm_package_version;
 
+const configDir = path.join(os.homedir(), '.config', 'zapete');
+const buttonsPath = path.join(configDir, 'buttons.json');
+const defaultsPath = path.join(__dirname, '..', 'buttons-defaults.json');
+
+if (!fs.existsSync(configDir)) {
+    fs.mkdirSync(configDir, { recursive: true });
+}
+
+// Initialize config file if it doesn't exist
+if (!fs.existsSync(buttonsPath)) {
+    fs.copyFileSync(defaultsPath, buttonsPath);
+    console.log('Initialized new config file at', buttonsPath);
+}
+
 console.log('version: ', version);
 
 const interfaces = os.networkInterfaces();
@@ -63,7 +77,6 @@ function closeWebSocketServer() {
 }
 
 wss.on('connection', function connection(ws) {
-
     console.log('Client connected');
 
     ws.on('message', function incoming(message) {
@@ -73,7 +86,6 @@ wss.on('connection', function connection(ws) {
             console.log('Received shutdown request. Closing WebSocket server...');
             wss.close(() => {
                 console.log('WebSocket server closed.');
-                process.exit(0); 
                 server.close(() => {
                     console.log('HTTP server shut down.');
                     process.exit(0);
@@ -83,22 +95,21 @@ wss.on('connection', function connection(ws) {
             buttons = data.buttons;
             saveButtonsToServer(ws);
         } else if (data.type === 'button_request') {
-            readButtonsFile(ws, 'buttons.json');
+            readButtonsFile(ws, buttonsPath); // Updated path
         } else if (data.type === 'button_defaults_request') {
-            readButtonsFile(ws, 'buttons-defaults.json');
+            readButtonsFile(ws, defaultsPath);
         } else {
-            executeCommand(data.command.toString(), ws); 
+            executeCommand(data.command.toString(), ws);
         }
     });
-    
+
     ws.send('Right click / long press a button to edit');
-    
 });
 
 function openWithXDG(arg) {
 
     let toOpen;
-    
+
     toOpen = (arg.startsWith('http')) ? arg : path.resolve(arg);
 
     exec('which xdg-open', (err, stdout, stderr) => {
@@ -107,7 +118,7 @@ function openWithXDG(arg) {
             return;
         }
         if (stdout) {
-            
+
             exec(`xdg-open ${toOpen}`, (err, stdout, stderr) => {
                 if (err) {
                     console.error('Error opening with xdg-open:', err);
@@ -186,13 +197,13 @@ function sendButtonsToClient(ws, fileName) {
 }
 
 function saveButtonsToServer(ws) {
-    fs.writeFile('buttons.json', JSON.stringify(buttons), 'utf8', (err) => {
+    fs.writeFile(buttonsPath, JSON.stringify(buttons), 'utf8', (err) => {
         if (err) {
             ws.send('Error saving buttons to server:' + err);
             console.error('Error saving buttons to server:', err);
         } else {
             ws.send('Buttons saved to server');
-            console.log('Buttons saved to server');
+            console.log('Buttons saved to', buttonsPath);
         }
     });
 }
