@@ -266,7 +266,7 @@ function editButton(event, isNew) {
 
 function makeButton(buttonData) {
     const buttonElement = document.createElement('button');
-    buttonElement.classList.add('button', 'is-large', 'column', 'block', buttonData.color, buttonData.icon);
+    buttonElement.classList.add('button', 'is-large', 'column', 'block', buttonData.icon);
     buttonElement.innerHTML = (buttonData.icon === "icon-none") ? buttonData.name : "";
 
     buttonElement.setAttribute('name', buttonData.name);
@@ -274,6 +274,9 @@ function makeButton(buttonData) {
     buttonElement.setAttribute('data-command', buttonData.command);
     buttonElement.setAttribute('data-icon', buttonData.icon);
     buttonElement.setAttribute('data-color', buttonData.color);
+    buttonElement.setAttribute('data-hexcolor', buttonData.hexcolor);
+
+    buttonElement.style.backgroundColor = buttonData.hexcolor;
 
     buttonElement.setAttribute('oncontextmenu', 'openButtonForm(event, false); return false;');
     buttonElement.setAttribute('title', buttonData.name);
@@ -311,7 +314,8 @@ function setButtonsToPage(buttons) {
             name: button.name,
             command: button.command,
             icon: button.icon,
-            color: button.color
+            color: button.color,
+            hexcolor:button.hexcolor
         });
 
     });
