@@ -62,24 +62,59 @@
         <input type="hidden" id="selectedColor" value="is-primary">
         <div id="color-picker-container"></div>
         <div id="colorGrid" class="icon-grid">
-            <button type="button" class="icon-option" title="No color"><div class="button-placeholder">×</div></button>
-            <button type="button" class="icon-option" title="Select color" style="background-color:#f44336"><div class="button-placeholder"></div></button>
-            <button type="button" class="icon-option" title="Select color" style="background-color:#795548"><div class="button-placeholder"></div></button>
-            <button type="button" class="icon-option" title="Select color" style="background-color:#9C27B0"><div class="button-placeholder"></div></button>
-            <button type="button" class="icon-option" title="Select color" style="background-color:#673AB7"><div class="button-placeholder"></div></button>
-            <button type="button" class="icon-option" title="Select color" style="background-color:#3F51B5"><div class="button-placeholder"></div></button>
-            <button type="button" class="icon-option" title="Select color" style="background-color:#2196F3"><div class="button-placeholder"></div></button>
-            <button type="button" class="icon-option" title="Select color" style="background-color:#03A9F4"><div class="button-placeholder"></div></button>
-            <button type="button" class="icon-option" title="Select color" style="background-color:#00BCD4"><div class="button-placeholder"></div></button>
-            <button type="button" class="icon-option" title="Select color" style="background-color:#009688"><div class="button-placeholder"></div></button>
-            <button type="button" class="icon-option" title="Select color" style="background-color:#4CAF50"><div class="button-placeholder"></div></button>
-            <button type="button" class="icon-option" title="Select color" style="background-color:#8BC34A"><div class="button-placeholder"></div></button>
-            <button type="button" class="icon-option" title="Select color" style="background-color:#CDDC39"><div class="button-placeholder"></div></button>
-            <button type="button" class="icon-option" title="Select color" style="background-color:#FFEB3B"><div class="button-placeholder"></div></button>
-            <button type="button" class="icon-option" title="Select color" style="background-color:#FFC107"><div class="button-placeholder"></div></button>
-            <button type="button" class="icon-option" title="Select color" style="background-color:#FF9800"><div class="button-placeholder"></div></button>
-            <button type="button" class="icon-option" title="Select color" style="background-color:#FF5722"><div class="button-placeholder"></div></button>
+            <button type="button" class="color-option" title="No color" data-color="none">
+                <div class="button-placeholder">×</div>
+            </button>
+            <button type="button" class="color-option" title="Red" style="background-color:#f44336" data-color="#f44336">
+                <div class="button-placeholder"></div>
+            </button>
+            <button type="button" class="color-option" title="Brown" style="background-color:#795548" data-color="#795548">
+                <div class="button-placeholder"></div>
+            </button>
+            <button type="button" class="color-option" title="Purple" style="background-color:#9C27B0" data-color="#9C27B0">
+                <div class="button-placeholder"></div>
+            </button>
+            <button type="button" class="color-option" title="Deep Purple" style="background-color:#673AB7" data-color="#673AB7">
+                <div class="button-placeholder"></div>
+            </button>
+            <button type="button" class="color-option" title="Indigo" style="background-color:#3F51B5" data-color="#3F51B5">
+                <div class="button-placeholder"></div>
+            </button>
+            <button type="button" class="color-option" title="Blue" style="background-color:#2196F3" data-color="#2196F3">
+                <div class="button-placeholder"></div>
+            </button>
+            <button type="button" class="color-option" title="Light Blue" style="background-color:#03A9F4" data-color="#03A9F4">
+                <div class="button-placeholder"></div>
+            </button>
+            <button type="button" class="color-option" title="Cyan" style="background-color:#00BCD4" data-color="#00BCD4">
+                <div class="button-placeholder"></div>
+            </button>
+            <button type="button" class="color-option" title="Teal" style="background-color:#009688" data-color="#009688">
+                <div class="button-placeholder"></div>
+            </button>
+            <button type="button" class="color-option" title="Green" style="background-color:#4CAF50" data-color="#4CAF50">
+                <div class="button-placeholder"></div>
+            </button>
+            <button type="button" class="color-option" title="Light Green" style="background-color:#8BC34A" data-color="#8BC34A">
+                <div class="button-placeholder"></div>
+            </button>
+            <button type="button" class="color-option" title="Lime" style="background-color:#CDDC39" data-color="#CDDC39">
+                <div class="button-placeholder"></div>
+            </button>
+            <button type="button" class="color-option" title="Yellow" style="background-color:#FFEB3B" data-color="#FFEB3B">
+                <div class="button-placeholder"></div>
+            </button>
+            <button type="button" class="color-option" title="Amber" style="background-color:#FFC107" data-color="#FFC107">
+                <div class="button-placeholder"></div>
+            </button>
+            <button type="button" class="color-option" title="Orange" style="background-color:#FF9800" data-color="#FF9800">
+                <div class="button-placeholder"></div>
+            </button>
+            <button type="button" class="color-option" title="Deep Orange" style="background-color:#FF5722" data-color="#FF5722">
+                <div class="button-placeholder"></div>
+            </button>
         </div>
+
     </div>
 
     <div class="field">

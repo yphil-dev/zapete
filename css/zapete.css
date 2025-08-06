@@ -90,6 +90,18 @@ nav.navbar {
     margin-top: 8px;
 }
 
+.color-option {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #dbdbdb;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 0;
+}
+
 .icon-option {
     width: 40px;
     height: 40px;
@@ -107,9 +119,9 @@ nav.navbar {
     border-color: #3273dc;
 }
 
-.icon-option.selected {
-    border: 2px solid #3273dc;
-    background-color: #eef4ff;
+.icon-option.selected,
+.color-option.selected {
+    border: 2px solid #FF5B00;
 }
 
 .icon-placeholder {

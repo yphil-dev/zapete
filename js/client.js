@@ -134,6 +134,7 @@ function openButtonForm(event, isNew) {
             const command = callerButton.getAttribute('data-command');
             const icon = callerButton.getAttribute('data-icon');
             const color = callerButton.getAttribute('data-color');
+            const hexcolor = callerButton.getAttribute('data-hexcolor');
 
             buttonForm.querySelectorAll('.positionButton').forEach(button => {
                 button.style.display = isNew ? 'none' : 'block';
@@ -182,6 +183,17 @@ function openButtonForm(event, isNew) {
                 const iconButton = buttonForm.querySelector(`.icon-option[data-icon="${selectedIcon}"]`);
                 if (iconButton) {
                     iconButton.classList.add('selected');
+                }
+            }, 100);
+
+            // Select the corresponding color visually after a small delay
+            setTimeout(() => {
+                const selectedColor = hexcolor || "none";
+                console.log("selectedColor: ", selectedColor);
+                const colorButton = buttonForm.querySelector(`.color-option[data-color="${selectedColor}"]`);
+                console.log("colorButton: ", colorButton);
+                if (colorButton) {
+                    colorButton.classList.add('selected');
                 }
             }, 100);
 
