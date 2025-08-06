@@ -385,9 +385,9 @@ function populateIconGrid() {
     // Create "none" option
     const noneOption = document.createElement('button');
     noneOption.type = 'button';
-    noneOption.className = 'icon-option';
+    noneOption.className = 'icon-option swatch none';
     noneOption.dataset.icon = 'icon-none';
-    noneOption.innerHTML = '<div class="icon-placeholder">×</div>';
+    noneOption.innerHTML = '<div class="swatch-placeholder">×</div>';
     noneOption.title = "No icon";
     noneOption.addEventListener('click', selectIcon);
     iconGrid.appendChild(noneOption);
@@ -398,7 +398,7 @@ function populateIconGrid() {
     iconNames.forEach(iconName => {
         const iconOption = document.createElement('button');
         iconOption.type = 'button';
-        iconOption.className = 'icon-option';
+        iconOption.className = 'icon-option swatch';
         iconOption.dataset.icon = `icon-${iconName}`;
         iconOption.innerHTML = `<i class="icon-${iconName}"></i>`;
         iconOption.title = iconName;
