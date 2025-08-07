@@ -133,7 +133,7 @@ function openButtonForm(event, isNew) {
             const name = callerButton.getAttribute('data-name');
             const command = callerButton.getAttribute('data-command');
             const icon = callerButton.getAttribute('data-icon');
-            const hexcolor = callerButton.getAttribute('data-hexcolor');
+            const hexColor = callerButton.getAttribute('data-hexcolor');
 
             buttonForm.querySelectorAll('.positionButton').forEach(button => {
                 button.style.display = isNew ? 'none' : 'block';
@@ -184,8 +184,11 @@ function openButtonForm(event, isNew) {
 
             // Select the corresponding color visually after a small delay
             setTimeout(() => {
-                const selectedColor = hexcolor || "none";
+                const selectedColor = hexColor || "none";
+                console.log("hexcolor: ", hexColor);
+                console.log("selectedColor: ", selectedColor);
                 const colorButton = buttonForm.querySelector(`.color-option[data-color="${selectedColor}"]`);
+                console.log("colorButton: ", colorButton);
                 if (colorButton) {
                     colorButton.classList.add('selected');
                 }
@@ -220,7 +223,7 @@ function editButton(event, isNew) {
 
         // Return the hex color or "none" if that's what's selected
         return selectedOption.dataset.color === 'none'
-            ? null
+            ? 'none'
             : selectedOption.dataset.color;
     }
 
@@ -275,7 +278,15 @@ function editButton(event, isNew) {
     selectedButton.setAttribute('data-command', buttonCommand);
     selectedButton.setAttribute('data-icon', buttonIcon);
     selectedButton.setAttribute('data-hexcolor', hexColor);
-    selectedButton.style.backgroundColor = hexColor;
+    console.log("hexColorSaved: ", hexColor);
+
+    if (hexColor === 'none') {
+        selectedButton.style.removeProperty('background-color'); // Remove the style
+    } else {
+        selectedButton.style.backgroundColor = hexColor; // Apply the color
+    }
+
+    console.log("selectedButton: ", selectedButton);
 
     selectedButton.setAttribute('title', buttonName);
     messageServer({type: 'button_update'});
