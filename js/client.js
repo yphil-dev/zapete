@@ -280,10 +280,10 @@ function editButton(event, isNew) {
     selectedButton.setAttribute('data-hexcolor', hexColor);
     console.log("hexColorSaved: ", hexColor);
 
-    if (hexColor === 'none') {
-        selectedButton.style.removeProperty('background-color'); // Remove the style
+    if (hexColor !== 'none') {
+        selectedButton.style.backgroundColor = hexColor;
     } else {
-        selectedButton.style.backgroundColor = hexColor; // Apply the color
+        selectedButton.style.removeProperty('background-color');
     }
 
     console.log("selectedButton: ", selectedButton);

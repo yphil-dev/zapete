@@ -218,7 +218,8 @@ function sendButtonsToClient(ws, fileName) {
 }
 
 function saveButtonsToServer(ws) {
-    fs.writeFile(buttonsPath, JSON.stringify(buttons), 'utf8', (err) => {
+    const jsonData = JSON.stringify(buttons, null, 4);
+    fs.writeFile(buttonsPath, jsonData, 'utf8', (err) => {
         if (err) {
             ws.send('Error saving buttons to server:' + err);
             console.error('Error saving buttons to server:', err);
