@@ -1,3 +1,13 @@
+/* Override Bulma's font stack */
+body, button, input, textarea, select {
+  font-family: "Roboto", "Helvetica Neue", Arial, sans-serif !important;
+}
+
+/* Monospace elements (e.g., <code>) */
+pre, code {
+  font-family: "Courier New", monospace !important;
+}
+
 [data-page]{
     position:fixed; /* or absolute if the content exceeds the height of the page */
     width: 100%;

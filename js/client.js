@@ -146,7 +146,6 @@ function openButtonForm(event, isNew) {
             const buttonCommandOption = buttonForm.querySelector('.button-command');
             const leftButton = buttonForm.querySelector('.left');
             const rightButton = buttonForm.querySelector('.right');
-            const selectedIconInput = buttonForm.querySelector('#selectedIcon');
 
             formTitle.textContent = isNew ? "Add button" : "Edit button";
             saveButton.textContent = isNew ? "Add" : "Save";
@@ -170,10 +169,6 @@ function openButtonForm(event, isNew) {
             buttonNameInput.value = name;
             buttonCommandOption.value = command;
 
-            // Set the selected icon value
-            selectedIconInput.value = icon || "icon-none";
-
-            // Select the corresponding icon visually after a small delay
             setTimeout(() => {
                 const selectedIcon = icon || "icon-none";
                 const iconButton = buttonForm.querySelector(`.icon-option[data-icon="${selectedIcon}"]`);
@@ -182,13 +177,9 @@ function openButtonForm(event, isNew) {
                 }
             }, 100);
 
-            // Select the corresponding color visually after a small delay
             setTimeout(() => {
                 const selectedColor = hexColor || "none";
-                console.log("hexcolor: ", hexColor);
-                console.log("selectedColor: ", selectedColor);
                 const colorButton = buttonForm.querySelector(`.color-option[data-color="${selectedColor}"]`);
-                console.log("colorButton: ", colorButton);
                 if (colorButton) {
                     colorButton.classList.add('selected');
                 }
@@ -211,23 +202,20 @@ function editButton(event, isNew) {
 
     const buttonNameInput = document.querySelector('.button-name');
     const buttonCommandInput = document.querySelector('.button-command');
-    const selectedIconInput = document.getElementById('selectedIcon'); // Changed from iconSelect
 
     const buttonName = buttonNameInput.value;
     const buttonCommand = buttonCommandInput.value;
-    const buttonIcon = selectedIconInput.value; // Get value from hidden input now
 
-    function getSelectedColor() {
-        const selectedOption = document.querySelector('#colorGrid .selected');
-        if (!selectedOption) return null; // No selection
-
-        // Return the hex color or "none" if that's what's selected
-        return selectedOption.dataset.color === 'none'
+    function getSelectedItem(itemType) {
+        const selectedOption = document.querySelector(`#${itemType}Grid .selected`);
+        if (!selectedOption) return null;
+        return selectedOption.dataset[itemType] === 'none'
             ? 'none'
-            : selectedOption.dataset.color;
+            : selectedOption.dataset[itemType];
     }
 
-    const hexColor = getSelectedColor();
+    const hexColor = getSelectedItem('color');
+    const buttonIcon = getSelectedItem('icon');
 
     document.querySelector('.help').textContent = "";
 
@@ -278,15 +266,12 @@ function editButton(event, isNew) {
     selectedButton.setAttribute('data-command', buttonCommand);
     selectedButton.setAttribute('data-icon', buttonIcon);
     selectedButton.setAttribute('data-hexcolor', hexColor);
-    console.log("hexColorSaved: ", hexColor);
 
     if (hexColor !== 'none') {
         selectedButton.style.backgroundColor = hexColor;
     } else {
         selectedButton.style.removeProperty('background-color');
     }
-
-    console.log("selectedButton: ", selectedButton);
 
     selectedButton.setAttribute('title', buttonName);
     messageServer({type: 'button_update'});
@@ -427,7 +412,4 @@ function selectIcon(event) {
     // Add selection to clicked button
     const selectedButton = event.currentTarget;
     selectedButton.classList.add('selected');
-
-    // Set hidden input value
-    document.getElementById('selectedIcon').value = selectedButton.dataset.icon;
 }

@@ -1,1 +1,182 @@
-[{"name":"ping!","command":"paplay \"/usr/share/sounds/freedesktop/stereo/complete.oga\"","icon":"icon-bell","color":"is-warning"},{"name":"prev","command":"smplayer -send-action pl_prev","icon":"icon-pl_prev","color":"is-info"},{"name":"rewind3","command":"smplayer -send-action rewind3","icon":"icon-rewind3","color":"is-primary"},{"name":"rewind1","command":"smplayer -send-action rewind1","icon":"icon-rewind1","color":"is-primary"},{"name":"play / pause","command":"smplayer -send-action pause","icon":"icon-play-pause","color":"is-success"},{"name":"forward1","command":"smplayer -send-action forward1","icon":"icon-forward1","color":"is-primary"},{"name":"forward3","command":"smplayer -send-action forward3","icon":"icon-forward3","color":"is-primary"},{"name":"pl_next","command":"smplayer -send-action pl_next","icon":"icon-pl_next","color":"is-info"},{"name":"Sub -","command":"smplayer -send-action dec_sub_step","icon":"icon-none","color":"is-link"},{"name":"fullscreen","command":"smplayer -send-action fullscreen","icon":"icon-fullscreen","color":"is-none"},{"name":"Sub +","command":"smplayer -send-action inc_sub_step","icon":"icon-none","color":"is-link"},{"name":"Browser video play / pause","command":"playerctl play-pause","icon":"icon-youtube","color":"is-success"}]
+[
+    {
+        "name": "rewind3",
+        "command": "smplayer -send-action rewind3",
+        "icon": "icon-fast-backward",
+        "hexcolor": "none"
+    },
+    {
+        "name": "rewind1",
+        "command": "smplayer -send-action rewind1",
+        "icon": "icon-backward",
+        "hexcolor": "#00C49A"
+    },
+    {
+        "name": "play / pause",
+        "command": "smplayer -send-action pause",
+        "icon": "icon-play-pause",
+        "hexcolor": "#32CD32"
+    },
+    {
+        "name": "forward1",
+        "command": "smplayer -send-action forward1",
+        "icon": "icon-forward",
+        "hexcolor": "#00C49A"
+    },
+    {
+        "name": "forward3",
+        "command": "smplayer -send-action forward3",
+        "icon": "icon-fast-forward",
+        "hexcolor": "#00C49A"
+    },
+    {
+        "name": "prev",
+        "command": "smplayer -send-action pl_prev",
+        "icon": "icon-step-backward",
+        "hexcolor": "#00C49A"
+    },
+    {
+        "name": "-",
+        "command": "smplayer -send-action dec_sub_step",
+        "icon": "icon-minus",
+        "hexcolor": "null"
+    },
+    {
+        "name": "Subs",
+        "command": "smplayer -send-action sub_next",
+        "icon": "icon-none",
+        "hexcolor": "#3ec1c9"
+    },
+    {
+        "name": "+",
+        "command": "smplayer -send-action inc_sub_step",
+        "icon": "icon-plus",
+        "hexcolor": "null"
+    },
+    {
+        "name": "A",
+        "command": "smplayer -send-action pl_next",
+        "icon": "icon-step-forward",
+        "hexcolor": "#00C49A"
+    },
+    {
+        "name": "Volume Down",
+        "command": "pactl set-sink-volume @DEFAULT_SINK@ -2%",
+        "icon": "icon-volume-down",
+        "hexcolor": "#3273dc"
+    },
+    {
+        "name": "Browser video play / pause",
+        "command": "playerctl play-pause",
+        "icon": "icon-youtube",
+        "hexcolor": "#3ec1c9"
+    },
+    {
+        "name": "ping!",
+        "command": "paplay \"/usr/share/sounds/freedesktop/stereo/complete.oga\"",
+        "icon": "icon-bell",
+        "hexcolor": "#e74c3c"
+    },
+    {
+        "name": "fullscreen",
+        "command": "smplayer -send-action fullscreen",
+        "icon": "icon-fullscreen",
+        "hexcolor": "#3273dc"
+    },
+    {
+        "name": "Volume Up",
+        "command": "pactl set-sink-volume @DEFAULT_SINK@ +2%",
+        "icon": "icon-volume-up",
+        "hexcolor": "#3273dc"
+    },
+    {
+        "name": "Toggle Mute",
+        "command": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+        "icon": "icon-volume-off",
+        "hexcolor": "#e74c3c"
+    },
+    {
+        "name": "_____________alt+tab_____________",
+        "command": "xdotool keydown alt key Tab; xdotool keyup alt",
+        "icon": "icon-none",
+        "hexcolor": "none"
+    },
+    {
+        "name": "A",
+        "command": "xdotool key Page_Down",
+        "icon": "icon-page-down",
+        "hexcolor": "#4a4a4a"
+    },
+    {
+        "name": "Page_Up",
+        "command": "xdotool key Page_Up",
+        "icon": "icon-page-up",
+        "hexcolor": "#4a4a4a"
+    },
+    {
+        "name": "Home",
+        "command": "xdotool key Home",
+        "icon": "icon-home",
+        "hexcolor": "#9EB3C2"
+    },
+    {
+        "name": "Up",
+        "command": "xdotool key Up",
+        "icon": "icon-up",
+        "hexcolor": "#4a4a4a"
+    },
+    {
+        "name": "End",
+        "command": "xdotool key End",
+        "icon": "icon-end",
+        "hexcolor": "#9EB3C2"
+    },
+    {
+        "name": "F5",
+        "command": "xdotool key F5",
+        "icon": "icon-refresh",
+        "hexcolor": "#209cee"
+    },
+    {
+        "name": "F8",
+        "command": "xdotool key F8",
+        "icon": "icon-none",
+        "hexcolor": "#413C58"
+    },
+    {
+        "name": "Left",
+        "command": "xdotool key Left",
+        "icon": "icon-left",
+        "hexcolor": "#4a4a4a"
+    },
+    {
+        "name": "Down",
+        "command": "xdotool key Down",
+        "icon": "icon-down",
+        "hexcolor": "#4a4a4a"
+    },
+    {
+        "name": "Right",
+        "command": "xdotool key Right",
+        "icon": "icon-right",
+        "hexcolor": "#4a4a4a"
+    },
+    {
+        "name": "Esc",
+        "command": "xdotool key Escape",
+        "icon": "icon-none",
+        "hexcolor": "#413C58"
+    },
+    {
+        "name": "Return",
+        "command": "xdotool key Return",
+        "icon": "icon-none",
+        "hexcolor": "none"
+    },
+    {
+        "name": "Tests",
+        "command": "tt",
+        "icon": "icon-plus",
+        "hexcolor": "#9EB3C2"
+    }
+]
