@@ -4,6 +4,8 @@ Remote control for any computer in your local network.
 
 [![Zapete](https://mobilohm.gitlab.io/img/shots/zapete.png)](https://gitlab.com/yphil/zapete)
 
+Zapete is part of the [Mobilohm suite](https://mobilohm.gitlab.io/) of libre mobile apps.
+
 ## Installation
 
 Install and run it on the target machine
