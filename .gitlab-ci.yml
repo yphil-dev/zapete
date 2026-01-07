@@ -207,7 +207,7 @@ deploy:release:
     - main
     - develop
     - tags
-  when: manual
+  when: always
 
 # Deploy to Snap Store - COMMENTED OUT FOR NOW
 # deploy:snap_store:
