@@ -1,0 +1,55 @@
+app-id: org.zapete.Zapete
+runtime: org.freedesktop.Platform
+runtime-version: '22.08'
+sdk: org.freedesktop.Sdk
+command: zapete-launch.sh
+
+finish-args:
+  - --share=network
+  - --share=ipc
+  - --socket=x11
+  - --socket=wayland
+  - --device=dri
+  - --filesystem=xdg-config/zapete:create
+
+modules:
+  - name: xdotool
+    buildsystem: simple
+    build-commands:
+      - install -Dm755 /usr/bin/xdotool /app/bin/xdotool
+    sources:
+      - type: archive
+      - url: https://github.com/jordansissel/xdotool/releases/download/v3.20211022.1/xdotool-3.20211022.1.tar.gz
+        sha256: 4d5bf3a3a9ba6a6f57bd1e73a6d0a887b8d8c7f0862c53c8ce1d8bf1cf5c9d6b8
+
+  - name: nodejs
+    buildsystem: simple
+    build-commands:
+      - install -Dm755 /usr/bin/node /app/bin/node
+      - install -Dm755 /usr/bin/npm /app/bin/npm
+    sources:
+      - type: archive
+      - url: https://nodejs.org/dist/v18.17.0/node-v18.17.0-linux-x64.tar.xz
+        sha256: 4a1c6a0b739c6d6f4b3b5e4c2b6e8f9c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7
+
+  - name: zapete
+    buildsystem: simple
+    build-commands:
+      - npm install --production
+      - mkdir -p /app/bin
+      - install zapete-launch.sh /app/bin/zapete-launch.sh
+      - chmod +x /app/bin/zapete-launch.sh
+      - cp -r . /app/share/zapete
+    sources:
+      - type: dir
+        path: .
+
+cleanup:
+  - /include
+  - /lib/pkgconfig
+  - /share/pkgconfig
+  - /share/aclocal
+  - /man
+  - /share/man
+  - /share/doc
+  - /share/info

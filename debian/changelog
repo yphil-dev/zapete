@@ -1,0 +1,13 @@
+zapete (0.2.1-1) unstable; urgency=medium
+
+  * New upstream release
+  * Added touchpad mouse control support
+  * Improved packaging for better system integration
+
+ -- Zapete Developers <info@zapete.dev>  Mon, 01 Jul 2026 23:46:00 +0000
+
+zapete (0.2.0-1) unstable; urgency=medium
+
+  * Initial Debian package
+
+ -- Zapete Developers <info@zapete.dev>  Mon, 01 Jul 2026 23:46:00 +0000

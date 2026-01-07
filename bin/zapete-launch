@@ -1,0 +1,12 @@
+#!/bin/bash
+# Snap launcher for Zapete
+
+# Set up environment
+export PATH="$SNAP/usr/bin:$SNAP/bin:$PATH"
+export LD_LIBRARY_PATH="$SNAP/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH"
+
+# Change to the application directory
+cd "$SNAP"
+
+# Start Zapete
+exec npm start

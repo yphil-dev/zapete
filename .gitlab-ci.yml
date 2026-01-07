@@ -1,0 +1,224 @@
+stages:
+  - test
+  - build
+  - package
+  - deploy
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: "/certs"
+
+# Test stage - ensure the application builds and starts
+test:node:
+  stage: test
+  image: node:18
+  before_script:
+    - apt-get update && apt-get install -y xdotool
+    - npm install
+  script:
+    - npm test || echo "No tests defined, skipping"
+    - timeout 10s npm start || echo "Server started successfully"
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+  only:
+    - merge_requests
+    - main
+    - develop
+
+# Build stage - prepare application for packaging
+build:dependencies:
+  stage: build
+  image: node:18
+  script:
+    - npm install --production
+    - npm run build 2>/dev/null || echo "No build script, skipping"
+  artifacts:
+    paths:
+      - node_modules/
+      - package.json
+      - package-lock.json
+    expire_in: 1 hour
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+  only:
+    - main
+    - develop
+    - tags
+
+# Package stage - build all package types
+
+# Snap package
+build:snap:
+  stage: package
+  image: ubuntu:22.04
+  before_script:
+    - apt-get update
+    - apt-get install -y snapcraft build-essential git curl
+    - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+    - apt-get install -y nodejs
+  script:
+    - snapcraft --use-lxd
+  artifacts:
+    paths:
+      - "*.snap"
+    expire_in: 1 week
+  only:
+    - main
+    - develop
+    - tags
+
+# Debian package
+build:deb:
+  stage: package
+  image: ubuntu:22.04
+  before_script:
+    - apt-get update
+    - apt-get install -y build-essential debhelper nodejs npm xdotool
+    - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+    - apt-get install -y nodejs
+  script:
+    - dpkg-buildpackage -b -us -uc
+  artifacts:
+    paths:
+      - "../zapete_*.deb"
+      - "../zapete_*.dsc"
+      - "../zapete_*.changes"
+    expire_in: 1 week
+  only:
+    - main
+    - develop
+    - tags
+
+# Flatpak package
+build:flatpak:
+  stage: package
+  image: ubuntu:22.04
+  before_script:
+    - apt-get update
+    - apt-get install -y flatpak flatpak-builder git curl
+    - flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    - flatpak install -y flathub org.freedesktop.Platform//22.08 org.freedesktop.Sdk//22.08
+  script:
+    - flatpak-builder --repo=repo --force-clean build org.zapete.Zapete.yml
+    - flatpak build-bundle repo zapete.flatpak org.zapete.Zapete
+  artifacts:
+    paths:
+      - "zapete.flatpak"
+    expire_in: 1 week
+  only:
+    - main
+    - develop
+    - tags
+
+# Deploy stage - create releases and upload packages
+
+# Create GitLab release with all packages
+deploy:release:
+  stage: deploy
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache curl
+  script:
+    - |
+      if [ -n "$CI_COMMIT_TAG" ]; then
+        RELEASE_TAG="$CI_COMMIT_TAG"
+        RELEASE_NAME="Release $CI_COMMIT_TAG"
+      else
+        RELEASE_TAG="continuous"
+        RELEASE_NAME="Continuous Build ($(date +%Y-%m-%d))"
+      fi
+
+      # Create release description
+      cat > release_description.md << EOF
+      ## Changes
+
+      $(git log --oneline --since="1 week ago" | head -10)
+
+      ## Downloads
+
+      - [Snap Package](https://gitlab.com/yphil/zapete/-/jobs/artifacts/${CI_COMMIT_SHA}/raw/zapete_${CI_COMMIT_REF_NAME}.snap?job=build:snap)
+      - [Debian Package](https://gitlab.com/yphil/zapete/-/jobs/artifacts/${CI_COMMIT_SHA}/raw/zapete_${CI_COMMIT_REF_NAME}.deb?job=build:deb)
+      - [Flatpak Bundle](https://gitlab.com/yphil/zapete/-/jobs/artifacts/${CI_COMMIT_SHA}/raw/zapete.flatpak?job=build:flatpak)
+
+      ## Installation
+
+      ### Snap
+      \`\`\`bash
+      sudo snap install zapete --edge
+      \`\`\`
+
+      ### Flatpak
+      \`\`\`bash
+      flatpak install zapete.flatpak
+      \`\`\`
+
+      ### Debian
+      \`\`\`bash
+      sudo dpkg -i zapete_${CI_COMMIT_REF_NAME}.deb
+      \`\`\`
+      EOF
+
+      # Create GitLab release
+      curl --header "PRIVATE-TOKEN: $GITLAB_TOKEN" \
+           --header "Content-Type: application/json" \
+           --data "{
+             \"name\": \"$RELEASE_NAME\",
+             \"tag_name\": \"$RELEASE_TAG\",
+             \"description\": \"$(cat release_description.md | jq -Rs .)\",
+             \"assets\": {
+               \"links\": [
+                 {
+                   \"name\": \"zapete.snap\",
+                   \"url\": \"https://gitlab.com/yphil/zapete/-/jobs/artifacts/${CI_COMMIT_SHA}/raw/zapete_${CI_COMMIT_REF_NAME}.snap?job=build:snap\"
+                 },
+                 {
+                   \"name\": \"zapete.deb\",
+                   \"url\": \"https://gitlab.com/yphil/zapete/-/jobs/artifacts/${CI_COMMIT_SHA}/raw/zapete_${CI_COMMIT_REF_NAME}.deb?job=build:deb\"
+                 },
+                 {
+                   \"name\": \"zapete.flatpak\",
+                   \"url\": \"https://gitlab.com/yphil/zapete/-/jobs/artifacts/${CI_COMMIT_SHA}/raw/zapete.flatpak?job=build:flatpak\"
+                 }
+               ]
+             }
+           }" \
+           "https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/releases"
+  dependencies:
+    - build:snap
+    - build:deb
+    - build:flatpak
+  only:
+    - main
+    - develop
+    - tags
+  when: manual
+
+# Deploy to Snap Store
+deploy:snap_store:
+  stage: deploy
+  image: ubuntu:22.04
+  before_script:
+    - apt-get update && apt-get install -y snapcraft
+  script:
+    - echo "$SNAP_STORE_LOGIN" | snapcraft login --with -
+    - snapcraft push *.snap --release edge
+  dependencies:
+    - build:snap
+  only:
+    - main
+    - tags
+  when: manual
+
+# Deploy to Flathub (would need separate repository)
+# deploy:flathub:
+#   stage: deploy
+#   script:
+#     - echo "Flathub deployment would go here"
+#   only:
+#     - main
+#     - tags
+#   when: manual

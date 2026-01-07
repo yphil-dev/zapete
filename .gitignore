@@ -1,6 +1,30 @@
+# Dependencies
 node_modules/
 package-lock.json
+
+# Build artifacts
+*.snap
+*.deb
+*.dsc
+*.changes
+*.flatpak
+build/
+repo/
+
+# Temporary files
 tmp/
 TAGS
+
+# User configuration (generated at runtime)
 buttons.json
 img/zapete-qrcode.png
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db

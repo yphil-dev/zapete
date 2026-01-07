@@ -1,0 +1,29 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_auto_install:
+	# Install the application
+	mkdir -p $(CURDIR)/debian/zapete/usr/lib/zapete
+	cp -r * $(CURDIR)/debian/zapete/usr/lib/zapete/
+
+	# Create symlink for binary
+	mkdir -p $(CURDIR)/debian/zapete/usr/bin
+	ln -s /usr/lib/zapete/zapete-start.sh $(CURDIR)/debian/zapete/usr/bin/zapete
+
+	# Create desktop file
+	mkdir -p $(CURDIR)/debian/zapete/usr/share/applications
+	install -m 644 $(CURDIR)/debian/zapete.desktop $(CURDIR)/debian/zapete/usr/share/applications/
+
+	# Create systemd service
+	mkdir -p $(CURDIR)/debian/zapete/lib/systemd/system
+	install -m 644 $(CURDIR)/debian/zapete.service $(CURDIR)/debian/zapete/lib/systemd/system/
+
+override_dh_auto_build:
+	# Install npm dependencies
+	cd $(CURDIR) && npm install --production
+
+override_dh_auto_clean:
+	# Clean npm dependencies
+	rm -rf node_modules package-lock.json
