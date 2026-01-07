@@ -51,25 +51,25 @@ build:dependencies:
 
 # Package stage - build all package types
 
-# Snap package
-build:snap:
-  stage: package
-  image: ubuntu:22.04
-  before_script:
-    - apt-get update
-    - apt-get install -y snapcraft build-essential git curl
-    - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
-    - apt-get install -y nodejs
-  script:
-    - snapcraft --use-lxd
-  artifacts:
-    paths:
-      - "*.snap"
-    expire_in: 1 week
-  only:
-    - main
-    - develop
-    - tags
+# # Snap package
+# build:snap:
+#   stage: package
+#   image: ubuntu:22.04
+#   before_script:
+#     - apt-get update
+#     - apt-get install -y snapcraft build-essential git curl
+#     - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+#     - apt-get install -y nodejs
+#   script:
+#     - snapcraft --use-lxd
+#   artifacts:
+#     paths:
+#       - "*.snap"
+#     expire_in: 1 week
+#   only:
+#     - main
+#     - develop
+#     - tags
 
 # Debian package
 build:deb:
@@ -92,26 +92,26 @@ build:deb:
     - develop
     - tags
 
-# Flatpak package
-build:flatpak:
-  stage: package
-  image: ubuntu:22.04
-  before_script:
-    - apt-get update
-    - apt-get install -y flatpak flatpak-builder git curl
-    - flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-    - flatpak install -y flathub org.freedesktop.Platform//22.08 org.freedesktop.Sdk//22.08
-  script:
-    - flatpak-builder --repo=repo --force-clean build org.zapete.Zapete.yml
-    - flatpak build-bundle repo zapete.flatpak org.zapete.Zapete
-  artifacts:
-    paths:
-      - "zapete.flatpak"
-    expire_in: 1 week
-  only:
-    - main
-    - develop
-    - tags
+# # Flatpak package
+# build:flatpak:
+#   stage: package
+#   image: ubuntu:22.04
+#   before_script:
+#     - apt-get update
+#     - apt-get install -y flatpak flatpak-builder git curl
+#     - flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+#     - flatpak install -y flathub org.freedesktop.Platform//22.08 org.freedesktop.Sdk//22.08
+#   script:
+#     - flatpak-builder --repo=repo --force-clean build org.zapete.Zapete.yml
+#     - flatpak build-bundle repo zapete.flatpak org.zapete.Zapete
+#   artifacts:
+#     paths:
+#       - "zapete.flatpak"
+#     expire_in: 1 week
+#   only:
+#     - main
+#     - develop
+#     - tags
 
 # Deploy stage - create releases and upload packages
 
