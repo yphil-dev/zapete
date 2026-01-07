@@ -137,6 +137,7 @@ nav.navbar {
   cursor: move;
   touch-action: none; /* Prevent scrolling/zooming on touch */
   user-select: none;
+  margin-bottom: 0.5em;
 }
 
 .touchpad-label {
