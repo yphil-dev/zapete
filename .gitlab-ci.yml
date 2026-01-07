@@ -74,13 +74,12 @@ build:snap:
 # Debian package
 build:deb:
   stage: package
-  image: ubuntu:22.04
+  image: node:18
   before_script:
     - apt-get update
-    - apt-get install -y build-essential debhelper nodejs npm xdotool
-    - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
-    - apt-get install -y nodejs
+    - apt-get install -y build-essential debhelper xdotool dpkg-dev
   script:
+    - npm install --production
     - dpkg-buildpackage -b -us -uc
   artifacts:
     paths:
@@ -221,4 +220,4 @@ deploy:snap_store:
 #   only:
 #     - main
 #     - tags
-#   when: manual
+#   when: manual#   when: manual

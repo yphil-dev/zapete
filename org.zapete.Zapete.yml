@@ -14,22 +14,24 @@ finish-args:
 
 modules:
   - name: xdotool
-    buildsystem: simple
-    build-commands:
-      - install -Dm755 /usr/bin/xdotool /app/bin/xdotool
+    buildsystem: autotools
+    make-install-args:
+      - PREFIX=/app
     sources:
       - type: archive
-      - url: https://github.com/jordansissel/xdotool/releases/download/v3.20211022.1/xdotool-3.20211022.1.tar.gz
+        url: https://github.com/jordansissel/xdotool/releases/download/v3.20211022.1/xdotool-3.20211022.1.tar.gz
         sha256: 4d5bf3a3a9ba6a6f57bd1e73a6d0a887b8d8c7f0862c53c8ce1d8bf1cf5c9d6b8
 
   - name: nodejs
     buildsystem: simple
     build-commands:
-      - install -Dm755 /usr/bin/node /app/bin/node
-      - install -Dm755 /usr/bin/npm /app/bin/npm
+      - tar -xf node-v18.17.0-linux-x64.tar.xz
+      - cp node-v18.17.0-linux-x64/bin/node /app/bin/
+      - cp node-v18.17.0-linux-x64/bin/npm /app/bin/
+      - cp node-v18.17.0-linux-x64/bin/npx /app/bin/
     sources:
       - type: archive
-      - url: https://nodejs.org/dist/v18.17.0/node-v18.17.0-linux-x64.tar.xz
+        url: https://nodejs.org/dist/v18.17.0/node-v18.17.0-linux-x64.tar.xz
         sha256: 4a1c6a0b739c6d6f4b3b5e4c2b6e8f9c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7
 
   - name: zapete
