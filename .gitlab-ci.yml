@@ -219,7 +219,7 @@ deploy:snap_store:
     - echo "$SNAP_STORE_LOGIN" | snapcraft login --with -
     - snapcraft push *.snap --release edge
   dependencies:
-    - build:snap
+    # - build:snap  # Commented out
   only:
     - main
     - tags
