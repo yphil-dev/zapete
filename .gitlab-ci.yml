@@ -119,11 +119,11 @@ build:deb:
 deploy:artifacts:
   stage: deploy
   image: alpine:latest
-  script:
-    - echo "✅ DEB package built successfully!"
-    - echo "📦 Download from: https://gitlab.com/yphil/zapete/-/jobs/artifacts/${CI_COMMIT_SHA}/file/../zapete_*.deb?job=build:deb"
-    - echo "🔗 Or visit: https://gitlab.com/yphil/zapete/-/pipelines/${CI_PIPELINE_ID}"
-    - ls -la ../zapete_*.deb 2>/dev/null || echo "DEB file location may vary"
+  script: |
+    echo "✅ DEB package built successfully!"
+    echo "📦 Download from: https://gitlab.com/yphil/zapete/-/jobs/artifacts/${CI_COMMIT_SHA}/file/../zapete_*.deb?job=build:deb"
+    echo "🔗 Or visit: https://gitlab.com/yphil/zapete/-/pipelines/${CI_PIPELINE_ID}"
+    ls -la ../zapete_*.deb 2>/dev/null || echo "DEB file location may vary"
   dependencies:
     - build:deb
   only:
