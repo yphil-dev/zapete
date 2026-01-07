@@ -128,7 +128,7 @@ nav.navbar {
 
 /* Touchpad Styles */
 .touchpad {
-  width: 100%;
+  width: 95%;
   height: 200px;
   border: 2px solid #4a4a4a;
   border-radius: 8px;
@@ -138,6 +138,7 @@ nav.navbar {
   touch-action: none; /* Prevent scrolling/zooming on touch */
   user-select: none;
   margin-bottom: 0.5em;
+  color: #7a7a7a;
 }
 
 .touchpad-label {
