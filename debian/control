@@ -2,13 +2,13 @@ Source: zapete
 Section: utils
 Priority: optional
 Maintainer: Zapete Developers <info@zapete.dev>
-Build-Depends: debhelper (>= 9), nodejs (>= 14), npm
+Build-Depends: debhelper (>= 9)
 Standards-Version: 4.1.4
 Homepage: https://gitlab.com/yphil/zapete
 
 Package: zapete
 Architecture: all
-Depends: ${misc:Depends}, ${shlibs:Depends}, nodejs (>= 14), npm, xdotool
+Depends: ${misc:Depends}, ${shlibs:Depends}, xdotool
 Description: Remote control for any computer in your local network
  Zapete is a remote control application that allows you to control your computer
  from any device on your local network using a web interface. It supports
