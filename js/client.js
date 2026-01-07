@@ -2,12 +2,24 @@ const serverMessages = document.getElementById("serverMessages");
 const buttonContainer = document.getElementById("buttonContainer");
 const buttonInfocontainer = document.getElementById("buttonInfoContainer");
 const serverAddressInput = document.getElementById("serverAddressInput");
+const touchpad = document.getElementById("touchpad");
 const buttons = buttonContainer.querySelectorAll("button");
 const refreshButtons = document.getElementById("refreshButtons");
 const addButton = document.querySelector("#addButton");
 let ws;
 let callerButton = null;
 const resetButton = document.querySelector('#resetButton');
+
+// Touchpad state variables
+let isMouseDown = false;
+let isRightClick = false;
+let lastMouseX = 0;
+let lastMouseY = 0;
+let touchpadEnabled = false;
+let mouseDownTime = 0;
+let hasMoved = false;
+let totalMovement = 0;
+const MOVEMENT_THRESHOLD = 5; // pixels
 
 refreshButtons.style.display = "none";
 resetButton.style.display = "none";
@@ -91,11 +103,16 @@ function messageServer(message) {
 
 function sendMessage(message) {
     serverMessages.value = '';
-    ws.send(JSON.stringify({
+    const payload = {
         type: message.type,
         command: message.type === 'button_command' ? message.command : '',
-        buttons: message.type === 'button_update' ? getButtonsFromPage() : ''
-    }));
+        buttons: message.type === 'button_update' ? getButtonsFromPage() : '',
+        mouseAction: message.type === 'mouse_command' ? message.action : '',
+        mouseButton: message.type === 'mouse_command' ? message.button : '',
+        dx: message.type === 'mouse_command' ? message.dx : 0,
+        dy: message.type === 'mouse_command' ? message.dy : 0
+    };
+    ws.send(JSON.stringify(payload));
 }
 
 function moveButtonLeft(selectedButton) {
@@ -413,3 +430,154 @@ function selectIcon(event) {
     const selectedButton = event.currentTarget;
     selectedButton.classList.add('selected');
 }
+
+// Touchpad event handlers
+function initTouchpad() {
+    if (!touchpad) return;
+
+    // Mouse events
+    touchpad.addEventListener('mousedown', handleMouseDown);
+    touchpad.addEventListener('mousemove', handleMouseMove);
+    touchpad.addEventListener('mouseup', handleMouseUp);
+    touchpad.addEventListener('mouseleave', handleMouseUp); // Handle mouse leaving touchpad
+
+    // Touch events
+    touchpad.addEventListener('touchstart', handleTouchStart, { passive: false });
+    touchpad.addEventListener('touchmove', handleTouchMove, { passive: false });
+    touchpad.addEventListener('touchend', handleTouchEnd, { passive: false });
+
+    // Prevent context menu on touchpad
+    touchpad.addEventListener('contextmenu', (e) => e.preventDefault());
+
+    touchpadEnabled = true;
+}
+
+function handleMouseDown(event) {
+    event.preventDefault();
+
+    isMouseDown = true;
+    hasMoved = false;
+    totalMovement = 0;
+    mouseDownTime = Date.now();
+    lastMouseX = event.clientX;
+    lastMouseY = event.clientY;
+
+    // Determine if it's a right click
+    isRightClick = (event.button === 2);
+}
+
+function handleMouseMove(event) {
+    if (!isMouseDown) return;
+
+    event.preventDefault();
+
+    const deltaX = event.clientX - lastMouseX;
+    const deltaY = event.clientY - lastMouseY;
+
+    // Always send movement commands for actual cursor control
+    if (deltaX !== 0 || deltaY !== 0) {
+        messageServer({
+            type: 'mouse_command',
+            action: 'move',
+            dx: deltaX,
+            dy: deltaY
+        });
+
+        // Accumulate total movement for click detection
+        totalMovement += Math.abs(deltaX) + Math.abs(deltaY);
+        if (totalMovement > MOVEMENT_THRESHOLD) {
+            hasMoved = true;
+        }
+    }
+
+    lastMouseX = event.clientX;
+    lastMouseY = event.clientY;
+}
+
+function handleMouseUp(event) {
+    if (!isMouseDown) return;
+
+    event.preventDefault();
+    isMouseDown = false;
+
+    const duration = Date.now() - mouseDownTime;
+
+    // CRITICAL: If ANY movement occurred, treat as MOVE ONLY - never send click
+    if (!hasMoved && duration < 300) { // Reduced to 300ms for more responsive clicks
+        messageServer({ type: 'mouse_command', action: 'click', button: isRightClick ? 'right' : 'left' });
+        console.log(`Mouse click: button=${isRightClick ? 'right' : 'left'}, duration=${duration}ms`);
+    }
+
+    messageServer({ type: 'mouse_command', action: 'release', button: isRightClick ? 'right' : 'left' });
+}
+
+function handleTouchStart(event) {
+    event.preventDefault();
+
+    if (event.touches.length === 1) {
+        const touch = event.touches[0];
+        isMouseDown = true;
+        hasMoved = false;
+        totalMovement = 0;
+        mouseDownTime = Date.now();
+        isRightClick = false;
+        lastMouseX = touch.clientX;
+        lastMouseY = touch.clientY;
+    }
+}
+
+function handleTouchMove(event) {
+    event.preventDefault();
+
+    if (event.touches.length === 1 && isMouseDown) {
+        const touch = event.touches[0];
+        const deltaX = touch.clientX - lastMouseX;
+        const deltaY = touch.clientY - lastMouseY;
+
+        // Always send movement commands for actual cursor control
+        if (deltaX !== 0 || deltaY !== 0) {
+            messageServer({
+                type: 'mouse_command',
+                action: 'move',
+                dx: deltaX,
+                dy: deltaY
+            });
+
+            // Accumulate total movement for click detection
+            totalMovement += Math.abs(deltaX) + Math.abs(deltaY);
+            if (totalMovement > MOVEMENT_THRESHOLD) {
+                hasMoved = true;
+            }
+        }
+
+        lastMouseX = touch.clientX;
+        lastMouseY = touch.clientY;
+    }
+}
+
+function handleTouchEnd(event) {
+    event.preventDefault();
+
+    if (isMouseDown) {
+        isMouseDown = false;
+
+        const duration = Date.now() - mouseDownTime;
+
+        // CRITICAL: If ANY movement occurred, treat as MOVE ONLY - never send click
+        if (!hasMoved && duration < 300) { // Reduced to 300ms for more responsive clicks
+            messageServer({ type: 'mouse_command', action: 'click', button: 'left' });
+            console.log(`Touch click: duration=${duration}ms`);
+        }
+
+        messageServer({ type: 'mouse_command', action: 'release', button: 'left' });
+    }
+}
+
+// Initialize touchpad when connected
+const originalConnect = connect;
+connect = function() {
+    return originalConnect().then(() => {
+        initTouchpad();
+        return Promise.resolve();
+    });
+};

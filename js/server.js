@@ -119,6 +119,8 @@ wss.on('connection', function connection(ws) {
             readButtonsFile(ws, buttonsPath); // Updated path
         } else if (data.type === 'button_defaults_request') {
             readButtonsFile(ws, defaultsPath);
+        } else if (data.type === 'mouse_command') {
+            handleMouseCommand(data, ws);
         } else {
             executeCommand(data.command.toString(), ws);
         }
@@ -184,6 +186,46 @@ function executeCommand(command, ws) {
         console.log('stdout: ', stdout);
         return;
     });
+}
+
+function handleMouseCommand(data, ws) {
+    let command = '';
+
+    switch (data.mouseAction) {
+        case 'click':
+            // Map button names to xdotool button numbers
+            const buttonNum = data.mouseButton === 'left' ? 1 : 3;
+            command = `xdotool mousedown ${buttonNum}`;
+            break;
+        case 'move':
+            // Use relative movement with gentle scaling
+            const dx = Math.round(data.dx * 1.2); // Gentle scaling for better control
+            const dy = Math.round(data.dy * 1.2);
+            // Always use -- separator to handle negative coordinates properly
+            if (dx !== 0 || dy !== 0) {
+                command = `xdotool mousemove_relative -- ${dx} ${dy}`;
+            }
+            break;
+        case 'release':
+            // Map button names to xdotool button numbers
+            const releaseButtonNum = data.mouseButton === 'left' ? 1 : 3;
+            command = `xdotool mouseup ${releaseButtonNum}`;
+            break;
+        default:
+            console.error('Unknown mouse action:', data.mouseAction);
+            return;
+    }
+
+    if (command) {
+        exec(command, (error, stdout, stderr) => {
+            if (error) {
+                console.error(`Error executing mouse command: ${error}`);
+            }
+            if (stderr) {
+                console.error(`Mouse command stderr: ${stderr}`);
+            }
+        });
+    }
 }
 
 function readButtonsFile(ws, fileName) {
