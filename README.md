@@ -8,9 +8,36 @@ Zapete is part of the [Mobilohm suite](https://mobilohm.gitlab.io/) of libre mob
 
 ## Installation
 
-Install and run it on the target machine
+### System Dependencies
 
-``` ejs
+Zapete requires `xdotool` for keyboard and mouse control:
+
+**Ubuntu/Debian:**
+```bash
+sudo apt update
+sudo apt install xdotool
+```
+
+**Fedora/RHEL/CentOS:**
+```bash
+sudo dnf install xdotool
+# or for older systems:
+sudo yum install xdotool
+```
+
+**Arch Linux:**
+```bash
+sudo pacman -S xdotool
+```
+
+**macOS (with Homebrew):**
+```bash
+brew install xdotool
+```
+
+### Install and Run Zapete
+
+```bash
 git clone https://gitlab.com/yphil/zapete.git
 cd zapete
 npm install
@@ -24,6 +51,7 @@ Scan the QRcode or point any browser to the displayed address, and tap "connect"
 - At startup, Zapete opens in your desktop's browser ; You can use this instance to edit uyour buttons, they will update/refresh on the phone.
 - Your buttons are saved to `~/.config/zapete/buttons.json` so you can sync / version control the file.
 - Select "No icon" to display the name of the button instead
+- **Touchpad**: Use the touchpad area for mouse control - tap to click, drag to move the cursor
 
 ## Development
 ### Update the icons
