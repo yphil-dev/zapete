@@ -209,21 +209,21 @@ deploy:release:
     - tags
   when: manual
 
-# Deploy to Snap Store
-deploy:snap_store:
-  stage: deploy
-  image: ubuntu:22.04
-  before_script:
-    - apt-get update && apt-get install -y snapcraft
-  script:
-    - echo "$SNAP_STORE_LOGIN" | snapcraft login --with -
-    - snapcraft push *.snap --release edge
-  dependencies:
-    # - build:snap  # Commented out
-  only:
-    - main
-    - tags
-  when: manual
+# Deploy to Snap Store - COMMENTED OUT FOR NOW
+# deploy:snap_store:
+#   stage: deploy
+#   image: ubuntu:22.04
+#   before_script:
+#     - apt-get update && apt-get install -y snapcraft
+#   script:
+#     - echo "$SNAP_STORE_LOGIN" | snapcraft login --with -
+#     - snapcraft push *.snap --release edge
+#   dependencies:
+#     # - build:snap  # Commented out
+#   only:
+#     - main
+#     - tags
+#   when: manual
 
 # Deploy to Flathub (would need separate repository)
 # deploy:flathub:
