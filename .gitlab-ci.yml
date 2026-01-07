@@ -200,9 +200,9 @@ deploy:release:
            }" \
            "https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/releases"
   dependencies:
-    - build:snap
     - build:deb
-    - build:flatpak
+    # - build:snap  # Commented out
+    # - build:flatpak  # Commented out
   only:
     - main
     - develop
