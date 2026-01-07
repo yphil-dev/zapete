@@ -32,7 +32,7 @@ modules:
     sources:
       - type: archive
         url: https://nodejs.org/dist/v18.17.0/node-v18.17.0-linux-x64.tar.xz
-        sha256: 4a1c6a0b739c6d6f4b3b5e4c2b6e8f9c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7
+        sha256: f36facda28c4d5ce76b3a1b4344e688d29d9254943a47f2f1909b1a10acb1959
 
   - name: zapete
     buildsystem: simple
