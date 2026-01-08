@@ -34,14 +34,6 @@ Scan the QRcode or point any browser to the displayed address, and tap "connect"
 - Select "No icon" to display the name of the button instead
 - **Touchpad**: Use the touchpad area for mouse control - tap to click, drag to move the cursor
 
-## Development
-### Update the icons
-
-- Drop `css/fontello-config.json` in https://fontello.com/ ;
-- Edit ;
-- Download to your `~/Downloads` dir ;
-- `mv -v ~/Downloads/fontello-*.zip ./fontello.zip && rm -rfv fontello-* ; unzip fontello.zip && cp -fv fontello-*/config.json css/fontello-config.json && cp -fv fontello-*/css/*.css css/ && cp -fv fontello-*/font/* font/ && mkdir -p ~/.local/share/fonts/ && cp -fv fontello-*/font/*.ttf ~/.local/share/fonts/ && fc-cache -f -v && rm -rfv fontello-*`.
-
 ## Contribute
 
 If you find one of the [MobilOhm](https://mobilohm.gitlab.io/) apps helpful and would like to support its development, consider making a contribution through [Ko-fi](https://ko-fi.com/yphil) or [Liberapay](https://liberapay.com/yPhil/).
