@@ -43,11 +43,16 @@ jobs:
     - name: Build Debian package
       run: dpkg-buildpackage -b -us -uc
     - name: Upload Debian package
+      run: |
+        cd ..
+        ls -la zapete_*.deb zapete_*.dsc zapete_*.changes || true
+    - name: Upload Debian artifacts
       uses: actions/upload-artifact@v4
       with:
         name: zapete-deb
         path: |
-          ../zapete_*.deb
-          ../zapete_*.dsc
-          ../zapete_*.changes
+          zapete_*.deb
+          zapete_*.dsc
+          zapete_*.changes
         retention-days: 7
+      working-directory: ..
