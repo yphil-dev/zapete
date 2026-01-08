@@ -59,20 +59,20 @@ jobs:
         retention-days: 7
 
   release:
-    runs-on: ubuntu-latest
     needs: build-deb
+    runs-on: ubuntu-latest
     steps:
-    - name: Download Debian artifacts
-      uses: actions/download-artifact@v4
-      with:
-        name: zapete-deb
-    - name: Create Release
-      uses: softprops/action-gh-release@v1
-      with:
-        files: |
-          zapete_*.deb
-          zapete_*.dsc
-          zapete_*.changes
-        generate_release_notes: true
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Download Debian artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: zapete-deb
+          path: dist/
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: Zapete ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+          files: |
+            dist/*.deb
