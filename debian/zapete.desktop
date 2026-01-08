@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Zapete
 Comment=Remote control for any computer in your local network
-Exec=/usr/lib/zapete/zapete-start.sh
+Exec=/usr/bin/zapete
 Icon=/usr/lib/zapete/img/zapete-logo.png
 Terminal=false
 Type=Application
