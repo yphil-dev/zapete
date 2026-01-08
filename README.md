@@ -2,7 +2,7 @@
 
 Remote control for any computer in your local network.
 
-[![Zapete](https://mobilohm.gitlab.io/img/shots/zapete.png)](https://gitlab.com/yphil/zapete)
+[![Zapete](https://mobilohm.gitlab.io/img/shots/zapete.png)](https://github.com/yphil-dev/zapete)
 
 Zapete is part of the [Mobilohm suite](https://mobilohm.gitlab.io/) of libre mobile apps.
 
@@ -10,8 +10,8 @@ Zapete is part of the [Mobilohm suite](https://mobilohm.gitlab.io/) of libre mob
 
 Install and run it on the target machine
 
-``` ejs
-git clone https://gitlab.com/yphil/zapete.git
+```bash
+git clone https://github.com/yphil-dev/zapete.git
 cd zapete
 npm install
 npm start
@@ -43,6 +43,13 @@ sudo pacman -S xdotool
 ```bash
 brew install xdotool
 ```
+
+### Automated Builds
+
+GitHub Actions automatically builds Debian packages for every push to `main` or `develop` branches. Built packages are available as workflow artifacts.
+
+- **View builds**: Go to [Actions tab](https://github.com/yphil-dev/zapete/actions)
+- **Download packages**: Click on a workflow run → Artifacts
 
 ## Usage
 
