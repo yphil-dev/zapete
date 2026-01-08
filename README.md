@@ -8,6 +8,21 @@ Zapete is part of the [Mobilohm suite](https://mobilohm.gitlab.io/) of libre mob
 
 ## Installation
 
+### Packages
+
+#### Debian
+
+Download the latest Debian package from the [releases page](https://github.com/yphil-dev/zapete/releases).
+
+The package includes all necessary dependencies including `xdotool` for keyboard and mouse control.
+
+```bash
+sudo dpkg -i zapete_*.deb
+sudo apt install -f  # Install any missing dependencies
+```
+
+### From Source
+
 Install and run it on the target machine
 
 ```bash
@@ -17,39 +32,12 @@ npm install
 npm start
 ```
 
-### System Dependencies
+**Note:** Requires manual installation of `xdotool`:
 
-Zapete requires `xdotool` for keyboard and mouse control:
-
-**Ubuntu/Debian:**
 ```bash
 sudo apt update
 sudo apt install xdotool
 ```
-
-**Fedora/RHEL/CentOS:**
-```bash
-sudo dnf install xdotool
-# or for older systems:
-sudo yum install xdotool
-```
-
-**Arch Linux:**
-```bash
-sudo pacman -S xdotool
-```
-
-**macOS (with Homebrew):**
-```bash
-brew install xdotool
-```
-
-### Automated Builds
-
-GitHub Actions automatically builds Debian packages for every push to `main` or `develop` branches. Built packages are available as workflow artifacts.
-
-- **View builds**: Go to [Actions tab](https://github.com/yphil-dev/zapete/actions)
-- **Download packages**: Click on a workflow run → Artifacts
 
 ## Usage
 
@@ -73,4 +61,3 @@ Scan the QRcode or point any browser to the displayed address, and tap "connect"
 If you find one of the [MobilOhm](https://mobilohm.gitlab.io/) apps helpful and would like to support its development, consider making a contribution through [Ko-fi](https://ko-fi.com/yphil) or [Liberapay](https://liberapay.com/yPhil/).
 
 Your support helps keep this app free, open source, and ad-free.
-
