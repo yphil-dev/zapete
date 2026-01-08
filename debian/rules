@@ -19,10 +19,6 @@ override_dh_auto_install:
 	mkdir -p $(CURDIR)/debian/zapete/usr/share/applications
 	install -m 644 $(CURDIR)/debian/zapete.desktop $(CURDIR)/debian/zapete/usr/share/applications/
 
-	# Create systemd service
-	mkdir -p $(CURDIR)/debian/zapete/lib/systemd/system
-	install -m 644 $(CURDIR)/debian/zapete.service $(CURDIR)/debian/zapete/lib/systemd/system/
-
 override_dh_auto_build:
 	# Install npm dependencies
 	cd $(CURDIR) && npm install --production
