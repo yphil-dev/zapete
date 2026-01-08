@@ -2,8 +2,8 @@
     "name": "Zapete",
     "version": "0.2.1",
     "description": "Remote control for any computer in your local network",
-    "http-port": "8009",
-    "websocket-port": "8008",
+    "http_port": "8009",
+    "websocket_port": "8008",
     "scripts": {
         "start": "node js/server.js &",
         "stop": "node js/stop.js",

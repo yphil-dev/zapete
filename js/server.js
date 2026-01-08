@@ -9,6 +9,11 @@ const httpServer = require('http-server');
 const httpPort = process.env.npm_package_http_port || 8009;
 const wsPort = process.env.npm_package_websocket_port || 8008;
 
+console.log("process.env.npm_package_http_port: ", process.env.npm_package_http_port);
+
+const pjson = path.join(__dirname, '..', 'package.json');
+console.log("packageJsonPath: ", pjson.http_port);
+
 const version = process.env.npm_package_version;
 
 const configDir = path.join(os.homedir(), '.config', 'zapete');
@@ -45,12 +50,60 @@ const wsOptions = {
     port: wsPort
 };
 
-const server = httpServer.createServer(options);
-server.listen(options.port, () => {
-    console.log(`HTTP server started on port ${options.port}`);
-});
+// Check if port is available before starting server
+function checkPort(port) {
+    return new Promise((resolve) => {
+        const net = require('net');
+        const server = net.createServer();
 
-const wss = new WebSocket.Server(wsOptions);
+        server.listen(port, '127.0.0.1', () => {
+            server.close();
+            resolve(true); // Port available
+        });
+
+        server.on('error', () => resolve(false)); // Port in use
+    });
+}
+
+// Show system notification
+function showNotification(title, message) {
+    exec(`notify-send "${title}" "${message}"`, (err) => {
+        if (err) {
+            // Fallback to zenity dialog
+            exec(`zenity --info --title="${title}" --text="${message}"`, (err2) => {
+                if (err2) {
+                    // Last resort: console message
+                    console.log(`🔔 ${title}: ${message}`);
+                }
+            });
+        }
+    });
+}
+
+// Check port availability before starting
+checkPort(httpPort).then(async (portAvailable) => {
+    if (!portAvailable) {
+        console.log(`Port ${httpPort} is already in use - Zapete may already be running`);
+        showNotification(
+            "Zapete Already Running",
+            "Opening existing Zapete instance in browser..."
+        );
+
+        // Open browser to existing instance
+        openWithXDG(`http://localhost:${httpPort}`);
+
+        // Give time for notification and browser to complete
+        setTimeout(() => process.exit(0), 1000);
+        return;
+    }
+
+    // Port is available, start the servers
+    const server = httpServer.createServer(options);
+    server.listen(options.port, () => {
+        console.log(`HTTP server started on port ${options.port}`);
+    });
+
+    const wss = new WebSocket.Server(wsOptions);
 
 let isShuttingDown = false;
 
@@ -271,3 +324,5 @@ function saveButtonsToServer(ws) {
         }
     });
 }
+
+}); // Close the checkPort().then() callback
