@@ -14,13 +14,6 @@ Zapete is part of the [Mobilohm suite](https://mobilohm.gitlab.io/) of libre mob
 
 Download the latest Debian package from the [releases page](https://github.com/yphil-dev/zapete/releases).
 
-The package includes all necessary dependencies including `xdotool` for keyboard and mouse control.
-
-```bash
-sudo dpkg -i zapete_*.deb
-sudo apt install -f  # Install any missing dependencies
-```
-
 ### From Source
 
 Install and run it on the target machine
@@ -30,13 +23,6 @@ git clone https://github.com/yphil-dev/zapete.git
 cd zapete
 npm install
 npm start
-```
-
-**Note:** Requires manual installation of `xdotool`:
-
-```bash
-sudo apt update
-sudo apt install xdotool
 ```
 
 ## Usage
