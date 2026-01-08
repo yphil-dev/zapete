@@ -42,9 +42,11 @@ jobs:
       run: npm install --production
     - name: Build Debian package
       run: dpkg-buildpackage -b -us -uc
-    - name: Upload Debian package
+    - name: Prepare artifacts
       run: |
-        cd ..
+        cp ../zapete_*.deb . || true
+        cp ../zapete_*.dsc . || true
+        cp ../zapete_*.changes . || true
         ls -la zapete_*.deb zapete_*.dsc zapete_*.changes || true
     - name: Upload Debian artifacts
       uses: actions/upload-artifact@v4
@@ -55,4 +57,3 @@ jobs:
           zapete_*.dsc
           zapete_*.changes
         retention-days: 7
-      working-directory: ..
