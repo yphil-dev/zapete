@@ -1,0 +1,147 @@
+/* Override Bulma's font stack */
+body, button, input, textarea, select {
+  font-family: "Roboto", "Helvetica Neue", Arial, sans-serif !important;
+}
+
+/* Monospace elements (e.g., <code>) */
+pre, code {
+  font-family: "Courier New", monospace !important;
+}
+
+.hidden {
+  display: none !important;
+}
+
+[data-page]{
+    position:fixed; /* or absolute if the content exceeds the height of the page */
+    width: 100%;
+    min-height: 100vh;
+    transform: translate3d(100%, 0, 0);
+    opacity: 0;
+    transition: opacity 0.2s ease-in, opacity 0.1s ease-in;
+    z-index: 10;
+}
+
+[data-page].active{
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+    z-index: 100;
+}
+
+section#about-page.section.active {
+    padding-top: 0;
+    position: absolute !important;
+}
+
+section#home-page.section.active {
+    padding-top: 0;
+    position: absolute !important;
+}
+
+#buttonContainer button,
+#buttonInfoContainer article,
+#buttonNewContainer button {
+  margin-bottom: .40rem !important;
+  margin-right: .40rem !important;
+}
+
+#buttonContainer {
+  margin-top: 1em;
+}
+
+#buttonInfoContainer {
+    margin: 0 !important;
+}
+
+#buttonInfoContainer article {
+    margin-bottom: 1.2em !important;
+    margin-top: 0.8em !important;
+}
+
+#serverControls,
+#serverMessagesControls {
+  margin-top: 0 !important;
+  margin-bottom: 0.4em !important;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+#serverForm {
+  padding-left: 0;
+}
+
+#serverForm div {
+  padding-left: 0;
+}
+
+.hero-body, .section {
+    padding: 1.5rem 1.5rem !important;
+}
+
+.big-logo {
+  margin: 2em;
+  text-align: center;
+}
+
+nav.navbar {
+  border-radius: 0;
+}
+
+.buttonButtons {
+  justify-content: center !important;
+}
+
+[class^="icon-"]:before, [class*=" icon-"]:before {
+  margin: 0 !important;
+  font-size: 120%;
+}
+
+/* Icon Grid Styles */
+.icon-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.swatch {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #4c5759;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 0;
+}
+
+.swatch:hover,
+.swatch.selected {
+    border: 4px solid #FF5B00;
+}
+
+.swatch-placeholder {
+    font-size: 20px;
+    color: #7a7a7a;
+}
+
+.none {
+  background-color: unset !important;
+}
+
+/* Touchpad Styles */
+.touchpad {
+  width: 95%;
+  height: 200px;
+  position: relative;
+  cursor: move;
+  touch-action: none; /* Prevent scrolling/zooming on touch */
+  user-select: none;
+  color: #7a7a7a;
+}
+
+.touchpad:active {
+  border-color: #3273dc;
+  background-color: #3a3a3a;
+}
