@@ -5,9 +5,9 @@
     "http_port": "8009",
     "websocket_port": "8008",
     "scripts": {
-        "start": "node js/server.js &",
-        "stop": "node js/stop.js",
-        "dev": "node js/server.js",
+        "start": "node src/js/server.js &",
+        "stop": "node src/js/stop.js",
+        "dev": "node src/js/server.js",
         "test": "mocha test/**/*.test.js",
         "build": "echo 'No build step required'"
     },
