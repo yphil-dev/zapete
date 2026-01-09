@@ -32,7 +32,7 @@ describe('Package Configuration', () => {
     const files = [
       'snapcraft.yaml',
       'debian/control',
-      'org.zapete.Zapete.yml'
+      'io.gitlab.yphil.zapete.yml'
     ];
 
     files.forEach(file => {
