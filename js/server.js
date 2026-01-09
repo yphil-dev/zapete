@@ -39,7 +39,7 @@ console.log('version: ', version);
 const interfaces = os.networkInterfaces();
 let hostIP;
 let buttons = [];
-const imagePath = '/tmp/zapete-qrcode.png';
+const imagePath = path.join(__dirname, '..', 'img', 'zapete-qrcode.png');
 
 const options = {
     cache: -1, // Disable caching
@@ -210,15 +210,15 @@ function openWithXDG(arg) {
 wss.on('listening', function() {
     console.log(`WebSocket server is listening on ${hostIP}:${wsPort}`);
 
-    QRCode.toFile('/tmp/zapete-qrcode.png', "http://" + hostIP + ":" + httpPort + "?ws=" + wsPort, {
+    QRCode.toFile(imagePath, "http://" + hostIP + ":" + httpPort + "?ws=" + wsPort, {
         errorCorrectionLevel: 'H'
     }, function(err) {
         // if (err) throw err;
         console.log('QR code saved!');
     });
 
-    openWithXDG("http://localhost:" + httpPort + "?ws=" + wsPort);
-    openWithXDG(imagePath);
+    openWithXDG("http://localhost:" + httpPort + "?ws=" + wsPort + "#settings");
+    // openWithXDG(imagePath);
 });
 
 wss.on('error', function error(err) {

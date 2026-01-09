@@ -3,6 +3,7 @@ const buttonContainer = document.getElementById("buttonContainer");
 const buttonInfocontainer = document.getElementById("buttonInfoContainer");
 const serverAddressInput = document.getElementById("serverAddressInput");
 const touchpad = document.getElementById("touchpad");
+const touchpadContainer = document.getElementById("touchpadContainer");
 const buttons = buttonContainer.querySelectorAll("button");
 const refreshButtons = document.getElementById("refreshButtons");
 const addButton = document.querySelector("#addButton");
@@ -76,6 +77,7 @@ function connect() {
             try {
                 const buttons = JSON.parse(event.data); // If the server response parses, it's the buttons
                 setButtonsToPage(buttons);
+                touchpadContainer.classList.remove('hidden');
             } catch (err) {
                 serverMessages.value = event.data;
             }
@@ -349,6 +351,9 @@ function setButtonsToPage(buttons) {
         });
 
     });
+
+
+
 }
 
 resetButton.addEventListener('click', function() {

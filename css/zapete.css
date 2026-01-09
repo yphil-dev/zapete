@@ -8,6 +8,10 @@ pre, code {
   font-family: "Courier New", monospace !important;
 }
 
+.hidden {
+  display: none !important;
+}
+
 [data-page]{
     position:fixed; /* or absolute if the content exceeds the height of the page */
     width: 100%;

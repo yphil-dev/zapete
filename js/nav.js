@@ -19,7 +19,28 @@ const ZPT = (function () {
     document.addEventListener("DOMContentLoaded", function(){
         pages = document.querySelectorAll('[data-page]');
         links = document.querySelectorAll('[data-role="link"]');
-        //pages[0].className = "active";  - already done in the HTML
+
+        // Handle initial hash navigation
+        const initialHash = window.location.hash.slice(1); // Remove #
+        if (initialHash) {
+            const targetPage = document.getElementById(initialHash + '-page');
+            if (targetPage) {
+                // Hide all pages
+                pages.forEach(page => page.classList.remove('active'));
+                // Show target page
+                targetPage.classList.add('active');
+                // Update nav links
+                links.forEach(link => {
+                    const linkHash = link.href.split("#")[1];
+                    if (linkHash === initialHash) {
+                        link.classList.add('active-link');
+                    } else {
+                        link.classList.remove('active-link');
+                    }
+                });
+            }
+        }
+
         links.forEach(link => {
             link.addEventListener("click", navigate);
         });
