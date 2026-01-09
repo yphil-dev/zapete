@@ -13,7 +13,7 @@ override_dh_auto_install:
 	cp -r node_modules $(CURDIR)/debian/zapete/usr/lib/zapete/ || echo "Warning: node_modules copy failed"
 
 	# Create startup script
-	install -m 755 $(CURDIR)/launch.sh $(CURDIR)/debian/zapete/usr/lib/zapete/
+	install -m 755 $(CURDIR)/debian/launch.sh $(CURDIR)/debian/zapete/usr/lib/zapete/
 
 	# Create symlink for binary
 	mkdir -p $(CURDIR)/debian/zapete/usr/bin
