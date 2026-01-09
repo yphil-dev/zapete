@@ -6,7 +6,7 @@
 override_dh_auto_install:
 	# Install the application (exclude debian directory and build artifacts)
 	mkdir -p $(CURDIR)/debian/zapete/usr/lib/zapete
-	cp -r index.html css/ js/ img/ font/ buttons-defaults.json package.json package-lock.json $(CURDIR)/debian/zapete/usr/lib/zapete/
+	cp -r index.html button-form.html css/ js/ img/ font/ buttons-defaults.json package.json package-lock.json $(CURDIR)/debian/zapete/usr/lib/zapete/
 	# Ensure QR code placeholder exists for package
 	touch $(CURDIR)/debian/zapete/usr/lib/zapete/img/zapete-qrcode.png
 	# Copy node_modules separately to ensure it gets included

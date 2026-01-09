@@ -1,7 +1,6 @@
 #!/bin/bash
+# Go to app directory
+cd /app/share/zapete
 
-# Change to the application directory
-cd "/usr/lib/zapete"
-
-# Start Zapete
-exec npm start
+# Run Node from the SDK
+exec node js/server.js

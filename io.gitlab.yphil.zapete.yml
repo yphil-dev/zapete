@@ -1,0 +1,67 @@
+app-id: io.gitlab.yphil.zapete
+runtime: org.freedesktop.Platform
+runtime-version: '24.08'
+sdk: org.freedesktop.Sdk
+command: zapete-launch.sh
+
+finish-args:
+  - --share=network
+  - --share=ipc
+  - --socket=x11
+  - --socket=wayland
+  - --device=dri
+  - --filesystem=xdg-config/zapete:create
+  - --filesystem=home:ro
+
+modules:
+  # Module 1: xdotool
+  - name: xdotool
+    buildsystem: simple
+    build-commands:
+      - make
+      - mkdir -p /app/bin
+      - install -Dm755 xdotool /app/bin/xdotool
+    sources:
+      - type: archive
+        url: https://github.com/jordansissel/xdotool/releases/download/v3.20211022.1/xdotool-3.20211022.1.tar.gz
+        sha256: 96f0facfde6d78eacad35b91b0f46fecd0b35e474c03e00e30da3fdd345f9ada
+
+  # Module 2: YOUR APP WITH NODE.JS - ALL IN ONE
+  - name: zapete
+    buildsystem: simple
+    build-commands:
+      # STEP 1: REMOVE THE OLD NODE.JS FROM YOUR SOURCE
+      - rm -rf node-v18.17.0-linux-x64
+
+      # STEP 2: DOWNLOAD NODE.JS 20
+      - wget -q https://nodejs.org/dist/v20.11.0/node-v20.11.0-linux-x64.tar.xz
+      - tar -xf node-v20.11.0-linux-x64.tar.xz
+
+      # STEP 3: INSTALL NODE.JS TO /app
+      - mkdir -p /app/bin
+      - cp node-v20.11.0-linux-x64/bin/node /app/bin/node
+      - chmod +x /app/bin/node
+
+      # STEP 4: COPY YOUR APP
+      - mkdir -p /app/share/zapete
+      - cp -r . /app/share/zapete/
+
+      # STEP 5: CREATE LAUNCH SCRIPT
+      - |
+        cat > /app/bin/zapete-launch.sh << 'EOF'
+        #!/bin/sh
+        cd /app/share/zapete
+        # ABSOLUTE PATH - NO BULLSHIT
+        exec /app/bin/node js/server.js
+        EOF
+      - chmod +x /app/bin/zapete-launch.sh
+
+      # STEP 6: VERIFY EVERYTHING
+      - echo "=== VERIFICATION ==="
+      - ls -la /app/bin/node
+      - /app/bin/node --version
+      - ls -la /app/share/zapete/buttons-defaults.json
+      - ls -la /app/share/zapete/js/server.js
+    sources:
+      - type: dir
+        path: .
