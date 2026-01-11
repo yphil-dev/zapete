@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'zapete-font';
-  src: url('../font/zapete-font.eot?23654907');
-  src: url('../font/zapete-font.eot?23654907#iefix') format('embedded-opentype'),
-       url('../font/zapete-font.woff2?23654907') format('woff2'),
-       url('../font/zapete-font.woff?23654907') format('woff'),
-       url('../font/zapete-font.ttf?23654907') format('truetype'),
-       url('../font/zapete-font.svg?23654907#zapete-font') format('svg');
+  src: url('../../font/zapete-font.eot?23654907');
+  src: url('../../font/zapete-font.eot?23654907#iefix') format('embedded-opentype'),
+       url('../../font/zapete-font.woff2?23654907') format('woff2'),
+       url('../../font/zapete-font.woff?23654907') format('woff'),
+       url('../../font/zapete-font.ttf?23654907') format('truetype'),
+       url('../../font/zapete-font.svg?23654907#zapete-font') format('svg');
   font-weight: normal;
   font-style: normal;
 }

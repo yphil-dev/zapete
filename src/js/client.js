@@ -134,8 +134,10 @@ function openButtonForm(event, isNew) {
 
     callerButton = event.target;
 
-    fetch('button-form.html')
-        .then(response => response.text())
+    fetch('/src/html/button-form.html')
+        .then(response => {
+            return response.text();
+        })
         .then(html => {
             const buttonForm = document.createElement('article');
 

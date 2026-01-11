@@ -1,15 +1,18 @@
 ZPT.settings = (function () {
-    
+
     // THEME
 
     function loadTheme() {
-        let selectedTheme = localStorage.getItem('zapete-theme') || 'css/zapete-bulma-light.css';
+        let selectedTheme = localStorage.getItem('zapete-theme') || '../css/zapete-bulma-light.css';
+
+        console.log("selectedTheme: ", selectedTheme);
+
         document.querySelector('input[name="theme"][value="' + selectedTheme + '"]').checked = true;
         switchTheme(selectedTheme);
     }
 
     loadTheme();
-    
+
     function switchTheme(theme) {
         var themeLink = document.getElementById('theme-link');
         var newThemeLink = document.createElement('link');

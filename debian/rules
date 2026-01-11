@@ -6,16 +6,16 @@
 override_dh_auto_install:
 	# Install the application (exclude debian directory and build artifacts)
 	mkdir -p $(CURDIR)/debian/zapete/usr/lib/zapete
-	cp -r index.html css/ js/ img/ font/ buttons-defaults.json package.json package-lock.json $(CURDIR)/debian/zapete/usr/lib/zapete/
+	cp -r index.html src/ img/ font/ buttons-defaults.json package.json package-lock.json $(CURDIR)/debian/zapete/usr/lib/zapete/
 	# Copy node_modules separately to ensure it gets included
 	cp -r node_modules $(CURDIR)/debian/zapete/usr/lib/zapete/ || echo "Warning: node_modules copy failed"
 
 	# Create startup script
-	install -m 755 $(CURDIR)/zapete-launch.sh $(CURDIR)/debian/zapete/usr/lib/zapete/
+	install -m 755 $(CURDIR)/debian-launch.sh $(CURDIR)/debian/zapete/usr/lib/zapete/
 
 	# Create symlink for binary
 	mkdir -p $(CURDIR)/debian/zapete/usr/bin
-	ln -s /usr/lib/zapete/zapete-launch.sh $(CURDIR)/debian/zapete/usr/bin/zapete
+	ln -s /usr/lib/zapete/debian-launch.sh $(CURDIR)/debian/zapete/usr/bin/zapete
 
 	# Create desktop file
 	mkdir -p $(CURDIR)/debian/zapete/usr/share/applications
@@ -23,7 +23,7 @@ override_dh_auto_install:
 
 override_dh_auto_build:
 	# Install npm dependencies
-	cd $(CURDIR) && npm install --production
+	cd $(CURDIR) && npm install --omit=dev
 
 override_dh_auto_clean:
 	# Clean npm dependencies

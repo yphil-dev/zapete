@@ -19,7 +19,7 @@ describe('Package Configuration', () => {
       'index.html',
       'js/server.js',
       'js/client.js',
-      'css/zapete.css'
+      'src/css/zapete.css'
     ];
 
     files.forEach(file => {

@@ -7,14 +7,7 @@ const QRCode = require('qrcode');
 const httpServer = require('http-server');
 
 const httpPort = process.env.npm_package_http_port || 8009;
-const wsPort = process.env.npm_package_websocket_port || 8008;
-
-console.log("process.env.npm_package_http_port: ", process.env.npm_package_http_port);
-
-const pjson = path.join(__dirname, '..', 'package.json');
-console.log("packageJsonPath: ", pjson.http_port);
-
-const version = process.env.npm_package_version;
+const wsPort = process.env.npm_package_config_websocket_port || 8008;
 
 const configDir = path.join(os.homedir(), '.config', 'zapete');
 const buttonsPath = path.join(configDir, 'buttons.json');
@@ -28,21 +21,19 @@ if (!fs.existsSync(configDir)) {
     fs.mkdirSync(configDir, { recursive: true });
 }
 
-// Initialize config file if it doesn't exist
 if (!fs.existsSync(buttonsPath)) {
     fs.copyFileSync(defaultsPath, buttonsPath);
     console.log('Initialized new config file at', buttonsPath);
 }
 
-console.log('version: ', version);
+console.log('Zapete version: ', process.env.npm_package_version);
 
 const interfaces = os.networkInterfaces();
 let hostIP;
 let buttons = [];
-const imagePath = '/tmp/zapete-qrcode.png';
 
 const options = {
-    cache: -1, // Disable caching
+    cache: -1, // Disable
     port: httpPort
 };
 
@@ -210,15 +201,15 @@ function openWithXDG(arg) {
 wss.on('listening', function() {
     console.log(`WebSocket server is listening on ${hostIP}:${wsPort}`);
 
-    QRCode.toFile('/tmp/zapete-qrcode.png', "http://" + hostIP + ":" + httpPort + "?ws=" + wsPort, {
+    QRCode.toFile('img/zapete-qrcode.png', "http://" + hostIP + ":" + httpPort + "?ws=" + wsPort, {
         errorCorrectionLevel: 'H'
     }, function(err) {
         // if (err) throw err;
         console.log('QR code saved!');
     });
 
-    openWithXDG("http://localhost:" + httpPort + "?ws=" + wsPort);
-    openWithXDG(imagePath);
+    openWithXDG("http://localhost:" + httpPort + "?ws=" + wsPort + "/#settings");
+    // openWithXDG(imagePath);
 });
 
 wss.on('error', function error(err) {
