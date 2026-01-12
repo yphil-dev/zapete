@@ -10,7 +10,6 @@
         "start": "node src/js/server.js &",
         "stop": "node src/js/stop.js",
         "dev": "node src/js/server.js",
-        "test": "mocha test/**/*.test.js",
         "build": "echo 'No build step required'"
     },
     "repository": {
@@ -28,7 +27,6 @@
     },
     "devDependencies": {
         "bulma": "^0.9.4",
-        "mocha": "^10.2.0",
         "node-sass": "^9.0.0"
     }
 }
