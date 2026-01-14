@@ -201,10 +201,10 @@ function openWithXDG(arg) {
 wss.on('listening', function() {
     console.log(`WebSocket server is listening on ${hostIP}:${wsPort}`);
 
-    QRCode.toFile('img/zapete-qrcode.png', "http://" + hostIP + ":" + httpPort + "?ws=" + wsPort, {
+    QRCode.toFile('src/img/zapete-qrcode.png', "http://" + hostIP + ":" + httpPort + "?ws=" + wsPort, {
         errorCorrectionLevel: 'H'
     }, function(err) {
-        // if (err) throw err;
+        if (err) console.log("err: ", err);
         console.log('QR code saved!');
     });
 

@@ -1,13 +1,11 @@
-zapete (0.2.1-1) unstable; urgency=medium
+zapete (0.2.1-3) jammy; urgency=medium
 
-  * New upstream release
-  * Added touchpad mouse control support
-  * Improved packaging for better system integration
+  * Trigger PPA build for Ubuntu Jammy
 
- -- Zapete Developers <info@zapete.dev>  Mon, 01 Jul 2026 23:46:00 +0000
+ -- px <px@mae>  Wed, 14 Jan 2026 14:30:52 +0100
 
-zapete (0.2.0-1) unstable; urgency=medium
+zapete (0.2.1-1~ubuntu24.04.6.1~jammy1) jammy; urgency=medium
 
-  * Initial Debian package
+  * Trigger PPA build for Ubuntu Jammy
 
- -- Zapete Developers <info@zapete.dev>  Mon, 01 Jul 2026 23:46:00 +0000
+ -- Philippe Coatmeur (yPhil) <philcm@gnu.org>  Mon, 12 Jan 2026 20:00:00 +0100
