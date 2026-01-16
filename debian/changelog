@@ -1,4 +1,4 @@
-zapete (0.2.1) jammy; urgency=medium
+zapete (0.11.05) jammy; urgency=medium
 
   * Trigger PPA build for Ubuntu Jammy
 

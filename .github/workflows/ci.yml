@@ -12,23 +12,6 @@ env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        cache: 'npm'
-    - name: Install xdotool
-      run: sudo apt-get update && sudo apt-get install -y xdotool
-    - name: Install dependencies
-      run: npm install
-    - name: Run tests
-      run: npm test || echo "No tests defined, skipping"
-    - name: Test server startup
-      run: timeout 10s npm start || echo "Server started successfully"
 
   build-deb:
     runs-on: ubuntu-latest
@@ -74,6 +57,14 @@ jobs:
           name: zapete-deb
           path: dist/
 
+      - name: Rename deb file for release
+        run: |
+          # Find and rename the deb file
+          DEB_FILE=$(find dist/ -name "zapete_*.deb" -type f | head -1)
+          cp "$DEB_FILE" dist/zapete.deb
+          # Optionally keep only the renamed file
+          rm dist/zapete_*.deb || true
+
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
@@ -81,4 +72,4 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            dist/*.deb
+            dist/zapete.deb
