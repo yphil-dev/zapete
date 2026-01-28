@@ -14,7 +14,7 @@ const configDir = path.join(os.homedir(), '.config', 'zapete');
 const buttonsPath = path.join(configDir, 'buttons.json');
 const defaultsPath = path.join(__dirname, '..', 'buttons-defaults.json');
 
-const qrCodePath = path.join(configDir, 'qrcode.png');
+const qrCodePath = 'src/img/qrcode.png';
 
 function prettyConfigPath(fullPath) {
     return fullPath.replace(os.homedir(), '~');
