@@ -17,7 +17,7 @@ const defaultsPath = path.join(__dirname, '..', 'buttons-defaults.json');
 const qrCodePath = path.join(configDir, 'qrcode.png');
 
 function prettyConfigPath(fullPath) {
-  return fullPath.replace(os.homedir(), '~');
+    return fullPath.replace(os.homedir(), '~');
 }
 
 if (!fs.existsSync(configDir)) {
@@ -72,6 +72,8 @@ checkPort(httpPort).then(async (portAvailable) => {
             "Zapete already running - opening existing instance"
         );
 
+        createQRCode();
+
         // Open browser to existing instance
         openWithXDG(`http://localhost:${httpPort}`);
 
@@ -88,146 +90,152 @@ checkPort(httpPort).then(async (portAvailable) => {
 
     const wss = new WebSocket.Server(wsOptions);
 
-let isShuttingDown = false;
+    let isShuttingDown = false;
 
-process.on('SIGINT', () => {
-  if (isShuttingDown) return;
-  isShuttingDown = true;
+    process.on('SIGINT', () => {
+        if (isShuttingDown) return;
+        isShuttingDown = true;
 
-  console.log('\nShutting down gracefully...');
+        console.log('\nShutting down gracefully...');
 
-  // Close WebSocket server first
-  wss.clients.forEach(client => client.terminate());
-  wss.close(() => {
-    console.log('WebSocket server closed');
+        // Close WebSocket server first
+        wss.clients.forEach(client => client.terminate());
+        wss.close(() => {
+            console.log('WebSocket server closed');
 
-    // Then close HTTP server
-    server.close(() => {
-      console.log('HTTP server closed');
-      process.exit(0);
+            // Then close HTTP server
+            server.close(() => {
+                console.log('HTTP server closed');
+                process.exit(0);
+            });
+        });
     });
-  });
-});
 
-// Make server start return the prompt by detaching properly
-if (require.main === module) {
-  process.stdin.resume(); // Keep stdin open to catch SIGINT
-}
+    // Make server start return the prompt by detaching properly
+    if (require.main === module) {
+        process.stdin.resume(); // Keep stdin open to catch SIGINT
+    }
 
-Object.keys(interfaces).forEach((interfaceName) => {
-    interfaces[interfaceName].forEach((interface) => {
-        // Skip over loopback and non-IPv4 addresses
-        if (!interface.internal && interface.family === 'IPv4') {
-            hostIP = interface.address;
-        }
+    Object.keys(interfaces).forEach((interfaceName) => {
+        interfaces[interfaceName].forEach((interface) => {
+            // Skip over loopback and non-IPv4 addresses
+            if (!interface.internal && interface.family === 'IPv4') {
+                hostIP = interface.address;
+            }
+        });
     });
-});
 
-function closeWebSocketServer() {
-    wss.close((error) => {
-        if (error) {
-            console.error('Error closing WebSocket server:', error);
-        } else {
-            console.log('WebSocket server closed.');
-        }
-    });
-}
-
-wss.on('connection', function connection(ws) {
-    console.log('Client connected');
-
-    ws.on('message', function incoming(message) {
-        const data = JSON.parse(message);
-
-        if (data.type === 'shutdown') {
-            console.log('Received shutdown request. Closing WebSocket server...');
-            wss.close(() => {
+    function closeWebSocketServer() {
+        wss.close((error) => {
+            if (error) {
+                console.error('Error closing WebSocket server:', error);
+            } else {
                 console.log('WebSocket server closed.');
-                server.close(() => {
-                    console.log('HTTP server shut down.');
-                    process.exit(0);
+            }
+        });
+    }
+
+    wss.on('connection', function connection(ws) {
+        console.log('Client connected');
+
+        ws.on('message', function incoming(message) {
+            const data = JSON.parse(message);
+
+            if (data.type === 'shutdown') {
+                console.log('Received shutdown request. Closing WebSocket server...');
+                wss.close(() => {
+                    console.log('WebSocket server closed.');
+                    server.close(() => {
+                        console.log('HTTP server shut down.');
+                        process.exit(0);
+                    });
                 });
-            });
-        } else if (data.type === 'button_update') {
-            buttons = data.buttons;
-            saveButtonsToServer(ws);
-        } else if (data.type === 'button_request') {
-            readButtonsFile(ws, buttonsPath); // Updated path
-        } else if (data.type === 'button_defaults_request') {
-            readButtonsFile(ws, defaultsPath);
-        } else if (data.type === 'mouse_command') {
-            handleMouseCommand(data, ws);
-        } else {
-            executeCommand(data.command.toString(), ws);
-        }
+            } else if (data.type === 'button_update') {
+                buttons = data.buttons;
+                saveButtonsToServer(ws);
+            } else if (data.type === 'button_request') {
+                readButtonsFile(ws, buttonsPath); // Updated path
+            } else if (data.type === 'button_defaults_request') {
+                readButtonsFile(ws, defaultsPath);
+            } else if (data.type === 'mouse_command') {
+                handleMouseCommand(data, ws);
+            } else {
+                executeCommand(data.command.toString(), ws);
+            }
+        });
+
+        ws.send('Right click / long press a button to edit');
     });
 
-    ws.send('Right click / long press a button to edit');
-});
+    function openWithXDG(arg) {
 
-function openWithXDG(arg) {
+        let toOpen;
 
-    let toOpen;
+        toOpen = (arg.startsWith('http')) ? arg : path.resolve(arg);
 
-    toOpen = (arg.startsWith('http')) ? arg : path.resolve(arg);
+        exec('which xdg-open', (err, stdout, stderr) => {
+            if (err) {
+                console.error('Error checking xdg-open:', err);
+                return;
+            }
+            if (stdout) {
 
-    exec('which xdg-open', (err, stdout, stderr) => {
-        if (err) {
-            console.error('Error checking xdg-open:', err);
+                exec(`xdg-open ${toOpen}`, (err, stdout, stderr) => {
+                    if (err) {
+                        console.error('Error opening with xdg-open:', err);
+                        return;
+                    }
+                });
+            } else {
+                console.error('xdg-open is not available');
+            }
+        });
+    }
+
+    function createQRCode() {
+
+        QRCode.toFile(qrCodePath, "http://" + hostIP + ":" + httpPort + "?ws=" + wsPort, {
+            errorCorrectionLevel: 'H'
+        }, function(err) {
+            if (err) console.log("err: ", err);
+            console.log('QR code saved!');
+        });
+
+    }
+
+    wss.on('listening', function() {
+        console.log(`WebSocket server is listening on ${hostIP}:${wsPort}`);
+
+        createQRCode();
+
+        openWithXDG("http://localhost:" + httpPort + "?ws=" + wsPort + "/#settings");
+        // openWithXDG(imagePath);
+    });
+
+    wss.on('error', function error(err) {
+        console.error('WebSocket server error:', err);
+    });
+
+    function executeCommand(command, ws) {
+        exec(command, (error, stdout, stderr) => {
+            if (error) {
+                console.error(`Error executing command: ${error}`);
+                // ws.send(`${error.message}`);
+                // return;
+            }
+            if (stderr) {
+                ws.send(`${stderr}`);
+                console.error(`Command stderr: ${stderr}`);
+            }
+            console.log('stdout: ', stdout);
             return;
-        }
-        if (stdout) {
+        });
+    }
 
-            exec(`xdg-open ${toOpen}`, (err, stdout, stderr) => {
-                if (err) {
-                    console.error('Error opening with xdg-open:', err);
-                    return;
-                }
-            });
-        } else {
-            console.error('xdg-open is not available');
-        }
-    });
-}
+    function handleMouseCommand(data, ws) {
+        let command = '';
 
-wss.on('listening', function() {
-    console.log(`WebSocket server is listening on ${hostIP}:${wsPort}`);
-
-    QRCode.toFile(qrCodePath, "http://" + hostIP + ":" + httpPort + "?ws=" + wsPort, {
-        errorCorrectionLevel: 'H'
-    }, function(err) {
-        if (err) console.log("err: ", err);
-        console.log('QR code saved!');
-    });
-
-    openWithXDG("http://localhost:" + httpPort + "?ws=" + wsPort + "/#settings");
-    // openWithXDG(imagePath);
-});
-
-wss.on('error', function error(err) {
-    console.error('WebSocket server error:', err);
-});
-
-function executeCommand(command, ws) {
-    exec(command, (error, stdout, stderr) => {
-        if (error) {
-            console.error(`Error executing command: ${error}`);
-            // ws.send(`${error.message}`);
-            // return;
-        }
-        if (stderr) {
-            ws.send(`${stderr}`);
-            console.error(`Command stderr: ${stderr}`);
-        }
-        console.log('stdout: ', stdout);
-        return;
-    });
-}
-
-function handleMouseCommand(data, ws) {
-    let command = '';
-
-    switch (data.mouseAction) {
+        switch (data.mouseAction) {
         case 'click':
             // Map button names to xdotool button numbers
             const buttonNum = data.mouseButton === 'left' ? 1 : 3;
@@ -250,62 +258,62 @@ function handleMouseCommand(data, ws) {
         default:
             console.error('Unknown mouse action:', data.mouseAction);
             return;
+        }
+
+        if (command) {
+            exec(command, (error, stdout, stderr) => {
+                if (error) {
+                    console.error(`Error executing mouse command: ${error}`);
+                }
+                if (stderr) {
+                    console.error(`Mouse command stderr: ${stderr}`);
+                }
+            });
+        }
     }
 
-    if (command) {
-        exec(command, (error, stdout, stderr) => {
-            if (error) {
-                console.error(`Error executing mouse command: ${error}`);
+    function readButtonsFile(ws, fileName) {
+
+        fs.readFile(fileName, 'utf8', (err, data) => {
+            if (!err) {
+                let buttons = [];
+                try {
+                    buttons = JSON.parse(data);
+                    if (Array.isArray(buttons) && buttons.length > 0) {
+                        sendButtonsToClient(ws, fileName);
+                        return;
+                    } else {
+                        console.error('Buttons file is empty or not an array.');
+                    }
+                } catch (parseError) {
+                    console.error('Error parsing buttons file:', parseError);
+                }
             }
-            if (stderr) {
-                console.error(`Mouse command stderr: ${stderr}`);
+            sendButtonsToClient(ws, 'buttons-defaults.json');
+        });
+    }
+
+    function sendButtonsToClient(ws, fileName) {
+        fs.readFile(fileName, 'utf8', (err, data) => {
+            if (err) {
+                console.error('Error loading buttons from file:', err);
+                return;
+            }
+            ws.send(data);
+        });
+    }
+
+    function saveButtonsToServer(ws) {
+        const jsonData = JSON.stringify(buttons, null, 4);
+        fs.writeFile(buttonsPath, jsonData, 'utf8', (err) => {
+            if (err) {
+                ws.send('Error saving buttons to server:' + err);
+                console.error('Error saving buttons to server:', err);
+            } else {
+                ws.send(`Buttons saved to ${prettyConfigPath(buttonsPath)}`);
+                console.log('Buttons saved to', prettyConfigPath(buttonsPath));
             }
         });
     }
-}
-
-function readButtonsFile(ws, fileName) {
-
-    fs.readFile(fileName, 'utf8', (err, data) => {
-        if (!err) {
-            let buttons = [];
-            try {
-                buttons = JSON.parse(data);
-                if (Array.isArray(buttons) && buttons.length > 0) {
-                    sendButtonsToClient(ws, fileName);
-                    return;
-                } else {
-                    console.error('Buttons file is empty or not an array.');
-                }
-            } catch (parseError) {
-                console.error('Error parsing buttons file:', parseError);
-            }
-        }
-        sendButtonsToClient(ws, 'buttons-defaults.json');
-    });
-}
-
-function sendButtonsToClient(ws, fileName) {
-    fs.readFile(fileName, 'utf8', (err, data) => {
-        if (err) {
-            console.error('Error loading buttons from file:', err);
-            return;
-        }
-        ws.send(data);
-    });
-}
-
-function saveButtonsToServer(ws) {
-    const jsonData = JSON.stringify(buttons, null, 4);
-    fs.writeFile(buttonsPath, jsonData, 'utf8', (err) => {
-        if (err) {
-            ws.send('Error saving buttons to server:' + err);
-            console.error('Error saving buttons to server:', err);
-        } else {
-            ws.send(`Buttons saved to ${prettyConfigPath(buttonsPath)}`);
-            console.log('Buttons saved to', prettyConfigPath(buttonsPath));
-        }
-    });
-}
 
 }); // Close the checkPort().then() callback
