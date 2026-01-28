@@ -14,7 +14,7 @@ const configDir = path.join(os.homedir(), '.config', 'zapete');
 const buttonsPath = path.join(configDir, 'buttons.json');
 const defaultsPath = path.join(__dirname, '..', 'buttons-defaults.json');
 
-const qrCodePath = 'src/img/qrcode.png';
+const qrCodePath = path.join(__dirname, 'qrcode.png');
 
 function prettyConfigPath(fullPath) {
     return fullPath.replace(os.homedir(), '~');
@@ -198,7 +198,7 @@ checkPort(httpPort).then(async (portAvailable) => {
             errorCorrectionLevel: 'H'
         }, function(err) {
             if (err) console.log("err: ", err);
-            console.log('QR code saved!');
+            console.log('QR code saved to', qrCodePath);
         });
 
     }
