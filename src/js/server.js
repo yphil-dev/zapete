@@ -14,6 +14,8 @@ const configDir = path.join(os.homedir(), '.config', 'zapete');
 const buttonsPath = path.join(configDir, 'buttons.json');
 const defaultsPath = path.join(__dirname, '..', 'buttons-defaults.json');
 
+const qrCodePath = path.join(configDir, 'qrcode.png');
+
 function prettyConfigPath(fullPath) {
   return fullPath.replace(os.homedir(), '~');
 }
@@ -191,7 +193,7 @@ function openWithXDG(arg) {
 wss.on('listening', function() {
     console.log(`WebSocket server is listening on ${hostIP}:${wsPort}`);
 
-    QRCode.toFile('../img/zapete-qrcode.png', "http://" + hostIP + ":" + httpPort + "?ws=" + wsPort, {
+    QRCode.toFile(qrCodePath, "http://" + hostIP + ":" + httpPort + "?ws=" + wsPort, {
         errorCorrectionLevel: 'H'
     }, function(err) {
         if (err) console.log("err: ", err);
