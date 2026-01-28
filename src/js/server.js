@@ -1,5 +1,6 @@
 const WebSocket = require('isomorphic-ws');
 const { exec } = require('child_process');
+
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
@@ -56,28 +57,17 @@ function checkPort(port) {
     });
 }
 
-// Show system notification
-function showNotification(title, message) {
-    exec(`notify-send "${title}" "${message}"`, (err) => {
-        if (err) {
-            // Fallback to zenity dialog
-            exec(`zenity --info --title="${title}" --text="${message}"`, (err2) => {
-                if (err2) {
-                    // Last resort: console message
-                    console.log(`🔔 ${title}: ${message}`);
-                }
-            });
-        }
-    });
+async function showNotification(body) {
+    console.log(body);
 }
+
 
 // Check port availability before starting
 checkPort(httpPort).then(async (portAvailable) => {
     if (!portAvailable) {
         console.log(`Port ${httpPort} is already in use - Zapete may already be running`);
         showNotification(
-            "Zapete Already Running",
-            "Opening existing Zapete instance in browser..."
+            "Zapete already running - opening existing instance"
         );
 
         // Open browser to existing instance

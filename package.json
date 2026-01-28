@@ -1,6 +1,6 @@
 {
     "name": "Zapete",
-    "version": "0.5.51",
+    "version": "0.5.52",
     "description": "Remote control for any computer in your local network",
     "config": {
         "http_port": "8009",
@@ -21,6 +21,7 @@
     },
     "homepage": "https://gitlab.com/yphil/zapete",
     "dependencies": {
+        "dbus-next": "^0.10.2",
         "http-server": "^14.1.1",
         "isomorphic-ws": "^5.0.0",
         "qrcode": "^1.5.3"
