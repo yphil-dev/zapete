@@ -217,6 +217,19 @@
         <script src="src/js/settings.js"></script>
 
         <script>
+            // Initialize localStorage theme
+            function initTheme() {
+                const savedTheme = localStorage.getItem('theme');
+                const themeLink = document.getElementById('theme-link');
+                
+                if (savedTheme) {
+                    themeLink.href = savedTheme;
+                    console.log('Loaded saved theme:', savedTheme);
+                } else {
+                    console.log('No saved theme, using default');
+                }
+            }
+            
             // Display localStorage values for debugging
             function displayLocalStorage() {
                 const themeValue = localStorage.getItem('theme') || 'not set';
@@ -233,6 +246,7 @@
             
             // Initialize localStorage display
             document.addEventListener('DOMContentLoaded', function() {
+                initTheme();
                 displayLocalStorage();
             });
             
@@ -248,6 +262,11 @@
                 if (radio.checked) {
                     themeLink.href = radio.value;
                     console.log('Theme switched to:', radio.value);
+                    
+                    // Save to localStorage
+                    localStorage.setItem('theme', radio.value);
+                    console.log('Saved theme to localStorage:', radio.value);
+                    
                     displayLocalStorage();
                 }
             };
