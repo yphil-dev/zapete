@@ -1,6 +1,6 @@
 {
     "name": "Zapete",
-    "version": "0.5.58",
+    "version": "0.5.59",
     "description": "Remote control for any computer in your local network",
     "config": {
         "http_port": "8009",
