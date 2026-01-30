@@ -74,9 +74,14 @@ section#home-page.section.active {
     padding: 1.5rem 1.5rem !important;
 }
 
-.big-logo {
-  margin: 2em;
+
+div.big-logo {
+  margin: 0;
   text-align: center;
+}
+
+img.big-logo {
+  max-width: 600px;
 }
 
 nav.navbar {
@@ -140,4 +145,8 @@ nav.navbar {
 .touchpad:active {
   border-color: #3273dc;
   background-color: #3a3a3a;
+}
+
+.zapete-icon {
+  height: 150px;
 }
