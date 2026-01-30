@@ -74,16 +74,15 @@ checkPort(httpPort).then(async (portAvailable) => {
             "Zapete already running - opening existing instance"
         );
 
-
         createQRCode((err, qrDataURL) => {
             if (err) {
                 console.error('Failed to generate QR code:', err);
-                openWithXDG(`http://localhos:${httpPort}?ws=${wsPort}#settings`);
+                openWithXDG(`http://localhost:${httpPort}?ws=${wsPort}#settings`);
                 return;
             }
 
             const encodedQR = encodeURIComponent(qrDataURL);
-            const fullUrl = `http://localhos:${httpPort}?ws=${wsPort}&qrcode=${encodedQR}#settings`;
+            const fullUrl = `http://localhost:${httpPort}?ws=${wsPort}&qrcode=${encodedQR}#settings`;
 
             console.log("fullUrl: ", fullUrl);
             openWithXDG(fullUrl);
