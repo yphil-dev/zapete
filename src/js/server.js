@@ -6,6 +6,7 @@ const os = require('os');
 const path = require('path');
 const QRCode = require('qrcode');
 const httpServer = require('http-server');
+const { spawn } = require('child_process');
 
 const httpPort = process.env.npm_package_http_port || 8009;
 const wsPort = process.env.npm_package_config_websocket_port || 8008;
@@ -15,6 +16,7 @@ const buttonsPath = path.join(configDir, 'buttons.json');
 const defaultsPath = path.join(__dirname, '..', 'buttons-defaults.json');
 
 const qrCodePath = path.join(__dirname, '..', '..', 'qrcode.png');
+
 
 function prettyConfigPath(fullPath) {
     return fullPath.replace(os.homedir(), '~');
@@ -72,10 +74,26 @@ checkPort(httpPort).then(async (portAvailable) => {
             "Zapete already running - opening existing instance"
         );
 
-        createQRCode();
 
-        // Open browser to existing instance
-        openWithXDG(`http://localhost:${httpPort}`);
+        createQRCode((err, qrDataURL) => {
+            if (err) {
+                console.error('Failed to generate QR code:', err);
+                openWithXDG(`http://localhos:${httpPort}?ws=${wsPort}#settings`);
+                return;
+            }
+
+            const encodedQR = encodeURIComponent(qrDataURL);
+            const fullUrl = `http://localhos:${httpPort}?ws=${wsPort}&qrcode=${encodedQR}#settings`;
+
+            console.log("fullUrl: ", fullUrl);
+            openWithXDG(fullUrl);
+        });
+
+        // // Just open the existing instance - don't generate new QR code
+        // const existingUrl = `http://localhost:${httpPort}#settings`;
+
+        // console.log("Opening existing instance at:", existingUrl);
+        // openWithXDG(existingUrl);
 
         // Give time for notification and browser to complete
         setTimeout(() => process.exit(0), 1000);
@@ -167,49 +185,55 @@ checkPort(httpPort).then(async (portAvailable) => {
         ws.send('Right click / long press a button to edit');
     });
 
+
     function openWithXDG(arg) {
+        let toOpen = (arg.startsWith('http')) ? arg : path.resolve(arg);
 
-        let toOpen;
+        console.log("Opening with spawn:", toOpen);
 
-        toOpen = (arg.startsWith('http')) ? arg : path.resolve(arg);
+        const xdg = spawn('xdg-open', [toOpen]);
 
-        exec('which xdg-open', (err, stdout, stderr) => {
+        xdg.on('error', (err) => {
+            console.error('Failed to spawn xdg-open:', err);
+        });
+
+        xdg.on('close', (code) => {
+            if (code !== 0) {
+                console.log(`xdg-open exited with code ${code}`);
+            }
+        });
+    }
+
+    function createQRCode(callback) {
+        const url = `http://${hostIP}:${httpPort}?ws=${wsPort}`;
+
+        QRCode.toDataURL(url, (err, qrDataURL) => {
             if (err) {
-                console.error('Error checking xdg-open:', err);
+                callback(err, null);
                 return;
             }
-            if (stdout) {
-
-                exec(`xdg-open ${toOpen}`, (err, stdout, stderr) => {
-                    if (err) {
-                        console.error('Error opening with xdg-open:', err);
-                        return;
-                    }
-                });
-            } else {
-                console.error('xdg-open is not available');
-            }
+            callback(null, qrDataURL);
         });
     }
 
-    function createQRCode() {
-
-        QRCode.toFile(qrCodePath, "http://" + hostIP + ":" + httpPort + "?ws=" + wsPort, {
-            errorCorrectionLevel: 'H'
-        }, function(err) {
-            if (err) console.log("err: ", err);
-            console.log('QR code saved to', qrCodePath);
-        });
-
-    }
-
+    // Usage:
     wss.on('listening', function() {
         console.log(`WebSocket server is listening on ${hostIP}:${wsPort}`);
 
-        createQRCode();
+        createQRCode((err, qrDataURL) => {
+            if (err) {
+                console.error('Failed to generate QR code:', err);
+                openWithXDG(`http://localhost:${httpPort}?ws=${wsPort}#settings`);
+                return;
+            }
 
-        openWithXDG("http://localhost:" + httpPort + "?ws=" + wsPort + "/#settings");
-        // openWithXDG(imagePath);
+            const encodedQR = encodeURIComponent(qrDataURL);
+            const fullUrl = `http://localhost:${httpPort}/?ws=${wsPort}&qrcode=${encodedQR}#settings`;
+
+            console.log('QR Code generated here:', encodedQR);
+            console.log("fullUrl: ", fullUrl);
+            openWithXDG(fullUrl);
+        });
     });
 
     wss.on('error', function error(err) {
